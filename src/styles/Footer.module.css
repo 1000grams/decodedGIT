@@ -1,0 +1,108 @@
+/* Use variables from global.css */
+.footer {
+  background-color: var(--bg-color);
+  color: var(--footer-text-color);
+  padding: 3rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+}
+
+.container {
+  max-width: var(--container-max-width); /* Use global variable */
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  gap: 2rem; /* Space between columns - Adjust as needed */
+  justify-content: space-between;
+}
+
+.brandInfo, .links, .social, .buzz {
+  flex: 1; /* Allow columns to grow */
+  min-width: 150px; /* Minimum width before wrapping */
+  /* Adjust min-width if columns are wrapping too early/late */
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  display: inline-block;
+}
+
+.copyright {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.privacyNote {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem; /* Space below copyright */
+}
+
+
+.links h4, .social h4, .buzz h4 {
+  color: var(--text-color);
+  margin-bottom: 1rem; /* Adjust spacing */
+}
+
+.links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.links li {
+  margin-bottom: 0.5em; /* Adjust spacing */
+}
+
+.links a {
+  color: var(--footer-text-color);
+  text-decoration: none;
+  font-size: 1rem; /* Match body text size */
+}
+
+.links a:hover {
+  color: var(--text-color); /* White on hover */
+  text-decoration: underline;
+}
+
+.socialIcons {
+    display: flex; /* Arrange icons horizontally */
+    gap: 1.5rem; /* Space between icons - Adjust as needed */
+}
+
+.socialIcons a {
+  color: var(--text-color); /* White icons */
+  font-size: 1.5rem; /* Icon size */
+  text-decoration: none;
+  transition: color 0.3s ease;
+  /* min-width/height handled by global styles - explicit size */
+  min-width: auto; /* Override global button min-width if just an icon */
+  min-height: auto;
+  padding: 0; /* Override global button padding */
+}
+
+.socialIcons a:hover {
+  color: var(--accent-color);
+}
+
+/* Buzz form styling (if implemented) */
+
+/* Responsive adjustments */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3rem; /* Adjust gap when stacked */
+  }
+
+  .brandInfo, .links, .social, .buzz {
+    min-width: auto; /* Allow shrinking */
+    width: 100%; /* Full width on mobile */
+  }
+
+  .socialIcons {
+    justify-content: center; /* Center icons on mobile */
+  }
+}

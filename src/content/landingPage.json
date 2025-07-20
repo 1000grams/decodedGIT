@@ -1,0 +1,151 @@
+{
+  "header": {
+    "logoText": "Decoded Music",
+    "navLinks": [
+      { "href": "/dashboard", "text": "Artist Dashboard" },
+      { "href": "/about", "text": "About" },
+      { "href": "/contact", "text": "Contact" },
+      { "href": "/buzz", "text": "Buzz" }
+    ],
+    "signInButtonHref": "/signin",
+    "signInButtonText": "Sign In",
+    "signUpButtonHref": "/signup",
+    "signUpButtonText": "Sign Up"
+  },
+  "hero": {
+    "videoSrc": "/p1.mp4",
+    "logoAltText": "Decoded Music logo",
+    "headline": "Welcome to Decoded Music",
+    "tagline": "Sound for the modern creator",
+    "hypeText": "High-quality music licensed the moment inspiration strikes.",
+    "primaryCtaHref": "#pricing-section",
+    "primaryCtaText": "See Pricing",
+    "secondaryCtaHref": "/catalog",
+    "secondaryCtaText": "Browse Catalog"
+  },
+  "problemSolution": {
+    "headline": "Music licensing shouldn't slow you down",
+    "introText": "Creators need quick access to clear, affordable music rights.",
+    "problemTitle": "The Problem",
+    "problemBody": "Confusing contracts and outdated pricing leave artists and brands frustrated.",
+    "problemBulletPoints": [
+      "Complex royalty agreements",
+      "Inconsistent licensing terms",
+      "High upfront costs"
+    ],
+    "solutionTitle": "Our Solution",
+    "solutionBody": "A single platform with transparent pricing and instant clearances.",
+    "solutionBulletPoints": [
+      "Dynamic pricing by usage",
+      "Simple online checkout",
+      "Rights managed in the cloud"
+    ],
+    "techMention": "Powered by AWS and Stripe for reliability"
+  },
+  "artistShowcase": {
+    "headline": "Featured Artist",
+    "featuredArtistSubHeadline": "Rue de Vivre",
+    "featuredArtistBody": "Cinematic pop that blends electronic textures with raw emotion.",
+    "browseCatalogCtaHref": "/catalog",
+    "browseCatalogCtaText": "Browse the Catalog",
+    "licenseSoundCtaHref": "/pricing",
+    "licenseSoundCtaText": "License This Sound",
+    "spotifyExploreSubHeadline": "Discover more on Spotify",
+    "spotifyDisclaimer": "Spotify® trademarks are the property of Spotify AB.",
+    "spotifyEmbeds": [
+      { "src": "https://open.spotify.com/embed/album/1" },
+      { "src": "https://open.spotify.com/embed/album/2" },
+      { "src": "https://open.spotify.com/embed/album/3" }
+    ]
+  },
+  "dynamicPricing": {
+    "headline": "Flexible Pricing",
+    "introText": "Only pay for what you need with transparent tiers.",
+    "howItWorksItems": [
+      { "icon": "scale", "text": "Select usage" },
+      { "icon": "credit-card", "text": "Checkout instantly" },
+      { "icon": "cloud", "text": "Download and go" }
+    ],
+    "priceCalloutText": "Licenses from",
+    "minPrice": "$5",
+    "priceDisclaimer": "Final price depends on distribution size.",
+    "useCases": [
+      {
+        "icon": "video",
+        "title": "Social content",
+        "description": "TikTok, YouTube, Instagram and more",
+        "link": "/pricing#ugc",
+        "cta": "Get a quote"
+      },
+      {
+        "icon": "broadcast",
+        "title": "Commercial",
+        "description": "Ads, podcasts or corporate use",
+        "link": "/pricing#commercial",
+        "cta": "Learn more"
+      }
+    ],
+    "beyondBasicsTitle": "What sets us apart",
+    "beyondBasicsList": [
+      { "icon": "lock", "text": "Rights cleared for every channel" },
+      { "icon": "analytics", "text": "Usage tracking and reporting" }
+    ],
+    "finalCtaHref": "/signup",
+    "finalCtaText": "Start licensing"
+  },
+  "buyers": {
+    "headline": "For Brands & Agencies",
+    "introText": "Fresh music to elevate your content.",
+    "features": [
+      { "iconName": "playlist", "title": "Curated catalog", "description": "Hand-picked tracks ready to license." },
+      { "iconName": "easy", "title": "Easy clearance", "description": "No endless negotiations." }
+    ],
+    "ctaHref": "/signup",
+    "ctaText": "Create Account"
+  },
+  "artists": {
+    "headline": "For Artists",
+    "tagline": "Your music. Your terms.",
+    "introText": "Reach new audiences and get paid fairly.",
+    "features": [
+      { "iconName": "upload", "title": "Simple uploads", "description": "Manage tracks in one place." },
+      { "iconName": "payments", "title": "Automated payouts", "description": "Keep 80% of every sale." }
+    ],
+    "ctaHref": "/dashboard",
+    "ctaText": "Join as Artist"
+  },
+  "collaboration": {
+    "headline": "Collaboration Made Simple",
+    "bodyText": "Work with fellow creatives directly through our platform.",
+    "ctaHref": "/contact",
+    "ctaText": "Contact Us"
+  },
+  "aws": {
+    "headline": "Powered by AWS",
+    "bodyText": "Scalable infrastructure ensures your music is always available."
+  },
+  "finalCta": {
+    "headline": "Ready to get started?",
+    "cta1Href": "/signup",
+    "cta1Text": "Sign Up",
+    "cta2Href": "/catalog",
+    "cta2Text": "Explore Music"
+  },
+  "footer": {
+    "logoText": "Decoded Music",
+    "copyright": "© {year} Decoded Music",
+    "privacyNote": "Read our terms and privacy policy.",
+    "quickLinksTitle": "Quick Links",
+    "quickLinks": [
+      { "href": "/about", "text": "About" },
+      { "href": "/contact", "text": "Contact" }
+    ],
+    "socialLinksTitle": "Follow Us",
+    "socialLinks": [
+      { "href": "https://facebook.com", "label": "Facebook", "icon": "facebook" },
+      { "href": "https://spotify.com", "label": "Spotify", "icon": "spotify" },
+      { "href": "https://youtube.com", "label": "YouTube", "icon": "youtube" },
+      { "href": "https://discord.com", "label": "Discord", "icon": "discord" }
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+/* Use variables from global.css */
+.section {
+  padding: 3rem 1rem;
+  min-height: 420px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.frameContainer {
+  max-width: 1000px; /* Limit width - Adjust as needed */
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem; /* Space between blocks - Adjust as needed */
+  align-items: center;
+  min-height: 320px;
+}
+
+.imageBlock {
+    flex: 1;
+    min-width: 300px; /* Ensure image block doesn't get too small on smaller screens - Adjust as needed */
+}
+
+.collaborationImage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.contentBlock {
+    flex: 1.5; /* Takes 1.5 units of space, creating a ~2:3 ratio */
+    text-align: left;
+}
+
+.headline {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 1rem; /* Adjust spacing */
+}
+
+.bodyText {
+  font-size: 1.125rem; /* 18px */
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem; /* Adjust spacing */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .frameContainer {
+    flex-direction: column;
+    gap: 2rem; /* Adjust gap */
+  }
+
+  .imageBlock,
+  .contentBlock {
+    flex: unset;
+    width: 100%;
+    min-width: auto;
+    text-align: center;
+  }
+
+  .headline {
+    font-size: 1.8rem; /* Smaller on mobile */
+  }
+}

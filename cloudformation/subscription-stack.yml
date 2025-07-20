@@ -1,0 +1,223 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic Subscription Stack - Price Revolution starting from $0.99'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    Description: Environment name
+
+Resources:
+  # Subscriptions Table
+  SubscriptionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-decodedmusic-subscriptions"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: subscription_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: subscription-id-index
+          KeySchema:
+            - AttributeName: subscription_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Platform
+          Value: decodedmusic
+        - Key: Purpose
+          Value: Subscription Management
+        - Key: PriceRevolution
+          Value: "starting from $0.99"
+
+  # Subscription Lambda Role
+  SubscriptionLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Environment}-subscription-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SubscriptionDynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt SubscriptionsTable.Arn
+                  - !Sub "${SubscriptionsTable.Arn}/index/*"
+
+  # Subscription Create Function
+  SubscriptionCreateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt SubscriptionLambdaRole.Arn
+      Code:
+        ZipFile: |
+
+
+
+
+          exports.handler = async (event) => {
+              console.log('ðŸ’³ Subscription Create - decodedmusic Platform');
+              console.log('Event:', JSON.stringify(event));
+    
+              // Handle CORS preflight
+              if (event.httpMethod === 'OPTIONS') {
+                  return {
+                      statusCode: 200,
+                      headers: {
+                          'Access-Control-Allow-Origin': '*',
+                          'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+                      },
+                      body: ''
+                  };
+              }
+    
+              try {
+                  const requestBody = event.body ? JSON.parse(event.body) : {};
+                  const { userId, planType } = requestBody;
+        
+                  if (!userId || !planType) {
+                      throw new Error('Missing required parameters: userId, planType');
+                  }
+        
+                  const subscriptionId = require('crypto').randomUUID();
+        
+                  // Pricing plans - Price Revolution
+                  const plans = {
+                      'artist-starter': { 
+                          name: 'Artist Starter', 
+                          price: 19, 
+                          features: ['Basic Analytics', 'Music Upload', 'Discord Access'] 
+                      },
+                      'pro-creator': { 
+                          name: 'Pro Creator', 
+                          price: 89, 
+                          features: ['Advanced Analytics', 'Spotify Integration', 'AI Insights', 'Pitch System'] 
+                      },
+                      'industry-pro': { 
+                          name: 'Industry Pro', 
+                          price: 249, 
+                          features: ['Full Platform Access', 'Bedrock AI', 'Marketing Hub', 'Priority Support'] 
+                      }
+                  };
+        
+                  const plan = plans[planType];
+                  if (!plan) {
+                      throw new Error(`Invalid plan type: ${planType}`);
+                  }
+        
+                  // Store subscription
+                  await ddb.send(new PutItemCommand({
+                      TableName: process.env.SUBSCRIPTIONS_TABLE,
+                      Item: {
+                          user_id: { S: userId },
+                          subscription_id: { S: subscriptionId },
+                          plan_type: { S: planType },
+                          plan_name: { S: plan.name },
+                          amount: { N: plan.price.toString() },
+                          status: { S: 'pending' },
+                          created_at: { S: new Date().toISOString() },
+                          platform: { S: 'decodedmusic' },
+                          tagline: { S: 'Created by artist, for artists' },
+                          price_revolution: { S: 'starting from $0.99' },
+                          aws_account: { S: process.env.AWS_ACCOUNT_ID }
+                      }
+                  }));
+        
+                  // Generate Stripe payment URL (placeholder)
+                  const paymentURL = `https://checkout.stripe.com/c/pay/cs_${subscriptionId.substring(0, 8)}`;
+        
+                  return {
+                      statusCode: 200,
+                      headers: { 
+                          'Access-Control-Allow-Origin': '*',
+                          'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          success: true,
+                          subscriptionId,
+                          paymentURL,
+                          plan: {
+                              name: plan.name,
+                              price: plan.price,
+                              features: plan.features
+                          },
+                          platform: 'decodedmusic',
+                          message: `${plan.name} subscription created - Price Revolution in action!`
+                      })
+                  };
+        
+              } catch (error) {
+                  console.error('Subscription error:', error);
+                  return {
+                      statusCode: 400,
+                      headers: { 
+                          'Access-Control-Allow-Origin': '*',
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          success: false,
+                          message: error.message || 'Subscription creation failed'
+                      })
+                  };
+              }
+          };
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+          SUBSCRIPTIONS_TABLE: !Ref SubscriptionsTable
+          PLATFORM_TAGLINE: "Created by artist, for artists"
+          SUPPORT_EMAIL: "ops@decodedmusic.com"
+      Timeout: 30
+      MemorySize: 256
+
+Outputs:
+  SubscriptionsTableName:
+    Description: Subscriptions table name
+    Value: !Ref SubscriptionsTable
+    Export:
+      Name: !Sub "${Environment}-SubscriptionsTable"
+
+  SubscriptionCreateFunctionArn:
+    Description: Subscription Create Function ARN
+    Value: !GetAtt SubscriptionCreateFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-SubscriptionCreateArn"
+
+  SubscriptionCreateFunctionName:
+    Description: Subscription Create Function Name
+    Value: !Ref SubscriptionCreateFunction
+    Export:
+      Name: !Sub "${Environment}-SubscriptionCreateName"
+
+
+

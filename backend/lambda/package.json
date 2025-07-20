@@ -1,0 +1,11 @@
+{
+  "name": "lambda-auth",
+  "version": "1.0.0",
+  "description": "Lambda handlers for Cognito authentication and verification",
+  "main": "loginHandler.js",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0",
+    "jwks-rsa": "^3.0.1",
+    "aws-sdk": "^2.1485.0"
+  }
+}

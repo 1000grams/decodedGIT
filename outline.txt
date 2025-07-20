@@ -1,0 +1,101 @@
+music-analytics-dashboard/
+├── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── favicon.png
+│   │   └── manifest.json
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Dashboard/
+│   │   │   │   ├── AnalyticsGrid.js
+│   │   │   │   ├── PortfolioCard.js
+│   │   │   │   ├── SpotifyCard.js
+│   │   │   │   ├── TrendsCard.js
+│   │   │   │   └── RecommendationsCard.js
+│   │   │   ├── Layout/
+│   │   │   │   ├── Header.js
+│   │   │   │   ├── Sidebar.js
+│   │   │   │   └── Footer.js
+│   │   │   └── SpotifyIntegration/
+│   │   │       ├── SpotifyConnect.js
+│   │   │       ├── SpotifyAuth.js
+│   │   │       └── SpotifyData.js
+│   │   ├── pages/
+│   │   │   ├── Dashboard.js
+│   │   │   ├── ArtistDashboard.js
+│   │   │   └── LandingPage.js
+│   │   ├── services/
+│   │   │   ├── api/
+│   │   │   │   ├── dashboard.js
+│   │   │   │   ├── spotify.js
+│   │   │   │   └── analytics.js
+│   │   │   └── auth/
+│   │   │       ├── cognito.js
+│   │   │       └── spotify.js
+│   │   ├── styles/
+│   │   │   ├── dashboard.css
+│   │   │   ├── global.css
+│   │   │   └── components.css
+│   │   ├── utils/
+│   │   │   ├── formatters.js
+│   │   │   ├── constants.js
+│   │   │   └── helpers.js
+│   │   └── App.js
+│   ├── build/
+│   │   └── static/
+│   ├── package.json
+│   ├── package-lock.json
+│   └── .env
+├── backend/
+│   ├── lambda/
+│   │   ├── dashboardSpotify/
+│   │   │   ├── index.js
+│   │   │   └── package.json
+│   │   ├── dashboardAccounting/
+│   │   │   ├── index.js
+│   │   │   └── package.json
+│   │   ├── dashboardAnalytics/
+│   │   │   ├── index.js
+│   │   │   └── package.json
+│   │   └── spotifyAuthHandler/
+│   │       ├── index.js
+│   │       └── package.json
+│   └── infrastructure/
+│       ├── cloudformation/
+│       │   ├── current-template.yaml
+│       │   ├── music-management.yml
+│       │   └── backend.yaml
+│       └── scripts/
+│           ├── deploy-lambdas.sh
+│           └── deploy-frontend.sh
+├── scripts/
+│   ├── deployment/
+│   │   ├── build-and-deploy.ps1
+│   │   ├── deploy-complete-system.ps1
+│   │   └── automate-deploy-sync.sh
+│   ├── data-processing/
+│   │   ├── load-ascap-works.py
+│   │   ├── spotify-auto-linker.py
+│   │   ├── growth-dashboard.py
+│   │   └── create-insights-table.py
+│   └── analytics/
+│       ├── mood-context-analyzer.py
+│       ├── viral-prediction-model.py
+│       └── enhanced-spotify-insights.py
+├── deployment/
+│   ├── frontend/
+│   │   ├── dashboard.html
+│   │   ├── dashboard.js
+│   │   └── dashboard.css
+│   └── backend/
+│       ├── lambda-packages/
+│       └── cloudformation/
+├── docs/
+│   ├── deployment-guide.md
+│   ├── api-documentation.md
+│   └── troubleshooting.md
+├── .env.example
+├── .env.production
+├── package.json
+├── README.md
+└── .gitignore

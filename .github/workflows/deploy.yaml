@@ -1,0 +1,17 @@
+name: Deploy Backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy CloudFormation
+        run: |
+          aws cloudformation deploy \
+            --template-file cloudformation/decodedMusicBackend.yaml \
+            --stack-name decoded-genai-stack \
+            --region eu-central-1 \
+            --capabilities CAPABILITY_NAMED_IAM

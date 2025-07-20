@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SigninLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: DecodedSigninHandler
+      Runtime: nodejs18.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: index.handler
+      Code:
+        S3Bucket: decodedmusic.com
+        S3Key: lambda/signin-handler.zip
+
+  SigninApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DecodedSigninAPI
+
+  AuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt SigninApi.RootResourceId
+      PathPart: auth
+      RestApiId: !Ref SigninApi
+
+  SigninResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref AuthResource
+      PathPart: signin
+      RestApiId: !Ref SigninApi
+
+  SigninPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref SigninResource
+      RestApiId: !Ref SigninApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - {Region: !Ref "AWS::Region", LambdaArn: !GetAtt SigninLambdaFunction.Arn}
+
+  LambdaPermissionForSignin:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SigninLambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SigninApi}/*/POST/auth/signin

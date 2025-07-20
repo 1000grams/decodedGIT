@@ -1,0 +1,49 @@
+/* Use variables from global.css */
+.section {
+  padding: 3rem 1rem; /* Standardized padding */
+  min-height: 320px; /* Ensure consistent section height */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+    max-width: 800px; /* Limit width - Adjust as needed */
+    margin: 0 auto;
+    min-height: 180px; /* Ensure consistent container height */
+    padding: 2rem 1rem; /* Standardized padding */
+    border-radius: 16px; /* Consistent border radius */
+    background: rgba(255,255,255,0.01);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10); /* Subtle shadow for depth */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.headline {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 2rem; /* Adjust spacing */
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1.5rem; /* Adjust gap */
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+   .headline {
+      font-size: 1.8rem; /* Smaller on mobile */
+   }
+   .ctaButtons {
+       flex-direction: column;
+       gap: 1rem; /* Adjust gap */
+   }
+}

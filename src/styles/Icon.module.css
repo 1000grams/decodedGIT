@@ -1,0 +1,9 @@
+.icon {
+  /* Basic styles for placeholder */
+  border: 1px dashed var(--accent-color);
+  text-align: center;
+  line-height: 1; /* Vertically center placeholder text */
+  display: flex; /* Ensure flex properties work */
+  align-items: center;
+  justify-content: center;
+}

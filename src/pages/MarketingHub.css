@@ -1,0 +1,100 @@
+/* General styles for the MarketingHub page */
+body {
+  margin: 0;
+  font-family: "Georgia", "Times New Roman", Times, serif;
+  background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+  color: #fff;
+}
+
+/* Header Section */
+header {
+  padding: 4rem 0 2rem 0;
+  text-align: center;
+  background: linear-gradient(120deg, #1e293b 60%, #2563eb 100%);
+  box-shadow: 0 8px 32px #0002;
+}
+
+header h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  margin-bottom: 24px;
+  color: #fff;
+  text-shadow: 0 4px 32px #2563eb55, 0 2px 0 #fff2;
+}
+
+/* Weekly Growth Tracking Section */
+.weekly-growth {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem;
+  background: #2563eb;
+  color: #fff;
+}
+
+.weekly-growth .left-column,
+.weekly-growth .right-column {
+  flex: 1;
+  padding: 1rem;
+}
+
+.weekly-growth .right-column {
+  border-left: 2px solid #fff;
+}
+
+/* Content Plan Table */
+.content-plan {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  text-align: left;
+  color: #e0e7ef;
+}
+
+.content-plan th {
+  border-bottom: 2px solid #2563eb;
+  padding: 0.5rem;
+}
+
+.content-plan td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #444;
+}
+
+/* Feature Cards */
+.feature-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin: 3rem 0 2rem 0;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px #0002;
+  padding: 2rem 1.5rem;
+  min-width: 220px;
+  max-width: 260px;
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1.5px solid #e0e7ef;
+  position: relative;
+}
+
+.feature-card h2 {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  color: #222;
+  font-size: 1rem;
+}

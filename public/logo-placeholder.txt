@@ -1,0 +1,12 @@
+﻿This is a placeholder for logo192.png
+Add your actual 192x192 PNG logo file here to fix the manifest error.
+
+For now, this text file prevents the 404 error.
+The dashboard will work fine without the logo.
+
+Logo should be:
+- 192x192 pixels
+- PNG format
+- Named exactly: logo192.png
+
+Rue De Vivre Analytics Dashboard

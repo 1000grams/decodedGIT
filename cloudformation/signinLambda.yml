@@ -1,0 +1,32 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SigninFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: signinHandler.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt SigninFunctionRole.Arn
+      Code:
+        ZipFile: |
+
+
+            const { email, password } = body;
+            if (!email || !password) {
+              return { statusCode: 400, body: 'Missing credentials' };
+            }
+            return { statusCode: 200, body: JSON.stringify({ token: 'placeholder-token' }) };
+          };
+  SigninFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+
+
+

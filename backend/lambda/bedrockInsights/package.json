@@ -1,0 +1,17 @@
+﻿{
+  "name": "decodedmusic-bedrock-insights",
+  "version": "2.0.0",
+  "description": "Enhanced Bedrock insights with admin business analytics",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.470.0",
+    "@aws-sdk/client-dynamodb": "^3.470.0",
+    "@aws-sdk/util-dynamodb": "^3.470.0"
+  },
+  "scripts": {
+    "deploy": "zip -r bedrock-insights-admin.zip index.js package.json"
+  },
+  "keywords": ["decodedmusic", "bedrock", "admin", "analytics"],
+  "author": "RDV & AHA LLC Music Management",
+  "license": "MIT"
+}

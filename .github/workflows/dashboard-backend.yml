@@ -1,0 +1,41 @@
+name: Deploy Decoded Music Artist Dashboard Backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: eu-central-1
+      DYNAMO_TABLE_EARNINGS: DecodedEarnings
+      DYNAMO_TABLE_STREAMS: DecodedStreams
+      DYNAMO_TABLE_CATALOG: DecodedCatalog
+      STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+      - name: Package Lambdas
+        run: |
+          cd backend/lambda/dashboardEarnings && zip -r earnings.zip . && aws s3 cp earnings.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardStreams && zip -r streams.zip . && aws s3 cp streams.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardCatalog && zip -r catalog.zip . && aws s3 cp catalog.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardAnalytics && zip -r analytics.zip . && aws s3 cp analytics.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardStatements && zip -r statements.zip . && aws s3 cp statements.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardAccounting && zip -r accounting.zip . && aws s3 cp accounting.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardTeam && zip -r team.zip . && aws s3 cp team.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+          cd backend/lambda/dashboardCampaigns && zip -r campaigns.zip . && aws s3 cp campaigns.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+      - name: Deploy CloudFormation
+        run: |
+          aws cloudformation deploy \
+            --template-file cloudformation/decodedMusicBackend.yaml \
+            --stack-name decoded-genai-stack \
+            --region $AWS_REGION \
+            --capabilities CAPABILITY_NAMED_IAM
+      - name: Test endpoint
+        run: curl -I https://n64vgs0he0.execute-api.eu-central-1.amazonaws.com/prod/dashboard/earnings

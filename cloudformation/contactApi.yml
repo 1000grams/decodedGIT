@@ -1,0 +1,70 @@
+---
+# yamllint disable rule:line-length
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: contactLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: inlineContactLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+  ContactLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: DecodedContactHandler
+      Runtime: nodejs18.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: index.handler
+      Code:
+        S3Bucket: decodedmusic.com
+        S3Key: lambda/contact-handler.zip
+
+  ContactApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DecodedContactAPI
+
+  ContactResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ContactApi.RootResourceId
+      PathPart: contact
+      RestApiId: !Ref ContactApi
+
+  ContactPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref ContactResource
+      RestApiId: !Ref ContactApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - {Region: !Ref "AWS::Region", LambdaArn: !GetAtt ContactLambdaFunction.Arn}
+
+  LambdaPermissionForContact:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ContactLambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactApi}/*/POST/contact

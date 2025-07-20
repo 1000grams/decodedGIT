@@ -1,0 +1,174 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Attach catalog and dashboard lambdas to API Gateway with CORS and artistId support
+
+Parameters:
+  EnvName:
+    Type: String
+    Default: prod
+    Description: Environment name prefix
+
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs18.x
+    MemorySize: 128
+
+Resources:
+  DecodedCatalogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-DecodedCatalog-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  DecodedCTATable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-DecodedCTA-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  RevenueLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-RevenueLog-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  ExpenseLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-ExpenseLog-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  WeeklyArtistStatsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-WeeklyArtistStats-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: artist_id
+          AttributeType: S
+        - AttributeName: week_start
+          AttributeType: S
+      KeySchema:
+        - AttributeName: artist_id
+          KeyType: HASH
+        - AttributeName: week_start
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+
+  StatementsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-Statements-${AWS::StackName}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  SpotifyAuthHandler:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-spotifyAuthHandler'
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::396913703024:role/decoded-genai-stack-BackendLambdaRole-7PvuaEMzpSHR
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: spotifyAuthHandler.zip
+      Environment:
+        Variables:
+          SPOTIFY_CLIENT_ID: 5866a38ab59f46b2b8ceebfa17540d32
+          SPOTIFY_REDIRECT_URI: https://decodedmusic.com/dashboard
+      Timeout: 10
+      MemorySize: 128
+
+  SpotifyCallbackHandler:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-spotifyCallbackHandler'
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::396913703024:role/decoded-genai-stack-BackendLambdaRole-7PvuaEMzpSHR
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: spotifyCallbackHandler.zip
+      Environment:
+        Variables:
+          SPOTIFY_CLIENT_ID: 5866a38ab59f46b2b8ceebfa17540d32
+          SPOTIFY_CLIENT_SECRET: YOUR_SPOTIFY_SECRET
+          SPOTIFY_REDIRECT_URI: https://decodedmusic.com/dashboard
+      Timeout: 10
+      MemorySize: 128
+
+  CatalogFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: prod-catalog-handler
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::396913703024:role/decoded-music-resources-CatalogLambdaRole-8APIdPDKgFm8
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardCatalog.zip
+      Environment:
+        Variables:
+          CATALOG_TABLE: prod-Catalog
+
+  DashboardStreamsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: prod-dashboardStreams
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardStreams.zip
+      Environment:
+        Variables:
+          DYNAMO_TABLE_STREAMS: prod-DecodedStreams
+
+  DecodedApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: decodedmusic-api
+      StageName: prod
+      Cors:
+        AllowMethods: "POST,OPTIONS"
+        AllowHeaders: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+        AllowOrigin: "https://decodedmusic.com"
+
+Outputs:
+  CatalogApi:
+    Description: "Catalog endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/prod/dashboard/catalog"
+
+  DashboardApi:
+    Description: "Dashboard streams endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/prod/dashboard/streams"

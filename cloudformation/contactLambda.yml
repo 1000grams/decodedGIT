@@ -1,0 +1,48 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ContactFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: contactHandler.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt ContactFunctionRole.Arn
+      Code:
+        ZipFile: |
+
+
+          exports.handler = async (event) => {
+            const body = JSON.parse(event.body || '{}');
+            const { name, email, message } = body;
+            const params = {
+              Destination: { ToAddresses: ['ops@decodedmusic.com'] },
+              Message: {
+                Body: { Text: { Data: `Contact Form:\nName: ${name}\nEmail: ${email}\nMessage: ${message}` } },
+                Subject: { Data: 'Decoded Contact Form' }
+              },
+              Source: 'ops@decodedmusic.com'
+            };
+            await ses.sendEmail(params).promise();
+            return { statusCode: 200, body: 'Received' };
+          };
+  ContactFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: allowSES
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ses:SendEmail
+                Resource: '*'
+
+
+
+

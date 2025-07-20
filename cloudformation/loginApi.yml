@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LoginLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: DecodedLoginHandler
+      Runtime: nodejs18.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: index.handler
+      Code:
+        S3Bucket: decodedmusic.com
+        S3Key: lambda/login-handler.zip
+
+  LoginApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DecodedLoginAPI
+
+  AuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt LoginApi.RootResourceId
+      PathPart: auth
+      RestApiId: !Ref LoginApi
+
+  LoginResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref AuthResource
+      PathPart: login
+      RestApiId: !Ref LoginApi
+
+  LoginPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref LoginResource
+      RestApiId: !Ref LoginApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - {Region: !Ref "AWS::Region", LambdaArn: !GetAtt LoginLambdaFunction.Arn}
+
+  LambdaPermissionForLogin:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt LoginLambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LoginApi}/*/POST/auth/login

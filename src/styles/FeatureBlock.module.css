@@ -1,0 +1,26 @@
+.featureBlock {
+  background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter background for the block */
+  padding: 1.5rem; /* Adjust padding */
+  border-radius: 8px;
+  text-align: left; /* Align content left within the block */
+  display: flex; /* Use flex to align items within the block */
+  flex-direction: column;
+  height: 100%; /* Make blocks same height in grid */
+}
+
+.icon {
+  margin-bottom: 1rem; /* Adjust spacing */
+}
+
+.title {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem; /* Adjust spacing */
+}
+
+.description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8); /* Slightly lighter text for body */
+  margin-bottom: 1.5rem; /* Space before potential button/link inside block */
+  flex-grow: 1; /* Push content down if flex container */
+}

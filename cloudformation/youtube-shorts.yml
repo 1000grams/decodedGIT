@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda stack for generating YouTube Shorts
+Parameters:
+  EnvName:
+    Type: String
+    Default: prod
+Resources:
+  ShortsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvName}-decodedmusic-shorts'
+
+  ShortsLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: shorts-lambda
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+              - Effect: Allow
+                Action: polly:SynthesizeSpeech
+                Resource: '*'
+
+  ShortsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-shortsGenerator'
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt ShortsLambdaRole.Arn
+      Timeout: 120
+      Environment:
+        Variables:
+          SHORTS_BUCKET: !Ref ShortsBucket
+          POLLY_VOICE: Joanna
+      Code:
+        S3Bucket: REPLACE_WITH_CODE_BUCKET
+        S3Key: shortsGenerator.zip
+
+Outputs:
+  ShortsBucketName:
+    Value: !Ref ShortsBucket
+  ShortsLambdaName:
+    Value: !Ref ShortsLambda

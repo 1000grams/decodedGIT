@@ -1,0 +1,8 @@
+# To pull a file from AWS CloudShell to your local machine, use AWS S3 as an intermediary.
+# 1. In CloudShell, upload the file to S3:
+# aws s3 cp ~/template.yaml s3://decodedmusic-lambda-code/template.yaml
+#
+# 2. On your local machine, download it from S3:
+# aws s3 cp s3://decodedmusic-lambda-code/template.yaml C:\decoded\template.yaml
+#
+# You can now open and edit C:\decoded\template.yaml in your local editor.

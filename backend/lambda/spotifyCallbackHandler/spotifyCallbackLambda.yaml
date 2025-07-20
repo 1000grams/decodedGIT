@@ -1,0 +1,15 @@
+
+  SpotifyCallbackLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${EnvName}-spotifyCallback"
+      Handler: index.handler
+      Role: !GetAtt BackendLambdaRole.Arn
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: spotifyCallbackHandler.zip
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          SPOTIFY_CLIENT_ID: "{{resolve:secretsmanager:decodedmusicSecrets:SecretString:SPOTIFY_CLIENT_ID}}"
+          SPOTIFY_CLIENT_SECRET: "{{resolve:secretsmanager:decodedmusicSecrets:SecretString:SPOTIFY_CLIENT_SECRET}}"

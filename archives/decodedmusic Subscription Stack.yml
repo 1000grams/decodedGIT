@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic Subscription Stack - Price Revolution starting from $0.99'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+
+Resources:
+  # Subscription Management Table
+  SubscriptionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-decodedmusic-subscriptions"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: subscription_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: subscription-id-index
+          KeySchema:
+            - AttributeName: subscription_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  # Subscription Creation Lambda
+  SubscriptionCreateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+          const { v4: uuidv4 } = require('uuid');
+          
+          const ddb = new DynamoDBClient({ region: process.env.AWS_REGION });
+          
+          exports.handler = async (event) => {
+              console.log('💳 Subscription Create - decodedmusic Platform');
+              
+              try {
+                  const { userId, planType, amount } = JSON.parse(event.body);
+                  const subscriptionId = uuidv4();
+                  
+                  // Pricing plans
+                  const plans = {
+                      'basic': { name: 'Basic Analytics', price: 29 },
+                      'pro': { name: 'Professional', price: 79 },
+                      'enterprise': { name: 'Enterprise', price: 199 }
+                  };
+                  
+                  const plan = plans[planType];
+                  if (!plan) {
+                      throw new Error('Invalid plan type');
+                  }
+                  
+                  // Store subscription
+                  await ddb.send(new PutItemCommand({
+                      TableName: process.env.SUBSCRIPTIONS_TABLE,
+                      Item: {
+                          user_id: { S: userId },
+                          subscription_id: { S: subscriptionId },
+                          plan_type: { S: planType },
+                          plan_name: { S: plan.name },
+                          amount: { N: plan.price.toString() },
+                          status: { S: 'pending' },
+                          created_at: { S: new Date().toISOString() },
+                          platform: { S: 'decodedmusic' },
+                          price_revolution: { S: 'starting from $0.99' }
+                      }
+                  }));
+                  
+                  // Generate payment URL (Stripe integration)
+                  const paymentURL = `https://checkout.stripe.com/pay/${subscriptionId}`;
+                  
+                  return {
+                      statusCode: 200,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: true,
+                          subscriptionId,
+                          paymentURL,
+                          plan: plan.name,
+                          amount: plan.price
+                      })
+                  };
+                  
+              } catch (error) {
+                  console.error('Subscription error:', error);
+                  return {
+                      statusCode: 400,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: false,
+                          message: error.message
+                      })
+                  };
+              }
+          };
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          SUBSCRIPTIONS_TABLE: !Ref SubscriptionsTable
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+      Role: !GetAtt SubscriptionLambdaRole.Arn
+      Timeout: 30
+
+  # IAM Role for Subscription Lambdas
+  SubscriptionLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SubscriptionDynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                Resource:
+                  - !GetAtt SubscriptionsTable.Arn
+                  - !Sub "${SubscriptionsTable.Arn}/index/*"

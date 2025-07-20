@@ -1,0 +1,71 @@
+/* Use variables from global.css */
+.section {
+  padding: 3rem 1rem;
+  min-height: 320px;
+  background-color: #1a1a1a; /* Slightly different dark background */
+  color: var(--text-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  max-width: 800px; /* Limit width - Adjust as needed */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Space between logo and text - Adjust as needed */
+  min-height: 220px;
+  padding: 2rem 1rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.01);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+.logoBlock {
+    flex-shrink: 0;
+    width: 100px; /* Fixed width for logo area - Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.awsLogo {
+    max-width: 100%;
+    height: auto;
+}
+
+.textBlock {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.headline {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem; /* Adjust spacing */
+}
+
+.bodyText {
+  font-size: 1.125rem; /* 18px */
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+    gap: 1.5rem; /* Adjust gap */
+    text-align: center;
+  }
+
+  .logoBlock {
+      width: 80px; /* Smaller logo area on mobile */
+  }
+
+  .textBlock {
+      text-align: center;
+  }
+}

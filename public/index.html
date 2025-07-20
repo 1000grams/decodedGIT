@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111111" />
+    <meta
+      name="description"
+      content="Decoded Music: Created by artist, for artists. Dynamic Music Licenses for Brands, Creators, and Artists. Price Revolution starting from $0.99!"
+    />
+
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Open Graph / Twitter Metadata -->
+    <meta property="og:title" content="Decoded Music | Created by artist, for artists" />
+    <meta property="og:description" content="Dynamic Music Licenses for Brands, Creators, and Artists. Price Revolution starting from $0.99!" />
+    <meta property="og:image" content="%PUBLIC_URL%/thumbnail.png" />
+    <meta property="og:url" content="https://decodedmusic.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <title>Decoded Music | Created by artist, for artists</title>
+
+    <!-- ✅ Fonts and Styles -->
+    <!-- Avoid third-party stylesheets for fonts -->
+
+    <!-- ✅ Base Styles -->
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        background-color: #111;
+        color: #fff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      :root {
+        --accent-color: #32C1ED;
+        --secondary-color: #667eea;
+        --success-color: #1db954;
+        --discord-color: #5865f2;
+      }
+
+      #root {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-footer {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        border-top: 2px solid var(--accent-color);
+        padding: 40px 20px 20px;
+        margin-top: auto;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .footer-section h3 {
+        color: var(--accent-color);
+        margin-bottom: 15px;
+        font-size: 1.1em;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer-links li {
+        margin: 8px 0;
+      }
+
+      .footer-links a {
+        color: #ccc;
+        text-decoration: none;
+        transition: color 0.3s, transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent-color);
+        transform: translateX(5px);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #333;
+        padding-top: 20px;
+        text-align: center;
+        color: #888;
+        font-size: 0.9em;
+      }
+
+      .platform-credit {
+        color: var(--accent-color);
+        font-weight: 600;
+      }
+
+      .support-link {
+        color: var(--accent-color);
+        text-decoration: none;
+      }
+
+      .support-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+
+    <!-- ✅ Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-11CHYW3K6Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-11CHYW3K6Z');
+    </script>
+
+    <!-- ✅ Snap Pixel -->
+    <script type="text/javascript">
+      (function (e, t, n) {
+        if (e.snaptr) return;
+        var a = (e.snaptr = function () {
+          a.handleRequest ? a.handleRequest.apply(a, arguments) : a.queue.push(arguments);
+        });
+        a.queue = [];
+        var s = 'script';
+        r = t.createElement(s);
+        r.async = !0;
+        r.src = n;
+        var u = t.getElementsByTagName(s)[0];
+        u.parentNode.insertBefore(r, u);
+      })(window, document, 'https://sc-static.net/scevent.min.js');
+
+      snaptr('init', '0e29f2de-37c1-4e4f-8274-c4d2f40d4bd7');
+      snaptr('track', 'PAGE_VIEW');
+    </script>
+
+    <!-- Google Analytics, Snap Pixel, and other scripts... -->
+    <script>
+      // Platform Configuration with AWS Account ID
+      window.DECODEDMUSIC_CONFIG = {
+        apiEndpoint: 'https://2h2oj7u446.execute-api.eu-central-1.amazonaws.com/prod',
+        awsAccountId: '3969-1370-3024',
+        
+        platformBranding: {
+          name: 'Decoded Music',
+          tagline: 'Created by artist, for artists',
+          description: 'Dynamic Music Licenses for Brands, Creators, and Artists. Price Revolution starting from $0.99',
+          company: 'RDV & AHA LLC Music Management'
+        },
+
+        support: {
+          email: 'ops@decodedmusic.com',
+          businessEmail: 'ops@decodedmusic.com'
+        },
+
+        social: {
+          youtube: 'https://www.youtube.com/@RueDeVivre',
+          instagram: 'https://www.instagram.com/kaiserinstreetwear/',
+          discord: 'https://discord.com/invite/6Txu7wUW'
+        }
+      };
+
+      // Cognito Configuration
+      window.COGNITO_CONFIG = {
+        region: 'eu-central-1',
+        userPoolId: 'eu-central-1_d9JNeVdni',
+        userPoolWebClientId: '5pb29tja8gkqm3jb43oimd5qjt',
+        domain: 'https://prod-decodedmusic-auth.auth.eu-central-1.amazoncognito.com'
+      };
+
+      // Spotify Configuration
+      window.SPOTIFY_CONFIG = {
+        clientId: '5866a38ab59f46b2b8ceebfa17540d32',
+        redirectUri: 'https://decodedmusic.com/spotify/callback'
+      };
+    </script>
+
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <div id="root"></div>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        
+        <!-- Navigation Section -->
+        <div class="footer-section">
+          <h3>🎵 Explore</h3>
+          <ul class="footer-links">
+            <li><a href="/">🏠 Home</a></li>
+            <li><a href="/buzz">📢 Buzz</a></li>
+            <li><a href="/about">ℹ️ About</a></li>
+            <li><a href="https://discord.com/invite/6Txu7wUW" target="_blank">🎮 Discord Community</a></li>
+          </ul>
+        </div>
+
+        <!-- Artist Tools Section -->
+        <div class="footer-section">
+          <h3>🎯 Artist Tools</h3>
+          <ul class="footer-links">
+            <li><a href="/dashboard">📊 Dashboard</a></li>
+            <li><a href="/pitch">🎯 Pitch System</a></li>
+            <li><a href="/marketing-hub">📈 Marketing Hub</a></li>
+            <li><a href="/spotify/connect">🎵 Connect Spotify</a></li>
+          </ul>
+        </div>
+
+        <!-- Social & Content -->
+        <div class="footer-section">
+          <h3>🌐 Connect with RDV</h3>
+          <ul class="footer-links">
+            <li><a href="https://www.youtube.com/@RueDeVivre" target="_blank">📺 YouTube</a></li>
+            <li><a href="https://www.instagram.com/kaiserinstreetwear/" target="_blank">📷 Instagram</a></li>
+          </ul>
+        </div>
+
+        <!-- Support & Legal -->
+        <div class="footer-section">
+          <h3>📋 Support</h3>
+          <ul class="footer-links">
+            <li><a href="mailto:ops@decodedmusic.com" class="support-link">📧 Support: ops@decodedmusic.com</a></li>
+            <li><a href="/terms-of-service">📜 Terms of Service</a></li>
+            <li><a href="/privacy-policy">🔒 Privacy Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 <span class="platform-credit">Decoded Music</span> - Created by artist, for artists</p>
+        <p>Built by RDV & AHA LLC Music Management | Price Revolution starting from $0.99</p>
+        <p>🎵 AWS Account: 3969-1370-3024 | Support: <a href="mailto:ops@decodedmusic.com" class="support-link">ops@decodedmusic.com</a></p>
+      </div>
+    </footer>
+
+  </body>
+</html>

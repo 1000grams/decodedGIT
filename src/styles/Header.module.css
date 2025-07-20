@@ -1,0 +1,102 @@
+.header {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it stays on top */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
+}
+
+.container {
+  max-width: 1200px; /* Or your desired max width */
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav a {
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: normal;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: var(--accent-color);
+  text-decoration: none; /* Remove underline on hover for nav links */
+}
+
+.authButtons {
+  display: flex;
+  gap: 0.8rem;
+  margin-left: 1.5rem; /* Space between nav links and buttons */
+}
+
+.burgerMenu {
+  display: none; /* Hide by default on desktop */
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  /* min-width/height handled by global styles */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .nav {
+    display: none; /* Hide nav by default on mobile */
+    flex-direction: column;
+    position: absolute;
+    top: 100%; /* Position below header */
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 1rem 0;
+    z-index: 999; /* Below header sticky */
+  }
+
+  .mobileNavOpen {
+    display: flex; /* Show nav when mobile menu is open */
+  }
+
+  .nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .authButtons {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .burgerMenu {
+    display: block; /* Show burger menu icon on mobile */
+  }
+}

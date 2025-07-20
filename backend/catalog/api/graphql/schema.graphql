@@ -1,0 +1,46 @@
+# Example GraphQL schema for the API layer (moved from Amplify directory)
+type ASCAP {
+  work_id: String!
+  ipi_name: String!
+  ipi_base_number: String!
+  publisher: String!
+}
+
+type Track {
+  track_id: ID!
+  title: String!
+  artist: Artist!
+  bpm: Int
+  key: String
+  duration_sec: Int
+  price_cents: Int
+  ascap: ASCAP!
+  preview_url: String!
+}
+
+input TrackFilter {
+  genre_ids: [ID!]
+  mood_ids: [ID!]
+  bpm_min: Int
+  bpm_max: Int
+  duration_min: Int
+  duration_max: Int
+  license_type: LicenseType
+}
+
+type TrackPage {
+  items: [Track!]!
+  total: Int!
+  facets: FacetResults
+}
+
+type Query {
+  browseTracks(filter: TrackFilter, page: Int!, perPage: Int!): TrackPage!
+  getTrack(track_id: ID!): Track
+  listGenres: [Genre!]!
+  listMoods: [Mood!]!
+}
+
+schema {
+  query: Query
+}

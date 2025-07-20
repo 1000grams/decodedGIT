@@ -1,0 +1,71 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+  /* min-width/height handled by global styles - adjust padding for visual size */
+}
+
+/* Variants */
+.fill.accent {
+  background-color: var(--accent-color);
+  color: var(--dark-text-color); /* Dark text on accent background */
+  border: 1px solid var(--accent-color);
+}
+
+.fill.accent:hover {
+  background-color: #28a2d1; /* Slightly darker accent */
+  border-color: #28a2d1;
+}
+
+.outline.accent {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+}
+
+.outline.accent:hover {
+  background-color: rgba(50, 193, 237, 0.1); /* Light accent background */
+  color: var(--accent-color);
+}
+
+/* Optional: Add other color variants like 'primary' (white) */
+/* .fill.primary {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    border: 1px solid var(--text-color);
+}
+.fill.primary:hover {
+    background-color: #eee;
+}
+.outline.primary {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+}
+.outline.primary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+} */
+
+
+/* Active state */
+.button:active {
+    transform: scale(0.98);
+}
+
+/* Optional Pulse/Animation (for Hero button) - Needs JS to trigger or apply via class */
+/* Example CSS for a simple pulse: */
+/* @keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(50, 193, 237, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(50, 193, 237, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(50, 193, 237, 0); }
+}
+.button.pulse {
+    animation: pulse 2s infinite;
+} */

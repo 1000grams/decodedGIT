@@ -1,0 +1,203 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Decoded Music Management stack - region EU-Central (Frankfurt)
+
+Parameters:
+  EnvName:
+    Type: String
+    Default: prod
+    Description: Environment name prefix
+
+Resources:
+  UploadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvName}-decodedmusic-uploads'
+
+  PreviewsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvName}-decodedmusic-previews'
+
+  StatementsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvName}-decodedmusic-statements'
+
+  IndustryBuzzBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${EnvName}-decodedmusic-industrybuzz'
+
+  DecodedCatalogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-DecodedCatalog'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  DecodedCTATable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-DecodedCTA'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  RevenueLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-RevenueLog'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  ExpenseLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-ExpenseLog'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  WeeklyArtistStatsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-WeeklyArtistStats'
+      AttributeDefinitions:
+        - AttributeName: artist_id
+          AttributeType: S
+        - AttributeName: week_start
+          AttributeType: S
+      KeySchema:
+        - AttributeName: artist_id
+          KeyType: HASH
+        - AttributeName: week_start
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+
+  SpotifyArtistDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-SpotifyArtistData'
+      AttributeDefinitions:
+        - AttributeName: artist_id
+          AttributeType: S
+        - AttributeName: week_start
+          AttributeType: S
+      KeySchema:
+        - AttributeName: artist_id
+          KeyType: HASH
+        - AttributeName: week_start
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+
+  StatementsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${EnvName}-Statements'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  CatalogLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: catalog-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+  CatalogLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-catalog-handler'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt CatalogLambdaRole.Arn
+      Code:
+        ZipFile: |
+
+
+          };
+
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub '${EnvName}-decoded-api'
+
+  CatalogResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: catalog
+      RestApiId: !Ref ApiGateway
+
+  CatalogMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref CatalogResource
+      RestApiId: !Ref ApiGateway
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CatalogLambda.Arn}/invocations'
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref CatalogLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/GET/catalog'
+
+Outputs:
+  ApiUrl:
+    Description: Base URL of API Gateway
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod'
+
+
+
+

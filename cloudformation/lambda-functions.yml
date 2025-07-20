@@ -1,0 +1,227 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic Lambda Functions - S3 Deployment'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+  S3Bucket:
+    Type: String
+    Default: decodedmusic-lambda-code
+
+Resources:
+  AuthLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Environment}-auth-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  AuthLoginFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authLogin"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+      Code:
+        ZipFile: |
+          if (event.httpMethod === 'OPTIONS') {
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                      'Access-Control-Allow-Methods': 'POST,OPTIONS'
+                  },
+                  body: ''
+              };
+          }
+
+          try {
+              const body = event.body ? JSON.parse(event.body) : {};
+              const { email, password } = body;
+
+              if (!email || !password) {
+                  throw new Error('Email and password required');
+              }
+
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      success: true,
+                      token: 'jwt-' + Date.now(),
+                      user: { email: email, platform: 'decodedmusic' },
+                      message: 'Login successful'
+                  })
+              };
+          } catch (error) {
+              return {
+                  statusCode: 400,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ success: false, message: error.message })
+              };
+          }
+      Timeout: 30
+      MemorySize: 128
+
+  AuthSignupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authSignup"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+      Code:
+        ZipFile: |
+          if (event.httpMethod === 'OPTIONS') {
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                      'Access-Control-Allow-Methods': 'POST,OPTIONS'
+                  },
+                  body: ''
+              };
+          }
+
+          try {
+              const body = event.body ? JSON.parse(event.body) : {};
+              const { name, email, password } = body;
+
+              if (!name || !email || !password) {
+                  throw new Error('Name, email and password required');
+              }
+
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      success: true,
+                      userId: 'user-' + Math.random().toString(36).substr(2, 9),
+                      user: { name: name, email: email, platform: 'decodedmusic' },
+                      message: 'Account created successfully'
+                  })
+              };
+          } catch (error) {
+              return {
+                  statusCode: 400,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ success: false, message: error.message })
+              };
+          }
+      Timeout: 30
+      MemorySize: 128
+
+  SubscriptionCreateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+      Code:
+        ZipFile: |
+          if (event.httpMethod === 'OPTIONS') {
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                      'Access-Control-Allow-Methods': 'POST,OPTIONS'
+                  },
+                  body: ''
+              };
+          }
+
+          try {
+              const body = event.body ? JSON.parse(event.body) : {};
+              const { userId, planType } = body;
+
+              if (!userId || !planType) {
+                  throw new Error('userId and planType required');
+              }
+
+              const plans = {
+                  'artist-starter': { name: 'Artist Starter', price: 19 },
+                  'pro-creator': { name: 'Pro Creator', price: 89 },
+                  'industry-pro': { name: 'Industry Pro', price: 249 }
+              };
+
+              const plan = plans[planType] || plans['artist-starter'];
+
+              return {
+                  statusCode: 200,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      success: true,
+                      subscriptionId: 'sub-' + Math.random().toString(36).substr(2, 9),
+                      plan: plan,
+                      message: plan.name + ' subscription created',
+                      platform: 'decodedmusic'
+                  })
+              };
+          } catch (error) {
+              return {
+                  statusCode: 400,
+                  headers: {
+                      'Access-Control-Allow-Origin': '*',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ success: false, message: error.message })
+              };
+          }
+      Timeout: 30
+      MemorySize: 128
+
+Outputs:
+  AuthLoginFunctionArn:
+    Description: Auth Login Function ARN
+    Value: !GetAtt AuthLoginFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthLoginFunctionArn"
+      
+  AuthSignupFunctionArn:
+    Description: Auth Signup Function ARN
+    Value: !GetAtt AuthSignupFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthSignupFunctionArn"
+      
+  SubscriptionCreateFunctionArn:
+    Description: Subscription Create Function ARN
+    Value: !GetAtt SubscriptionCreateFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-SubscriptionCreateFunctionArn"
+
+  LambdaRoleArn:
+    Description: Lambda Execution Role ARN
+    Value: !GetAtt AuthLambdaRole.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthLambdaRoleArn"
+
+
+

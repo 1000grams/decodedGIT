@@ -1,0 +1,473 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic Marketing Hub - Created by artist, for artists | AWS Account: 3969-1370-3024'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    Description: Environment name
+    
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
+    Description: S3 bucket containing Lambda deployment packages
+    
+  # ✅ VERIFIED COGNITO CONFIGURATION
+  UserPoolId:
+    Type: String
+    Description: Cognito User Pool ID (User pool - 5fxmkd)
+    Default: eu-central-1_d9JNeVdni
+    
+  UserPoolClientId:
+    Type: String
+    Description: Cognito User Pool App Client ID (DecodedMusic Sync Portal)
+    Default: 5pb29tja8gkqm3jb43oimd5qjt
+    
+  ApiGatewayId:
+    Type: String
+    Description: API Gateway ID
+    Default: 2h2oj7u446
+
+Resources:
+  # =========================================================================
+  # MARKETING HUB DYNAMODB TABLES
+  # =========================================================================
+  
+  # Marketing Spend Table
+  MarketingSpendTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-MarketingSpend"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: campaign_id
+          AttributeType: S
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: campaign_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: user-campaigns-index
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+            - AttributeName: date
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Purpose
+          Value: Marketing Campaign Tracking
+        - Key: Platform
+          Value: decodedmusic
+        - Key: PriceRevolution
+          Value: "0.99"
+        - Key: CognitoUserPool
+          Value: !Ref UserPoolId
+        - Key: CognitoAppClient
+          Value: !Ref UserPoolClientId
+
+  # Marketing Attribution Table
+  MarketingAttributionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-MarketingAttribution"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: attribution_id
+          AttributeType: S
+        - AttributeName: campaign_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+        - AttributeName: user_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: attribution_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: campaign-attribution-index
+          KeySchema:
+            - AttributeName: campaign_id
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: user-attribution-index
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  # =========================================================================
+  # IAM ROLES & POLICIES
+  # =========================================================================
+  
+  # Marketing Lambda Execution Role
+  MarketingLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Environment}-marketing-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: MarketingDynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource:
+                  - !GetAtt MarketingSpendTable.Arn
+                  - !GetAtt MarketingAttributionTable.Arn
+                  - !Sub "${MarketingSpendTable.Arn}/index/*"
+                  - !Sub "${MarketingAttributionTable.Arn}/index/*"
+                  # ✅ Add access to main decodedmusic tables
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users/index/*"
+        - PolicyName: BedrockAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                Resource:
+                  - arn:aws:bedrock:eu-central-1::foundation-model/meta.llama3-70b-instruct-v1:0
+                  - arn:aws:bedrock:eu-central-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0
+        - PolicyName: CognitoAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminGetUser
+                Resource:
+                  - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}"
+
+  # =========================================================================
+  # LAMBDA FUNCTIONS
+  # =========================================================================
+
+  # Bedrock Insights Lambda (Updated)
+  BedrockInsightsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-bedrockInsights"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt MarketingLambdaRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: bedrockInsights.zip
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+          ENVIRONMENT: !Ref Environment
+          BEDROCK_MODEL_ID: meta.llama3-70b-instruct-v1:0
+          BEDROCK_ALTERNATIVE_MODEL: anthropic.claude-3-sonnet-20240229-v1:0
+          MARKETING_SPEND_TABLE: !Ref MarketingSpendTable
+          MARKETING_ATTRIBUTION_TABLE: !Ref MarketingAttributionTable
+          # ✅ COGNITO CONFIGURATION
+          COGNITO_USER_POOL_ID: !Ref UserPoolId
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClientId
+          COGNITO_USER_POOL_NAME: "User pool - 5fxmkd"
+          COGNITO_APP_CLIENT_NAME: "DecodedMusic Sync Portal"
+          # ✅ PLATFORM CONFIGURATION
+          PLATFORM_TAGLINE: "Created by artist, for artists"
+          PRICE_REVOLUTION: "0.99"
+          SUPPORT_EMAIL: "ops@decodedmusic.com"
+          # ✅ DECODEDMUSIC TABLES
+          USERS_TABLE: "prod-decodedmusic-users"
+          EARNINGS_TABLE: "prod-decodedmusic-earnings"
+          CATALOG_TABLE: "prod-decodedmusic-catalog"
+          STREAMS_TABLE: "prod-decodedmusic-streams"
+      Timeout: 60
+      MemorySize: 1024
+      ReservedConcurrencyLimit: 10
+
+  # Marketing Spend Handler Lambda
+  MarketingSpendFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-marketingSpendHandler"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt MarketingLambdaRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: marketingSpendHandler.zip
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+          ENVIRONMENT: !Ref Environment
+          MARKETING_SPEND_TABLE: !Ref MarketingSpendTable
+          MARKETING_ATTRIBUTION_TABLE: !Ref MarketingAttributionTable
+          # ✅ COGNITO INTEGRATION
+          COGNITO_USER_POOL_ID: !Ref UserPoolId
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClientId
+          # ✅ INTEGRATIONS
+          SPOTIFY_CLIENT_ID: "5866a38ab59f46b2b8ceebfa17540d32"
+          SUPPORT_EMAIL: "ops@decodedmusic.com"
+      Timeout: 30
+      MemorySize: 512
+
+  # Marketing Attribution Lambda
+  MarketingAttributionFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-marketingAttribution"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt MarketingLambdaRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: marketingAttribution.zip
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+          ENVIRONMENT: !Ref Environment
+          MARKETING_ATTRIBUTION_TABLE: !Ref MarketingAttributionTable
+          # ✅ COGNITO INTEGRATION
+          COGNITO_USER_POOL_ID: !Ref UserPoolId
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClientId
+          # ✅ TRACKING PIXELS
+          GOOGLE_ANALYTICS_ID: "G-11CHYW3K6Z"
+          SNAP_PIXEL_ID: "0e29f2de-37c1-4e4f-8274-c4d2f40d4bd7"
+          META_PIXEL_ID: "727105113056303"
+      Timeout: 30
+      MemorySize: 256
+
+  # ✅ NEW: Cognito Auth Verification Lambda
+  CognitoAuthFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-cognitoAuth"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt MarketingLambdaRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: cognitoAuth.zip
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          AWS_ACCOUNT_ID: "3969-1370-3024"
+          COGNITO_USER_POOL_ID: !Ref UserPoolId
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClientId
+          USERS_TABLE: "prod-decodedmusic-users"
+      Timeout: 30
+      MemorySize: 256
+
+  # =========================================================================
+  # API GATEWAY INTEGRATION
+  # =========================================================================
+
+  # Bedrock Insights API Permission
+  BedrockInsightsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref BedrockInsightsFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayId}/*/*"
+
+  # Marketing Spend API Permission
+  MarketingSpendPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MarketingSpendFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayId}/*/*"
+
+  # Marketing Attribution API Permission
+  MarketingAttributionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref MarketingAttributionFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayId}/*/*"
+
+  # ✅ Cognito Auth API Permission
+  CognitoAuthPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CognitoAuthFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayId}/*/*"
+
+  # =========================================================================
+  # CLOUDWATCH MONITORING
+  # =========================================================================
+
+  # Bedrock Insights Log Group
+  BedrockInsightsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Environment}-bedrockInsights"
+      RetentionInDays: 14
+
+  # Marketing Spend Log Group
+  MarketingSpendLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Environment}-marketingSpendHandler"
+      RetentionInDays: 14
+
+  # Marketing Attribution Log Group
+  MarketingAttributionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Environment}-marketingAttribution"
+      RetentionInDays: 14
+
+  # ✅ Cognito Auth Log Group
+  CognitoAuthLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Environment}-cognitoAuth"
+      RetentionInDays: 14
+
+  # CloudWatch Alarms
+  BedrockInsightsErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${Environment}-bedrock-insights-errors"
+      AlarmDescription: "Bedrock Insights Lambda errors"
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref BedrockInsightsFunction
+      AlarmActions:
+        - !Ref MarketingHubSNSTopic
+
+  # SNS Topic for Alerts
+  MarketingHubSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${Environment}-marketing-hub-alerts"
+      DisplayName: "decodedmusic Marketing Hub Alerts"
+      Subscription:
+        - Endpoint: "ops@decodedmusic.com"
+          Protocol: "email"
+
+Outputs:
+  # Table Names
+  MarketingSpendTableName:
+    Description: Marketing Spend table name
+    Value: !Ref MarketingSpendTable
+    Export:
+      Name: !Sub "${Environment}-MarketingSpendTable"
+
+  MarketingAttributionTableName:
+    Description: Marketing Attribution table name
+    Value: !Ref MarketingAttributionTable
+    Export:
+      Name: !Sub "${Environment}-MarketingAttributionTable"
+
+  # ✅ COGNITO OUTPUTS
+  CognitoUserPoolId:
+    Description: Cognito User Pool ID (User pool - 5fxmkd)
+    Value: !Ref UserPoolId
+    Export:
+      Name: !Sub "${Environment}-CognitoUserPoolId"
+
+  CognitoUserPoolClientId:
+    Description: Cognito App Client ID (DecodedMusic Sync Portal)
+    Value: !Ref UserPoolClientId
+    Export:
+      Name: !Sub "${Environment}-CognitoUserPoolClientId"
+
+  # Lambda Function ARNs
+  BedrockInsightsFunctionArn:
+    Description: Bedrock Insights Lambda ARN
+    Value: !GetAtt BedrockInsightsFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-BedrockInsightsArn"
+
+  MarketingSpendFunctionArn:
+    Description: Marketing Spend Lambda ARN
+    Value: !GetAtt MarketingSpendFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-MarketingSpendArn"
+
+  MarketingAttributionFunctionArn:
+    Description: Marketing Attribution Lambda ARN
+    Value: !GetAtt MarketingAttributionFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-MarketingAttributionArn"
+
+  CognitoAuthFunctionArn:
+    Description: Cognito Auth Lambda ARN
+    Value: !GetAtt CognitoAuthFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-CognitoAuthArn"
+
+  # API Endpoints
+  BedrockInsightsEndpoint:
+    Description: Bedrock Insights API endpoint
+    Value: !Sub "https://${ApiGatewayId}.execute-api.${AWS::Region}.amazonaws.com/prod/bedrock-insights"
+    Export:
+      Name: !Sub "${Environment}-BedrockInsightsEndpoint"
+
+  MarketingSpendEndpoint:
+    Description: Marketing Spend API endpoint
+    Value: !Sub "https://${ApiGatewayId}.execute-api.${AWS::Region}.amazonaws.com/prod/marketing/spend"
+    Export:
+      Name: !Sub "${Environment}-MarketingSpendEndpoint"
+
+  MarketingAttributionEndpoint:
+    Description: Marketing Attribution API endpoint
+    Value: !Sub "https://${ApiGatewayId}.execute-api.${AWS::Region}.amazonaws.com/prod/marketing/attribution"
+    Export:
+      Name: !Sub "${Environment}-MarketingAttributionEndpoint"
+
+  CognitoAuthEndpoint:
+    Description: Cognito Auth API endpoint
+    Value: !Sub "https://${ApiGatewayId}.execute-api.${AWS::Region}.amazonaws.com/prod/auth/verify"
+    Export:
+      Name: !Sub "${Environment}-CognitoAuthEndpoint"
+
+  # ✅ PLATFORM INFO WITH COGNITO DETAILS
+  PlatformInfo:
+    Description: decodedmusic Platform Information
+    Value: !Sub "Created by artist, for artists | Price Revolution from $0.99 | AWS: 3969-1370-3024 | Cognito: ${UserPoolId} | Client: ${UserPoolClientId}"
+    Export:
+      Name: !Sub "${Environment}-PlatformInfo"

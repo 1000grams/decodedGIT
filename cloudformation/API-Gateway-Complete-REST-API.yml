@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic API Gateway - Complete REST API'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+
+Resources:
+  # Import existing Lambda functions
+  AuthLoginFunction:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authLogin"
+
+  AuthSignupFunction:
+    Type: AWS::CloudFormation::CustomResource  
+    Properties:
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authSignup"
+
+  SubscriptionCreateFunction:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-subscriptionCreate"
+
+  # API Gateway
+  DecodedMusicAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub "${Environment}-decodedmusic-api"
+      Description: "decodedmusic Platform API - Created by artist, for artists | AWS Account: 3969-1370-3024"
+      EndpointConfiguration:
+        Types:
+          - EDGE
+
+  # Auth Resource
+  AuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !GetAtt DecodedMusicAPI.RootResourceId
+      PathPart: auth
+
+  # Login Method
+  LoginMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref AuthResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authLogin/invocations"
+
+  # Login Permission
+  LoginPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-authLogin"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # Signup Method  
+  SignupMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref AuthResource
+      HttpMethod: PUT
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authSignup/invocations"
+
+  # Signup Permission
+  SignupPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-authSignup"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # Subscription Resource
+  SubscriptionResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !GetAtt DecodedMusicAPI.RootResourceId
+      PathPart: subscription
+
+  # Subscription Create Method
+  SubscriptionCreateMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref SubscriptionResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-subscriptionCreate/invocations"
+
+  # Subscription Permission
+  SubscriptionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # API Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - LoginMethod
+      - SignupMethod
+      - SubscriptionCreateMethod
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      StageName: !Ref Environment
+
+Outputs:
+  ApiGatewayId:
+    Description: API Gateway ID
+    Value: !Ref DecodedMusicAPI
+    Export:
+      Name: !Sub "${Environment}-ApiGatewayId"
+      
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${DecodedMusicAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}"
+    Export:
+      Name: !Sub "${Environment}-ApiEndpoint"

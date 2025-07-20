@@ -1,0 +1,100 @@
+/* Use variables from global.css */
+.section {
+  padding: 3rem 1rem; /* Use global variable */
+  min-height: 480px;
+  background-color: var(--bg-color);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sectionHeadline {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem; /* Adjust spacing */
+}
+
+.sectionIntro { /* Style for "Outdated Processes vs: Cloud-Native Clarity" */
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem; /* Space below intro text */
+}
+
+
+.frameContainer {
+  max-width: 1000px; /* Limit the width */
+  margin: 0 auto 1.5rem auto; /* Adjust spacing */
+  display: flex;
+  gap: 2rem; /* Space between blocks - Adjust as needed */
+  align-items: stretch; /* Ensure equal height visually */
+  min-height: 320px;
+}
+
+.problemBlock,
+.solutionBlock {
+  flex: 1; /* Allow blocks to take equal space */
+  padding: 2rem; /* Adjust padding */
+  border-radius: 16px;
+  min-height: 320px;
+  background-color: rgba(255, 255, 255, 0.05); /* Using one style for both */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* Keep distinct borders if desired, example: */
+/* .problemBlock { border: 1px solid rgba(255, 0, 0, 0.2); } */
+/* .solutionBlock { border: 1px solid rgba(50, 193, 237, 0.2); } */
+
+
+.blockTitle {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 1rem; /* Adjust spacing */
+}
+
+.blockBody {
+  font-size: 1.125rem; /* 18px */
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem; /* Adjust spacing */
+}
+
+.bulletPoints {
+    list-style: disc;
+    padding-left: 1.5rem; /* Indent bullet points */
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.bulletPoints li {
+    margin-bottom: 0.5em; /* Adjust spacing */
+}
+
+
+.techMention {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2rem; /* Adjust spacing */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .frameContainer {
+    flex-direction: column; /* Stack blocks vertically on mobile */
+    gap: 1.5rem; /* Adjust gap */
+  }
+
+  .problemBlock,
+  .solutionBlock {
+     padding: 1.5rem; /* Adjust padding */
+  }
+
+  .sectionHeadline {
+      font-size: 1.8rem; /* Smaller on mobile */
+  }
+  .sectionIntro {
+      margin-bottom: 1.5rem;
+  }
+}

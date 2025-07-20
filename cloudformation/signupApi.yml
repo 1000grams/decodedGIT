@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SignupLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: DecodedSignupHandler
+      Runtime: nodejs18.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: index.handler
+      Code:
+        S3Bucket: decodedmusic.com
+        S3Key: lambda/signup-handler.zip
+
+  SignupApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DecodedSignupAPI
+
+  SignupResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt SignupApi.RootResourceId
+      PathPart: signup
+      RestApiId: !Ref SignupApi
+
+  SignupPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref SignupResource
+      RestApiId: !Ref SignupApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - {Region: !Ref "AWS::Region", LambdaArn: !GetAtt SignupLambdaFunction.Arn}
+
+  LambdaPermissionForSignup:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SignupLambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SignupApi}/*/POST/signup

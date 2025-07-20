@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Decoded Buzz - Weekly Music Intelligence</title>
+  <meta name="description" content="Weekly music industry research: deals, syncs, lawsuits, and indie breakthroughs. Powered by DECODED.">
+
+  <style>
+    body {
+      background: #111827;
+      color: #e5e7eb;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      padding: 2rem;
+      margin: 0;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2.2rem;
+      color: #60a5fa;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      color: #93c5fd;
+    }
+    p {
+      font-size: 1rem;
+    }
+    pre {
+      background: #1f2937;
+      padding: 1.5rem;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      font-size: 1rem;
+      margin-top: 1rem;
+      color: #f9fafb;
+    }
+    .text-sm { font-size: 0.85rem; color: #9ca3af; text-align: center; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="container">
+    <h1>🎧 DECODED: This Week’s Industry Buzz</h1>
+    <p>
+      Whether through blockbuster acquisitions, sync strategy sessions, or courtroom showdowns, this week’s headlines underscore a vibrant—and often volatile—music business.
+      As labels and artists navigate regulatory hurdles, legal battlegrounds, and ever-evolving tech landscapes, one thing remains certain: in 2025, music’s movers and shakers are writing the playbook in real time.
+    </p>
+
+    <h2>[ S3 Buzz Summary ]</h2>
+    <pre id="buzz-content">Loading industry intelligence...</pre>
+
+    <p class="text-sm" id="run-date">Run date: ...</p>
+  </div>
+  <div id="footer-container"></div>
+
+  <script>
+    // Load header and footer dynamically
+    fetch('header.js')
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById('header-container').innerHTML = text;
+      })
+      .catch(() => {
+        console.error("Failed to load header.");
+      });
+
+    fetch('footer.js')
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById('footer-container').innerHTML = text;
+      })
+      .catch(() => {
+        console.error("Failed to load footer.");
+      });
+
+    // Existing S3 fetch logic
+    fetch('https://decodedmusic-buzz-files.s3.eu-central-1.amazonaws.com/june2025_summary.txt')
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById('buzz-content').textContent = text.trim();
+        const today = new Date();
+        document.getElementById('run-date').textContent = "Run date: " + today.toISOString().split('T')[0];
+      })
+      .catch(() => {
+        document.getElementById('buzz-content').textContent = "⚠️ No update available. Check S3 bucket or upload failed.";
+      });
+  </script>
+</body>
+</html>

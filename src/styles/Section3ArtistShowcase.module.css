@@ -1,0 +1,198 @@
+/* Use variables from global.css */
+.section {
+  padding: var(--section-padding-v) 1rem; /* Use global variable */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  text-align: center;
+}
+
+.sectionHeadline {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 2rem; /* Adjust spacing */
+}
+
+.frameContainer {
+  max-width: var(--container-max-width); /* Use global variable */
+  margin: 0 auto;
+  display: flex;
+  gap: 3rem; /* Space between blocks - Adjust as needed */
+  align-items: flex-start;
+}
+
+.featuredArtistBlock {
+  flex: 2; /* Take up more space (conceptually 2/3 or larger part) */
+  text-align: left;
+}
+
+.spotifyBlock {
+  flex: 1; /* Take up less space (conceptually 1/3 or smaller part) */
+  text-align: left;
+  min-width: 300px; /* Prevent shrinking too much on larger screens - Adjust as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dottedBox {
+  border: 2px dotted #60a5fa; /* blue-400 */
+  padding: 1.5rem;
+  min-height: 120px;
+  width: 100%;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.placeholderText {
+  color: #60a5fa;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.artistImage {
+    width: 100%;
+    height: auto;
+    max-height: 400px; /* Limit image height */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1.5rem; /* Adjust spacing */
+}
+
+.blockSubHeadline {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 0.8rem; /* Adjust spacing */
+}
+
+.blockBody {
+  font-size: 1.125rem; /* 18px */
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem; /* Adjust spacing */
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem; /* Adjust gap */
+  flex-wrap: wrap;
+}
+
+/* --- Spotify Carousel Specific Styles --- */
+.carouselContainer {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem; /* Space below the embed */
+    overflow: hidden;
+    padding: 0 2rem; /* Add padding for arrow space - Adjust as needed */
+    box-sizing: border-box;
+}
+
+.carouselContainer iframe {
+    display: block;
+    margin: 0 auto;
+     /* Spotify embed has border-radius style inline, keep it */
+}
+
+.carouselArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(17, 17, 17, 0.8); /* Semi-transparent dark background */
+    color: var(--accent-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px; /* Adjust size */
+    height: 40px; /* Adjust size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+}
+
+.carouselArrow:hover:not(:disabled) {
+    background: rgba(17, 17, 17, 1);
+}
+
+.carouselArrow:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+.prev {
+    left: 0; /* Adjust position */
+}
+
+.next {
+    right: 0; /* Adjust position */
+}
+
+
+.spotifyDisclaimer {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 1rem; /* Adjust spacing */
+    text-align: center;
+    width: 100%;
+}
+
+.indexIndicator {
+     font-size: 0.9rem;
+     color: rgba(255, 255, 255, 0.6);
+     text-align: center;
+     width: 100%;
+     margin-top: 0.5rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) { /* Adjust breakpoint */
+    .frameContainer {
+        flex-direction: column;
+        gap: 3rem; /* Adjust gap */
+    }
+
+    .featuredArtistBlock,
+    .spotifyBlock {
+        flex: unset;
+        width: 100%;
+        min-width: auto;
+        text-align: center;
+        align-items: center;
+    }
+
+     .featuredArtistBlock .ctaButtons {
+        justify-content: center;
+     }
+
+    .carouselContainer {
+        padding: 0 1rem; /* Reduce padding */
+    }
+     .carouselArrow {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+        font-size: 1rem;
+     }
+}
+
+@media (max-width: 480px) {
+     .carouselContainer {
+        padding: 0;
+     }
+      .sectionHeadline {
+        font-size: 1.8rem; /* Smaller headline on mobile */
+     }
+      .blockSubHeadline {
+        font-size: 1.3rem;
+      }
+}

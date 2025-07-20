@@ -1,0 +1,326 @@
+{
+  "timestamp": "2025-06-29T05:04:29.927064",
+  "current_data": {
+    "profile": {
+      "name": "Rue De Vivre",
+      "followers": 15,
+      "popularity": 5,
+      "genres": [
+        "dance pop",
+        "afrobeat"
+      ],
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/293x3NAIGPR4RCJrFkzs0P"
+      },
+      "spotify_url": "https://open.spotify.com/artist/293x3NAIGPR4RCJrFkzs0P"
+    },
+    "top_tracks": [
+      {
+        "name": "Lover",
+        "popularity": 11,
+        "duration_ms": 179400,
+        "explicit": true,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/3D1613lVg1Vju43WZkqv9c"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "Plastic - V.4",
+        "popularity": 9,
+        "duration_ms": 240000,
+        "explicit": true,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1Fcz62oapJ0lVPQnGneu5p"
+        },
+        "album": {
+          "name": "Trois",
+          "release_date": "2025-04-22",
+          "total_tracks": 10
+        }
+      },
+      {
+        "name": "No One",
+        "popularity": 5,
+        "duration_ms": 240000,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/2HHWtna04SmgwXU6DcGklF"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "Not Mfer",
+        "popularity": 5,
+        "duration_ms": 211320,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/40jx74SAyvxrJ2DXmpoqba"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "Vibes",
+        "popularity": 3,
+        "duration_ms": 123000,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/3NNzeoeBSSrRRqi62MOSGK"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "Ring Tone",
+        "popularity": 3,
+        "duration_ms": 191120,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/7L1VmDBnu9C3Soo0BtNjW4"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "Faith",
+        "popularity": 2,
+        "duration_ms": 182000,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/5tRwkGnxFpsckSUHzoy1Ne"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "New Phone, Who Dis?",
+        "popularity": 2,
+        "duration_ms": 222240,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/4VJ4yv1uMrfpdbJpdz3epO"
+        },
+        "album": {
+          "name": "Rave",
+          "release_date": "2025-03-27",
+          "total_tracks": 11
+        }
+      },
+      {
+        "name": "405 to the 10",
+        "popularity": 2,
+        "duration_ms": 170000,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1VVdOqCGVLYp7r3EHsUPHx"
+        },
+        "album": {
+          "name": "Trois",
+          "release_date": "2025-04-22",
+          "total_tracks": 10
+        }
+      },
+      {
+        "name": "Refusnik",
+        "popularity": 2,
+        "duration_ms": 240000,
+        "explicit": false,
+        "preview_url": null,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1OqK69SyP9zqC8yJ4DEQ5q"
+        },
+        "album": {
+          "name": "Trois",
+          "release_date": "2025-04-22",
+          "total_tracks": 10
+        }
+      }
+    ],
+    "market_analysis": {
+      "US": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "GB": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "CA": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "AU": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "DE": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "FR": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "ES": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "IT": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "NL": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "SE": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "NO": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "DK": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      },
+      "FI": {
+        "total_tracks": 10,
+        "top_track": "Lover",
+        "avg_popularity": 4.4,
+        "max_popularity": 11
+      }
+    },
+    "albums": [
+      {
+        "name": "OKINA SAKANA",
+        "album_type": "album",
+        "release_date": "2025-06-02",
+        "total_tracks": 8,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/6hCajqjMcAwptBiNc7IQEM"
+        }
+      },
+      {
+        "name": "Azita Nomadic Nights",
+        "album_type": "album",
+        "release_date": "2025-05-08",
+        "total_tracks": 13,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/3RfwstnKQDxCCzS7rBwESS"
+        }
+      },
+      {
+        "name": "Bumbo",
+        "album_type": "album",
+        "release_date": "2025-04-23",
+        "total_tracks": 11,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/42mx8xKI7RSRR0w430waoW"
+        }
+      },
+      {
+        "name": "Trois",
+        "album_type": "album",
+        "release_date": "2025-04-22",
+        "total_tracks": 10,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/236pSs89fMYpqMi5YJs6kW"
+        }
+      },
+      {
+        "name": "Rave",
+        "album_type": "album",
+        "release_date": "2025-03-27",
+        "total_tracks": 11,
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/245uu2SllJc2Va7oI0J4zl"
+        }
+      }
+    ]
+  },
+  "growth_metrics": {
+    "follower_metrics": {
+      "current_followers": 15,
+      "weekly_growth": "0",
+      "weekly_growth_rate": "0",
+      "monthly_growth": "0",
+      "monthly_growth_rate": "0"
+    },
+    "popularity_metrics": {
+      "current_popularity": 5,
+      "popularity_change": "0",
+      "popularity_trend": "stable"
+    },
+    "market_expansion": {
+      "current_markets": 13,
+      "new_markets": [],
+      "lost_markets": [],
+      "market_growth": 0
+    },
+    "audio_evolution": {},
+    "visibility_score": 24.604166666666668,
+    "visibility_components": {
+      "follower_score": 0.0375,
+      "popularity_score": 1.25,
+      "market_score": 21.666666666666668,
+      "track_score": 1.6500000000000001
+    }
+  },
+  "historical_data_points": 5
+}

@@ -1,0 +1,262 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic API Gateway - Complete REST API - Created by artist, for artists'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+
+Resources:
+  # API Gateway
+  DecodedMusicAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub "${Environment}-decodedmusic-api"
+      Description: "decodedmusic Platform API - Created by artist, for artists | AWS Account: 3969-1370-3024"
+      EndpointConfiguration:
+        Types:
+          - EDGE
+
+  # CORS Options Method for root
+  RootOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !GetAtt DecodedMusicAPI.RootResourceId
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  # Auth Resource
+  AuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !GetAtt DecodedMusicAPI.RootResourceId
+      PathPart: auth
+
+  # Auth Login Resource
+  LoginResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !Ref AuthResource
+      PathPart: login
+
+  # Login Method
+  LoginMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref LoginResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authLogin/invocations"
+
+  # Login Permission
+  LoginPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-authLogin"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # Auth Signup Resource
+  SignupResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !Ref AuthResource
+      PathPart: signup
+
+  # Signup Method
+  SignupMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref SignupResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-authSignup/invocations"
+
+  # Signup Permission
+  SignupPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-authSignup"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # Subscription Resource
+  SubscriptionResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ParentId: !GetAtt DecodedMusicAPI.RootResourceId
+      PathPart: subscription
+
+  # Subscription Create Method
+  SubscriptionCreateMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref SubscriptionResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Environment}-subscriptionCreate/invocations"
+
+  # Subscription Permission
+  SubscriptionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DecodedMusicAPI}/*/*"
+
+  # Login OPTIONS Method for CORS
+  LoginOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref LoginResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  # Signup OPTIONS Method for CORS
+  SignupOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref SignupResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  # Subscription OPTIONS Method for CORS
+  SubscriptionOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      ResourceId: !Ref SubscriptionResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  # API Deployment (SINGLE VERSION - REMOVED DUPLICATE)
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - LoginMethod
+      - LoginOptionsMethod
+      - SignupMethod
+      - SignupOptionsMethod
+      - SubscriptionCreateMethod
+      - SubscriptionOptionsMethod
+      - RootOptionsMethod
+    Properties:
+      RestApiId: !Ref DecodedMusicAPI
+      StageName: !Ref Environment
+
+Outputs:
+  ApiGatewayId:
+    Description: API Gateway ID
+    Value: !Ref DecodedMusicAPI
+    Export:
+      Name: !Sub "${Environment}-ApiGatewayId"
+      
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${DecodedMusicAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}"
+    Export:
+      Name: !Sub "${Environment}-ApiEndpoint"
+
+  LoginEndpoint:
+    Description: Login endpoint
+    Value: !Sub "https://${DecodedMusicAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/auth/login"
+    Export:
+      Name: !Sub "${Environment}-LoginEndpoint"
+
+  SignupEndpoint:
+    Description: Signup endpoint
+    Value: !Sub "https://${DecodedMusicAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/auth/signup"
+    Export:
+      Name: !Sub "${Environment}-SignupEndpoint"
+
+  SubscriptionEndpoint:
+    Description: Subscription endpoint
+    Value: !Sub "https://${DecodedMusicAPI}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/subscription"
+    Export:
+      Name: !Sub "${Environment}-SubscriptionEndpoint"

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rue De Vivre - Analytics Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header with Spotify Integration -->
+        <header class="dashboard-header">
+            <h1>🎧 Rue De Vivre Analytics</h1>
+            <div class="user-controls">
+                <button id="spotify-connect-btn" class="spotify-btn">
+                    🎵 Connect Spotify (Optional)
+                </button>
+                <div id="spotify-status" class="spotify-status hidden">
+                    ✅ Spotify Connected
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Analytics Grid -->
+        <main class="analytics-grid">
+            <!-- Portfolio Overview -->
+            <section class="portfolio-card">
+                <h2>💰 Portfolio Overview</h2>
+                <div id="portfolio-data" class="loading">Loading...</div>
+            </section>
+
+            <!-- Spotify Analytics -->
+            <section class="spotify-card">
+                <h2>🎵 Spotify Analytics</h2>
+                <div id="spotify-data" class="loading">Loading...</div>
+            </section>
+
+            <!-- Trends Analytics -->
+            <section class="trends-card">
+                <h2>🔮 Market Trends</h2>
+                <div id="trends-data" class="loading">Loading...</div>
+            </section>
+
+            <!-- Investment Recommendations -->
+            <section class="recommendations-card">
+                <h2>🎯 Investment Recommendations</h2>
+                <div id="recommendations-data" class="loading">Loading...</div>
+            </section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Catalog API with Lambda integration
+Parameters:
+  EnvName:
+    Type: String
+    Default: prod
+Resources:
+  CatalogLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: catalog-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Scan
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+  CatalogLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-catalog-handler'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt CatalogLambdaRole.Arn
+      Code:
+        S3Bucket: decodedmusic.com
+        S3Key: lambda/catalog-handler.zip
+      Environment:
+        Variables:
+          CATALOG_TABLE: !Sub '${EnvName}-DecodedCatalog'
+          PREVIEWS_BUCKET: !Sub '${EnvName}-decodedmusic-previews'
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub '${EnvName}-catalog-api'
+  ApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: api
+      RestApiId: !Ref ApiGateway
+  CatalogResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiResource
+      PathPart: catalog
+      RestApiId: !Ref ApiGateway
+  CatalogIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref CatalogResource
+      PathPart: '{id}'
+      RestApiId: !Ref ApiGateway
+  CatalogListMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref CatalogResource
+      RestApiId: !Ref ApiGateway
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CatalogLambda.Arn}/invocations'
+  CatalogGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref CatalogIdResource
+      RestApiId: !Ref ApiGateway
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CatalogLambda.Arn}/invocations'
+  LambdaPermissionApi:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CatalogLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/GET/api/catalog*'
+Outputs:
+  ApiUrl:
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/api/catalog'
+    Description: Base URL of the catalog API

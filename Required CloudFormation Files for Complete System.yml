@@ -1,0 +1,214 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'decodedmusic Authentication Stack - Created by artist, for artists | AWS Account: 3969-1370-3024'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    
+  # ✅ Verified Cognito Configuration
+  UserPoolId:
+    Type: String
+    Description: Existing Cognito User Pool ID
+    Default: eu-central-1_d9JNeVdni
+    
+  UserPoolClientId:
+    Type: String
+    Description: Existing Cognito App Client ID
+    Default: 5pb29tja8gkqm3jb43oimd5qjt
+
+Resources:
+  # Authentication Lambda Functions
+  AuthLoginFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authLogin"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          const { CognitoIdentityProviderClient, InitiateAuthCommand } = require('@aws-sdk/client-cognito-identity-provider');
+          const { DynamoDBClient, GetItemCommand, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+          
+          const cognito = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
+          const ddb = new DynamoDBClient({ region: process.env.AWS_REGION });
+          
+          exports.handler = async (event) => {
+              console.log('🔐 Auth Login - decodedmusic Platform');
+              
+              try {
+                  const { email, password } = JSON.parse(event.body);
+                  
+                  // Authenticate with Cognito
+                  const authCommand = new InitiateAuthCommand({
+                      AuthFlow: 'USER_PASSWORD_AUTH',
+                      ClientId: process.env.COGNITO_CLIENT_ID,
+                      AuthParameters: {
+                          USERNAME: email,
+                          PASSWORD: password
+                      }
+                  });
+                  
+                  const authResult = await cognito.send(authCommand);
+                  const accessToken = authResult.AuthenticationResult.AccessToken;
+                  
+                  // Get user from DynamoDB
+                  const userResult = await ddb.send(new GetItemCommand({
+                      TableName: process.env.USERS_TABLE,
+                      Key: { email: { S: email } }
+                  }));
+                  
+                  return {
+                      statusCode: 200,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: true,
+                          token: accessToken,
+                          user: {
+                              id: userResult.Item?.user_id?.S,
+                              email: email,
+                              name: userResult.Item?.name?.S,
+                              subscription: userResult.Item?.subscription?.S
+                          }
+                      })
+                  };
+                  
+              } catch (error) {
+                  console.error('Login error:', error);
+                  return {
+                      statusCode: 401,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: false,
+                          message: 'Invalid credentials'
+                      })
+                  };
+              }
+          };
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          COGNITO_CLIENT_ID: !Ref UserPoolClientId
+          USERS_TABLE: !Sub "${Environment}-decodedmusic-users"
+      Role: !GetAtt AuthLambdaRole.Arn
+      Timeout: 30
+
+  AuthSignupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authSignup"
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          const { CognitoIdentityProviderClient, SignUpCommand } = require('@aws-sdk/client-cognito-identity-provider');
+          const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+          const { v4: uuidv4 } = require('uuid');
+          
+          const cognito = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
+          const ddb = new DynamoDBClient({ region: process.env.AWS_REGION });
+          
+          exports.handler = async (event) => {
+              console.log('📝 Auth Signup - decodedmusic Platform');
+              
+              try {
+                  const { name, email, password, spotifyURL } = JSON.parse(event.body);
+                  const userId = uuidv4();
+                  
+                  // Create user in Cognito
+                  const signupCommand = new SignUpCommand({
+                      ClientId: process.env.COGNITO_CLIENT_ID,
+                      Username: email,
+                      Password: password,
+                      UserAttributes: [
+                          { Name: 'email', Value: email },
+                          { Name: 'name', Value: name }
+                      ]
+                  });
+                  
+                  await cognito.send(signupCommand);
+                  
+                  // Store user in DynamoDB
+                  await ddb.send(new PutItemCommand({
+                      TableName: process.env.USERS_TABLE,
+                      Item: {
+                          user_id: { S: userId },
+                          email: { S: email },
+                          name: { S: name },
+                          spotify_url: { S: spotifyURL || '' },
+                          subscription: { S: 'trial' },
+                          created_at: { S: new Date().toISOString() },
+                          platform: { S: 'decodedmusic' },
+                          tagline: { S: 'Created by artist, for artists' }
+                      }
+                  }));
+                  
+                  return {
+                      statusCode: 200,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: true,
+                          userId: userId,
+                          message: 'Account created successfully'
+                      })
+                  };
+                  
+              } catch (error) {
+                  console.error('Signup error:', error);
+                  return {
+                      statusCode: 400,
+                      headers: { 'Access-Control-Allow-Origin': '*' },
+                      body: JSON.stringify({
+                          success: false,
+                          message: error.message || 'Signup failed'
+                      })
+                  };
+              }
+          };
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          COGNITO_CLIENT_ID: !Ref UserPoolClientId
+          USERS_TABLE: !Sub "${Environment}-decodedmusic-users"
+      Role: !GetAtt AuthLambdaRole.Arn
+      Timeout: 30
+
+  # IAM Role for Auth Lambdas
+  AuthLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AuthLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cognito-idp:*
+                Resource: !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}"
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${Environment}-decodedmusic-users"
+
+Outputs:
+  AuthLoginFunctionArn:
+    Value: !GetAtt AuthLoginFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthLoginArn"
+      
+  AuthSignupFunctionArn:
+    Value: !GetAtt AuthSignupFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthSignupArn"

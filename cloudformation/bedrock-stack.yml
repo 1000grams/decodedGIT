@@ -1,0 +1,136 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Rue De Vivre Bedrock Integration Stack'
+
+Parameters:
+  EnvName:
+    Type: String
+    Default: 'prod'
+    Description: Environment name prefix
+
+Resources:
+  # Bedrock Insights Lambda Function
+  BedrockInsightsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${EnvName}-bedrock-insights'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        ZipFile: |
+
+
+              statusCode: 200,
+              body: JSON.stringify({ message: 'Bedrock Lambda placeholder' })
+            };
+          };
+      Role: !GetAtt BedrockLambdaRole.Arn
+      Timeout: 300
+      MemorySize: 512
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          BEDROCK_MODEL_ID: 'meta.llama3-70b-instruct-v1:0'
+          MARKETING_TABLE: !Sub '${EnvName}-MarketingSpend'
+          ANALYTICS_TABLE: !Sub '${EnvName}-MusicAnalytics'
+
+  # IAM Role with Bedrock permissions
+  BedrockLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: BedrockAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                  - bedrock:ListFoundationModels
+                Resource: 
+                  - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/meta.llama3-70b-instruct-v1:0'
+                  - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0'
+                  - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.titan-text-express-v1'
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                  - dynamodb:GetItem
+                Resource: 
+                  - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvName}-MarketingSpend'
+                  - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvName}-MusicAnalytics'
+
+  # API Gateway for Bedrock endpoint
+  BedrockApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub '${EnvName}-bedrock-api'
+      Description: 'Bedrock insights API for Rue De Vivre'
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  BedrockApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt BedrockApi.RootResourceId
+      PathPart: 'bedrock-insights'
+      RestApiId: !Ref BedrockApi
+
+  BedrockApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref BedrockApiResource
+      RestApiId: !Ref BedrockApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BedrockInsightsLambda.Arn}/invocations'
+
+  BedrockApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: BedrockApiMethod
+    Properties:
+      RestApiId: !Ref BedrockApi
+      StageName: 'prod'
+
+  # Lambda permission for API Gateway
+  BedrockLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref BedrockInsightsLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${BedrockApi}/*/*'
+
+Outputs:
+  BedrockApiUrl:
+    Description: 'Bedrock Insights API URL'
+    Value: !Sub 'https://${BedrockApi}.execute-api.${AWS::Region}.amazonaws.com/prod/bedrock-insights'
+    Export:
+      Name: !Sub '${EnvName}-bedrock-api-url'
+
+  BedrockLambdaArn:
+    Description: 'Bedrock Lambda Function ARN'
+    Value: !GetAtt BedrockInsightsLambda.Arn
+    Export:
+      Name: !Sub '${EnvName}-bedrock-lambda-arn'
+
+
+
+

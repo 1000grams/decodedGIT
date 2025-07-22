@@ -5,7 +5,7 @@ echo "Built by: RDV & AHA LLC Music Management"
 echo "================================================"
 
 # Navigate to Lambda directory
-cd backend/lambda/bedrockInsights
+cd backend/handlers/bedrockInsights
 
 # Install dependencies
 echo " Installing dependencies..."

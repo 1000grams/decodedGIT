@@ -19,7 +19,7 @@ lambdas=(
 for fn in "${lambdas[@]}"; do
   (
     echo "Packaging $fn..."
-    cd backend/lambda/$fn
+    cd backend/handlers/$fn
     zip -r "$fn.zip" . -x "$fn.zip"
     echo "Uploading $fn.zip to s3://$bucket/"
     aws s3 cp "$fn.zip" "s3://$bucket/"

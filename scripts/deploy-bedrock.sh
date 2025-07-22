@@ -4,12 +4,12 @@
 echo " Starting Bedrock Integration Deployment"
 
 # Create directory structure
-mkdir -p backend/lambda/bedrockInsights
-mkdir -p cloudformation
+mkdir -p backend/handlers/bedrockInsights
+mkdir -p infra/cloudformation
 mkdir -p scripts
 
 # Install Lambda dependencies
-cd backend/lambda/bedrockInsights
+cd backend/handlers/bedrockInsights
 npm init -y
 npm install @aws-sdk/client-bedrock-runtime @aws-sdk/client-dynamodb @aws-sdk/util-dynamodb
 

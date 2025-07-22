@@ -2,7 +2,7 @@
 echo " Deploying Decoded Music - By Artists, For Artists"
 
 # Package Lambda
-cd backend/lambda/bedrockInsights
+cd backend/handlers/bedrockInsights
 zip -r ../../../bedrock-insights.zip . -x "*.zip"
 cd ../../../
 

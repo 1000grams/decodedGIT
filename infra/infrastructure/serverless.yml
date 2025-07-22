@@ -8,12 +8,12 @@ provider:
 
 functions:
   apiService:
-    handler: backend/lambdas/apiService/handler.handler
+    handler: backend/handlers/apiService/handler.handler
     events:
       - http:
           path: api
           method: get
   analytics:
-    handler: backend/lambdas/analytics-lambda/handler.handler
+    handler: backend/handlers/analytics-lambda/handler.handler
   auth:
-    handler: backend/lambdas/auth-lambda/handler.handler
+    handler: backend/handlers/auth-lambda/handler.handler

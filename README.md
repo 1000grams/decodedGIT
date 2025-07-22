@@ -146,57 +146,57 @@ REACT_APP_COGNITO_CHECK_URL=https://your-api-id.execute-api.region.amazonaws.com
 
 
 ## Signup Lambda Function
-The backend includes a sample AWS Lambda handler at `backend/lambda/signupHandler.js` which emails signup details via SES. Deploy it using the CloudFormation template at `cloudformation/signupLambda.yml`:
+The backend includes a sample AWS Lambda handler at `backend/handlers/signupHandler.js` which emails signup details via SES. Deploy it using the CloudFormation template at `infra/cloudformation/signupLambda.yml`:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/signupLambda.yml \
+  --template-file infra/cloudformation/signupLambda.yml \
   --stack-name DecodedSignupLambda \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
-The API Gateway and Lambda permission configuration lives in `cloudformation/signupApi.yml`. Deploy this CloudFormation stack after uploading `lambda/signup-handler.zip` to S3 to expose a `/signup` endpoint:
+The API Gateway and Lambda permission configuration lives in `infra/cloudformation/signupApi.yml`. Deploy this CloudFormation stack after uploading `lambda/signup-handler.zip` to S3 to expose a `/signup` endpoint:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/signupApi.yml \
+  --template-file infra/cloudformation/signupApi.yml \
   --stack-name DecodedSignupApi \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ## Contact Lambda Function
-Handle simple contact submissions with the Lambda at `backend/lambda/contactHandler.js`.
+Handle simple contact submissions with the Lambda at `backend/handlers/contactHandler.js`.
 Deploy the function and API Gateway using the templates provided:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/contactLambda.yml \
+  --template-file infra/cloudformation/contactLambda.yml \
   --stack-name DecodedContactLambda \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 
 aws cloudformation deploy \
-  --template-file cloudformation/contactApi.yml \
+  --template-file infra/cloudformation/contactApi.yml \
   --stack-name DecodedContactApi \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ## Sign‑in Lambda Function
-The sign‑in handler at `backend/lambda/signinHandler.js` demonstrates a minimal
+The sign‑in handler at `backend/handlers/signinHandler.js` demonstrates a minimal
 authentication endpoint. Deploy it with:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/signinLambda.yml \
+  --template-file infra/cloudformation/signinLambda.yml \
   --stack-name DecodedSigninLambda \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 
 aws cloudformation deploy \
-  --template-file cloudformation/signinApi.yml \
+  --template-file infra/cloudformation/signinApi.yml \
   --stack-name DecodedSigninApi \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
@@ -209,38 +209,38 @@ groups such as `admin`, `artist`, `buyer`, `catalog_curator`, `content_creator`,
 redirected to the dashboard after signing in.
 
 ## Login Lambda Function
-`backend/lambda/loginHandler.js` exposes the same sign‑in logic under an
+`backend/handlers/loginHandler.js` exposes the same sign‑in logic under an
 `/auth/login` endpoint. Deploy it with the same CloudFormation templates used
 for the sign‑in handler if you want both routes available.
 
 ## Pitch Lambda Function
-The sync licensing pitch handler at `backend/lambda/pitchHandler/index.js` sends templated emails via SES.
+The sync licensing pitch handler at `backend/handlers/pitchHandler/index.js` sends templated emails via SES.
 Package and upload the code to S3:
 The bucket must already exist. Codex automation uses `decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb`.
 
 ```bash
-cd backend/lambda/pitchHandler
+cd backend/handlers/pitchHandler
 zip -r pitchHandler.zip .
 aws s3 mb s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb || true
 aws s3 cp pitchHandler.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/
 ```
 
-Deploy the resources defined in `cloudformation/decodedMusicBackend.yaml` to expose a `/api/pitch` endpoint:
+Deploy the resources defined in `infra/cloudformation/decodedMusicBackend.yaml` to expose a `/api/pitch` endpoint:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/decodedMusicBackend.yaml \
+  --template-file infra/cloudformation/decodedMusicBackend.yaml \
   --stack-name decoded-genai-stack \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ## Artist Dashboard API
-Several Lambda functions under `backend/lambda/` implement the `/api/dashboard/*` endpoints.
+Several Lambda functions under `backend/handlers/` implement the `/api/dashboard/*` endpoints.
 Package and upload the code to S3 before deploying:
 
 ```bash
-cd backend/lambda/dashboardEarnings && zip -r earnings.zip . && aws s3 cp earnings.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+cd backend/handlers/dashboardEarnings && zip -r earnings.zip . && aws s3 cp earnings.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
 ```
 
 Repeat for the other dashboard lambda directories (`dashboardStreams`, `dashboardCatalog`, etc.).
@@ -249,7 +249,7 @@ Deploy the updated CloudFormation stack:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/decodedMusicBackend.yaml \
+  --template-file infra/cloudformation/decodedMusicBackend.yaml \
   --stack-name decoded-genai-stack \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
@@ -318,13 +318,13 @@ The CloudFront distribution <https://d340ynz7yytwls.cloudfront.net/> (ID `E11YR1
 ## CloudFormation Deployment
 
 A starter template for the music management backend is provided at
-`cloudformation/music-management.yml`. All CloudFormation templates are located in the `cloudformation/` directory. This creates S3 buckets, DynamoDB tables,
+`infra/cloudformation/music-management.yml`. All CloudFormation templates are located in the `infra/cloudformation/` directory. This creates S3 buckets, DynamoDB tables,
 a sample Lambda function, and an API Gateway endpoint. Deploy it in the
 Frankfurt region (eu-central-1) with a unique stack name:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/music-management.yml \
+  --template-file infra/cloudformation/music-management.yml \
   --stack-name decodedmusic-stack \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM \
@@ -342,7 +342,7 @@ It provisions a Lambda function, API Gateway and DynamoDB table. Deploy it with:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/decodedMusicBackend.yaml \
+  --template-file infra/cloudformation/decodedMusicBackend.yaml \
   --stack-name decoded-genai-stack \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM

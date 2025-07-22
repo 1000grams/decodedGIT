@@ -127,7 +127,7 @@ Resources:
       MemorySize: 128
 
   CatalogFunction:
-    Type: AWS::Lambda::Function
+    Type: AWS::Serverless::Function
     Properties:
       FunctionName: prod-catalog-handler
       Handler: index.handler
@@ -139,9 +139,16 @@ Resources:
       Environment:
         Variables:
           CATALOG_TABLE: prod-Catalog
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/catalog
+            Method: GET
 
   DashboardStreamsFunction:
-    Type: AWS::Lambda::Function
+    Type: AWS::Serverless::Function
     Properties:
       FunctionName: prod-dashboardStreams
       Handler: index.handler
@@ -153,6 +160,174 @@ Resources:
       Environment:
         Variables:
           DYNAMO_TABLE_STREAMS: prod-DecodedStreams
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/streams
+            Method: GET
+
+  DashboardEarningsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardEarnings
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardEarnings.zip
+      Environment:
+        Variables:
+          DYNAMO_TABLE_EARNINGS: prod-DecodedEarnings
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/earnings
+            Method: GET
+
+  DashboardCatalogFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardCatalog
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardCatalog.zip
+      Environment:
+        Variables:
+          DYNAMO_TABLE_CATALOG: prod-DecodedCatalog
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/catalog
+            Method: GET
+
+  DashboardAnalyticsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardAnalytics
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardAnalytics.zip
+      Environment:
+        Variables:
+          DYNAMO_TABLE_ANALYTICS: prod-WeeklyArtistStats
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/analytics
+            Method: GET
+
+  DashboardStatementsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardStatements
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardStatements.zip
+      Environment:
+        Variables:
+          DYNAMO_TABLE_STATEMENTS: prod-Statements
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/statements
+            Method: GET
+
+  DashboardCampaignsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardCampaigns
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardCampaigns.zip
+      Environment:
+        Variables:
+          SPEND_TABLE: prod-MarketingSpend
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/campaigns
+            Method: GET
+
+  DashboardSpotifyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardSpotify
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardSpotify.zip
+      Environment:
+        Variables:
+          SPOTIFY_TABLE: prod-SpotifyArtistData
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/spotify
+            Method: GET
+
+  DashboardAccountingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardAccounting
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardAccounting.zip
+      Environment:
+        Variables:
+          REVENUE_TABLE: prod-RevenueLog
+          EXPENSE_TABLE: prod-ExpenseLog
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/accounting
+            Method: GET
+
+  DashboardTeamFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-dashboardTeam
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: dashboardTeam.zip
+      Environment:
+        Variables:
+          TEAM_JSON: '[]'
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/team
+            Method: GET
 
   DecodedApi:
     Type: AWS::Serverless::Api

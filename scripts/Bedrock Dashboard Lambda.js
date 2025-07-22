@@ -1,4 +1,4 @@
-// Create: backend/lambda/bedrockInsights/index.js
+// Create: backend/handlers/bedrockInsights/index.js
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 const { DynamoDBClient, ScanCommand } = require('@aws-sdk/client-dynamodb');
 

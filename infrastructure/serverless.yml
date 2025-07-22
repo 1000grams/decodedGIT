@@ -1,2 +1,19 @@
-# Moved serverless.yml to infrastructure
-# ...existing code...
+service: decoded-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+functions:
+  apiService:
+    handler: backend/lambdas/apiService/handler.handler
+    events:
+      - http:
+          path: api
+          method: get
+  analytics:
+    handler: backend/lambdas/analytics-lambda/handler.handler
+  auth:
+    handler: backend/lambdas/auth-lambda/handler.handler

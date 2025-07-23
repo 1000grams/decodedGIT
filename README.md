@@ -411,5 +411,10 @@ YouTube, or Spotify) and logs the posting progress for debugging.
 
 ## YouTube Shorts Automation
 
+
 The `youtubeShortsPipeline.js` script splits a track into three segments and calls the `shortsGenerator` Lambda. The Lambda overlays caption text using Amazon Polly and OpenCV, then saves each short to `SHORTS_BUCKET` ready for manual upload.
+
+## AWS SDK Usage on Lambda
+
+The Node.js handlers in this repository rely on the classic `aws-sdk` package. AWS Lambda bundles this SDK, so functions run without including it in the deployment zip. The dependency remains in `package.json` for local development and unit tests. Modules from the AWS SDK v3 (e.g. `@aws-sdk/client-dynamodb`) are not bundled by Lambda and must be deployed with your code. In most cases the built‑in SDK is sufficient and a vendored copy of `aws-sdk` is unnecessary unless a newer version is specifically required.
 

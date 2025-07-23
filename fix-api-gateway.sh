@@ -10,6 +10,20 @@ LAMBDA_PREFIX="prod-dashboard"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 COGNITO_AUTHORIZER_ID="l8m8wy"  # Cognito Authorizer ID
 
+# Ensure API Gateway can invoke a Lambda function
+ensure_lambda_permission() {
+  local function_name=$1
+  local statement_id="${API_ID}-${function_name}-invoke"
+
+  aws lambda add-permission \
+    --function-name "$function_name" \
+    --statement-id "$statement_id" \
+    --action lambda:InvokeFunction \
+    --principal apigateway.amazonaws.com \
+    --source-arn "arn:aws:execute-api:$REGION:$ACCOUNT_ID:$API_ID/*" \
+    --region "$REGION" 2>/dev/null || true
+}
+
 declare -A routes=(
   ["/dashboard/catalog"]="Catalog"
   ["/dashboard/streams"]="Streams"
@@ -35,6 +49,8 @@ declare -A any_routes=(
 for path in "${!routes[@]}"; do
   lambdaName="$LAMBDA_PREFIX${routes[$path]}"
   echo "🔧 Configuring $path → Lambda: $lambdaName"
+
+  ensure_lambda_permission "$lambdaName"
 
   resourceId=$(aws apigateway get-resources --rest-api-id "$API_ID" --region "$REGION" \
     --query "items[?path=='$path'].id" --output text)

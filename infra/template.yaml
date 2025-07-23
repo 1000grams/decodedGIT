@@ -144,7 +144,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref DecodedApi
-            Path: /dashboard/catalog
+            Path: /catalog
             Method: GET
 
   DashboardStreamsFunction:
@@ -335,7 +335,7 @@ Resources:
       Name: decodedmusic-api
       StageName: prod
       Cors:
-        AllowMethods: "POST,OPTIONS"
+        AllowMethods: "GET,POST,OPTIONS"
         AllowHeaders: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
         AllowOrigin: "https://decodedmusic.com"
 

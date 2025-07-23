@@ -125,15 +125,15 @@ exports.handler = async (event) => {
             trendBasedRecommendations: [
                 {
                     priority: 'VIRAL',
-                    action: \Focus on \ TikTok-ready tracks\,
-                    investment: ',500',
+                    action: 'Focus on TikTok-ready tracks',
+                    investment: '1,500',
                     expectedROI: '60-80%',
                     timeline: '15 days'
                 },
                 {
                     priority: 'BRAND',
-                    action: \Pursue \ tech brand partnerships\,
-                    investment: ',000',
+                    action: 'Pursue tech brand partnerships',
+                    investment: '5,000',
                     expectedROI: '40-60%',
                     timeline: '30 days'
                 }

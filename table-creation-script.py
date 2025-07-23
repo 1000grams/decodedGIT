@@ -1,4 +1,4 @@
-timport boto3
+import boto3
 from botocore.exceptions import ClientError
 
 def create_insights_table():

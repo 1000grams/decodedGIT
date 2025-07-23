@@ -21,6 +21,7 @@ The page is built as a sequence of components, each representing a distinct sect
 
 * `src/` – React components and pages.
 * `public/` – static files served by the app such as `index.html` and `favicon.png`.
+* `scripts/` – automation and deployment scripts.
 
 To update the site icon, replace `public/favicon.png` with your image and ensure `public/index.html` contains:
 

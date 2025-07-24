@@ -1,3 +1,17 @@
+import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+
+const cognitoConfig = {
+  region: 'eu-central-1',
+  userPoolId: 'eu-central-1_d9JNeVdni',
+  clientId: '5pb29tja8gkqm3jb43oimd5qjt',
+  domain: 'https://prod-decodedmusic-auth.auth.eu-central-1.amazoncognito.com'
+};
+
+const userPool = new CognitoUserPool({
+  UserPoolId: cognitoConfig.userPoolId,
+  ClientId: cognitoConfig.clientId
+});
+
 // Simple mock authentication service for demo purposes
 class CognitoAuthService {
     constructor() {
@@ -6,80 +20,59 @@ class CognitoAuthService {
     }
 
     async signIn(email, password) {
-        try {
-            // Mock authentication - accept any email/password for demo
-            console.log('🔐 Mock sign-in for demo purposes');
-            
-            this.currentUser = { username: email };
-            this.jwtToken = 'mock-jwt-token-' + Date.now();
-            
-            // Store in localStorage for persistence
-            localStorage.setItem('mockUser', email);
-            localStorage.setItem('mockToken', this.jwtToken);
-            
-            return {
-                success: true,
-                user: this.currentUser,
-                token: this.jwtToken,
-                username: email
-            };
-        } catch (error) {
-            return {
-                success: false,
-                error: 'Authentication failed'
-            };
-        }
+        const authDetails = new AuthenticationDetails({
+            Username: email,
+            Password: password
+        });
+
+        const user = new CognitoUser({
+            Username: email,
+            Pool: userPool
+        });
+
+        return new Promise((resolve, reject) => {
+            user.authenticateUser(authDetails, {
+                onSuccess: (result) => {
+                    const token = result.getIdToken().getJwtToken();
+                    localStorage.setItem('cognitoToken', token);
+                    resolve({ success: true, user: email, token });
+                },
+                onFailure: (err) => {
+                    reject({ success: false, error: err.message });
+                }
+            });
+        });
     }
 
     async getCurrentUser() {
-        try {
-            const storedUser = localStorage.getItem('mockUser');
-            const storedToken = localStorage.getItem('mockToken');
-            
-            if (storedUser && storedToken) {
-                this.currentUser = { username: storedUser };
-                this.jwtToken = storedToken;
-                
-                return {
-                    success: true,
-                    user: this.currentUser,
-                    token: this.jwtToken,
-                    username: storedUser
-                };
-            }
-            
-            return {
-                success: false,
-                error: 'No current user'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                error: 'Session error'
-            };
+        const currentUser = userPool.getCurrentUser();
+
+        if (!currentUser) {
+            return { success: false, user: null };
         }
+
+        return new Promise((resolve, reject) => {
+            currentUser.getSession((err, session) => {
+                if (err) {
+                    reject({ success: false, error: err.message });
+                } else {
+                    resolve({
+                        success: true,
+                        user: currentUser.getUsername(),
+                        token: session.getIdToken().getJwtToken()
+                    });
+                }
+            });
+        });
     }
 
     async signOut() {
-        this.currentUser = null;
-        this.jwtToken = null;
-        localStorage.removeItem('mockUser');
-        localStorage.removeItem('mockToken');
-        
-        return {
-            success: true
-        };
-    }
-
-    async getJwtToken() {
-        if (this.jwtToken) {
-            return this.jwtToken;
+        const currentUser = userPool.getCurrentUser();
+        if (currentUser) {
+            currentUser.signOut();
+            localStorage.removeItem('cognitoToken');
         }
-        
-        const result = await this.getCurrentUser();
-        return result.success ? result.token : null;
     }
 }
 
-const cognitoAuthService = new CognitoAuthService();
-export default cognitoAuthService;
+export default new CognitoAuthService();

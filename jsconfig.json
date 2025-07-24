@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "frontend/src",
     "jsx": "react"
   },
-  "include": ["src"]
+  "include": ["frontend/src"]
 }

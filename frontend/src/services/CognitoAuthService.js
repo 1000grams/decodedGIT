@@ -34,7 +34,7 @@ class CognitoAuthService {
             user.authenticateUser(authDetails, {
                 onSuccess: (result) => {
                     const token = result.getIdToken().getJwtToken();
-                    localStorage.setItem('cognitoToken', token);
+                    localStorage.setItem('cognito_token', token);
                     resolve({ success: true, user: email, token });
                 },
                 onFailure: (err) => {
@@ -70,7 +70,7 @@ class CognitoAuthService {
         const currentUser = userPool.getCurrentUser();
         if (currentUser) {
             currentUser.signOut();
-            localStorage.removeItem('cognitoToken');
+            localStorage.removeItem('cognito_token');
         }
     }
 }

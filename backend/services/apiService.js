@@ -2,7 +2,7 @@ const API_BASE = process.env.REACT_APP_API_BASE || 'https://2h2oj7u446.execute-a
 
 const apiService = {
   getDashboardData: async () => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     if (!token) {
       throw new Error('No Cognito token found. Please log in.');
     }
@@ -24,7 +24,7 @@ const apiService = {
   },
 
   getSpotifyData: async () => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     if (!token) {
       throw new Error('No Cognito token found. Please log in.');
     }

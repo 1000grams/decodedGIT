@@ -8,7 +8,7 @@ class DynamoDBService {
     async getArtistPortfolio(artistId) {
         // Ensure token is captured
         getCognitoTokenFromUrl();
-        const token = localStorage.getItem('cognito_id_token');
+        const token = localStorage.getItem('cognito_token');
         const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/portfolio`, {
             method: 'POST',
             headers: {
@@ -24,7 +24,7 @@ class DynamoDBService {
     // Get track analytics
     async getTrackAnalytics(artistId) {
         getCognitoTokenFromUrl();
-        const token = localStorage.getItem('cognito_id_token');
+        const token = localStorage.getItem('cognito_token');
         const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/track/analytics`, {
             method: 'POST',
             headers: {
@@ -39,7 +39,7 @@ class DynamoDBService {
     // Get AI recommendations
     async getAIRecommendations(artistId) {
         getCognitoTokenFromUrl();
-        const token = localStorage.getItem('cognito_id_token');
+        const token = localStorage.getItem('cognito_token');
         const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/recommendations`, {
             method: 'POST',
             headers: {
@@ -54,7 +54,7 @@ class DynamoDBService {
     // Update artist data
     async updateArtistData(artistId, data) {
         getCognitoTokenFromUrl();
-        const token = localStorage.getItem('cognito_id_token');
+        const token = localStorage.getItem('cognito_token');
         const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/update`, {
             method: 'POST',
             headers: {
@@ -68,7 +68,7 @@ class DynamoDBService {
 
     // Save contact message
     async saveContactMessage(data) {
-        const token = localStorage.getItem('cognito_id_token');
+        const token = localStorage.getItem('cognito_token');
         const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/contact/save`, {
             method: 'POST',
             headers: {

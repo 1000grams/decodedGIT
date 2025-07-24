@@ -11,7 +11,7 @@ jobs:
       - name: Deploy CloudFormation
         run: |
           aws cloudformation deploy \
-            --template-file cloudformation/decodedMusicBackend.yaml \
+            --template-file infra/cloudformation/decodedMusicBackend.yaml \
             --stack-name decoded-genai-stack \
             --region eu-central-1 \
             --capabilities CAPABILITY_NAMED_IAM

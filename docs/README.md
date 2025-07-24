@@ -308,10 +308,13 @@ After committing changes to GitHub you can deploy the build output to the Genera
 ### Automated deploy script
 
 The repository includes `automate-deploy-sync.sh` to perform the above steps in
-one command. Provide your target bucket via `DEPLOY_BUCKET`:
+one command. Provide your target bucket via `DEPLOY_BUCKET`. To automatically
+invalidate a CloudFront distribution after syncing, also set
+`CLOUDFRONT_DISTRIBUTION_ID`:
 
 ```bash
-DEPLOY_BUCKET=decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb ./automate-deploy-sync.sh
+DEPLOY_BUCKET=decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb \
+CLOUDFRONT_DISTRIBUTION_ID=E11YR13TCZW98X ./automate-deploy-sync.sh
 ```
 
 The CloudFront distribution <https://d340ynz7yytwls.cloudfront.net/> (ID `E11YR13TCZW98X`, ARN `arn:aws:cloudfront::396913703024:distribution/E11YR13TCZW98X`) will serve the updated site once the files are uploaded.

@@ -23,7 +23,7 @@ const DEFAULT_HEADERS = {
 };
 
 function getToken() {
-  return localStorage.getItem('cognito_id_token') || localStorage.getItem('spotify_token');
+  return localStorage.getItem('cognito_token') || localStorage.getItem('spotify_token');
 }
 
 async function fetchWithAuth(url, options = {}) {
@@ -42,7 +42,7 @@ async function fetchWithAuth(url, options = {}) {
 
 export const DashboardAPI = {
   getAccounting: async ({ artistId }) => {
-    const token = window.localStorage.getItem('cognito_id_token');
+    const token = window.localStorage.getItem('cognito_token');
     const res = await fetch(
       `${API_ENDPOINTS.DASHBOARD_BASE}/accounting?artistId=${artistId}`,
       {
@@ -93,7 +93,7 @@ export const DashboardAPI = {
 
 export const DynamoDBAPI = {
   getArtistPortfolio: async (artistId) => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/portfolio`, {
       method: 'POST',
       headers: {
@@ -106,7 +106,7 @@ export const DynamoDBAPI = {
   },
 
   getTrackAnalytics: async (artistId) => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/track/analytics`, {
       method: 'POST',
       headers: {
@@ -119,7 +119,7 @@ export const DynamoDBAPI = {
   },
 
   getAIRecommendations: async (artistId) => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/recommendations`, {
       method: 'POST',
       headers: {
@@ -132,7 +132,7 @@ export const DynamoDBAPI = {
   },
 
   updateArtistData: async (artistId, data) => {
-    const token = localStorage.getItem('cognito_id_token');
+    const token = localStorage.getItem('cognito_token');
     const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/update`, {
       method: 'POST',
       headers: {

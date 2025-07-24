@@ -1,5 +1,5 @@
 // Validate React frontend token usage
-const token = localStorage.getItem("cognito_id_token");
+const token = localStorage.getItem("cognito_token");
 
 if (!token) {
     console.error("❌ No Cognito token found in localStorage");

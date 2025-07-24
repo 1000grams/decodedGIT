@@ -1,7 +1,7 @@
 const API_BASE = process.env.REACT_APP_API_URL || 'https://2h2oj7u446.execute-api.eu-central-1.amazonaws.com/prod';
 
 function getToken() {
-  return localStorage.getItem('cognito_id_token') || localStorage.getItem('spotify_token');
+  return localStorage.getItem('cognito_token') || localStorage.getItem('spotify_token');
 }
 
 async function fetchWithAuth(url, options = {}) {
@@ -20,7 +20,7 @@ async function fetchWithAuth(url, options = {}) {
 
 export const DashboardAPI = {
   getAccounting: async ({ artistId }) => {
-    const token = window.localStorage.getItem('cognito_id_token');
+    const token = window.localStorage.getItem('cognito_token');
     const res = await fetch(
       `${process.env.REACT_APP_DASHBOARD_ACCOUNTING}?artistId=${artistId}`,
       {

@@ -64,7 +64,7 @@ function ArtistDashboard() {
   }, []);
 
   const spotifyToken = window.localStorage.getItem('spotify_token');
-  const cognitoToken = window.localStorage.getItem('cognito_id_token');
+  const cognitoToken = window.localStorage.getItem('cognito_token');
   const token = spotifyToken || cognitoToken;
 
   if (!token) {

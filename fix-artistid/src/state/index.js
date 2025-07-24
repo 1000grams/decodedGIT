@@ -1,4 +1,4 @@
-const cognitoAuthService = require('../services/CognitoAuthService');
+import cognitoAuthService from '../services/CognitoAuthService.js';
 
 let artistId = "defaultArtistId"; // Replace with dynamic logic if needed
 
@@ -22,8 +22,4 @@ function mapEmailToArtistId(email) {
   return mapping[email] || 'defaultArtistId';
 }
 
-module.exports = {
-  getArtistId,
-  setArtistId,
-  setArtistIdFromUser
-};
+export { getArtistId, setArtistId, setArtistIdFromUser };

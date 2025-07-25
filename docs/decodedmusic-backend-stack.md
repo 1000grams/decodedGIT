@@ -14,6 +14,7 @@ aws cloudformation deploy \
   --stack-name decoded-genai-stack \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
+```
 
 To remove an old stack named `DecodedMusicBackend` run:
 
@@ -21,6 +22,5 @@ To remove an old stack named `DecodedMusicBackend` run:
 aws cloudformation delete-stack \
   --stack-name DecodedMusicBackend \
   --region eu-central-1
-```
 ```
 

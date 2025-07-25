@@ -1,7 +1,8 @@
 # PowerShell script to automate dashboardSpotify Lambda setup
 
 # 1. Create working directory
-$dir = "dashboardSpotify"
+# Use path relative to this script so it can be executed from anywhere
+$dir = Join-Path $PSScriptRoot "..\backend\dashboardSpotify"
 if (!(Test-Path $dir)) {
     New-Item -ItemType Directory -Path $dir | Out-Null
 }

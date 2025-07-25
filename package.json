@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "npm start --prefix frontend",
-    "build": "npm run build --prefix frontend"
+    "build": "npm run build --prefix frontend",
+    "test": "node tests/cors-headers.test.js"
   }
 }

@@ -59,7 +59,7 @@ scans public news sources for updates on labels, sync opportunities, artist
 deals, disputes, catalog sales, and contract releases. Results are summarized
 using AWS Bedrock and saved to `industry_buzz.txt`.
 
-Copy `.env.example` to `.env` and fill in the required keys. Secrets such as API tokens should be stored in **AWS Secrets Manager** or **SSM Parameter Store** and referenced by name in the `.env` file. See [docs/secrets-management.md](docs/secrets-management.md) for details. Alternatively you can set the `NEWS_API_KEY` environment variable and AWS credentials before running:
+Copy `.env.example` to `.env` and fill in the required keys. Secrets such as API tokens should be stored in **AWS Secrets Manager** or **SSM Parameter Store** and referenced by name in the `.env` file. The front-end loads these variables using the `dotenv` package during local development, so be sure your CI/CD pipeline defines the same keys for production builds. Alternatively you can set the `NEWS_API_KEY` environment variable and AWS credentials before running:
 
 ```bash
 npm run research

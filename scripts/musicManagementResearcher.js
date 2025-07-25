@@ -64,7 +64,11 @@ async function run() {
   const news = await gatherNews();
   const text = news.map(a => `- ${a.title} (${a.source.name})`).join('\n');
   const summary = await summarizeWithBedrock(text);
+  // Save to project root for backwards compatibility
   await fs.writeFile('industry_buzz.txt', summary);
+  // Also output to the React public folder so the marketing panel can load it
+  const reactPath = path.join(__dirname, '..', 'frontend', 'public', 'industry_buzz.txt');
+  await fs.writeFile(reactPath, summary);
   console.log('Industry Buzz saved. Share via Threads API: https://developers.facebook.com/docs/threads-api');
 }
 

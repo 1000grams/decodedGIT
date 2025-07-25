@@ -58,6 +58,8 @@ The `npm run research` script (see `scripts/musicManagementResearcher.js`)
 scans public news sources for updates on labels, sync opportunities, artist
 deals, disputes, catalog sales, and contract releases. Results are summarized
 using AWS Bedrock and saved to `industry_buzz.txt`.
+The file is also copied to `frontend/public/industry_buzz.txt` so the React
+Marketing Panel can load the latest summary.
 
 Copy `.env.example` to `.env` and fill in the required keys. Secrets such as API tokens should be stored in **AWS Secrets Manager** or **SSM Parameter Store** and referenced by name in the `.env` file. The front-end loads these variables using the `dotenv` package during local development, so be sure your CI/CD pipeline defines the same keys for production builds. Alternatively you can set the `NEWS_API_KEY` environment variable and AWS credentials before running:
 

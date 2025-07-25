@@ -1,7 +1,4 @@
 {
-  "dependencies": {
-    "aws-sdk": "^2.1692.0"
-  },
   "scripts": {
     "start": "npm start --prefix frontend",
     "build": "npm run build --prefix frontend"

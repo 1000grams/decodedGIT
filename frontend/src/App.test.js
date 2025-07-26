@@ -11,3 +11,13 @@ test('renders hero headline', () => {
   const headline = screen.getByRole('heading', { name: /Decoded Music/i });
   expect(headline).toBeInTheDocument();
 });
+
+test('renders Home navigation link', () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const homeButton = screen.getByRole('button', { name: /Home/i });
+  expect(homeButton).toBeInTheDocument();
+});

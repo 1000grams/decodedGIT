@@ -1,5 +1,4 @@
-```powershell
-#!/bin/bash
+#!/usr/bin/env pwsh
 
 # Configuration
 $lambdaFunctions = @(
@@ -78,4 +77,3 @@ if (Test-Path $frontendEnvFile) {
 }
 
 Write-Host "`n✅ Verification complete."
-```

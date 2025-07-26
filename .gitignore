@@ -83,3 +83,5 @@ decoded-mirror.bfg-report/
 .aws-sam/
 lambda/growth-dashboard-lambda/
 archives/
+archive/
+frontend/src/fix-artistid/

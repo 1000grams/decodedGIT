@@ -17,6 +17,11 @@ aws s3 sync . s3://your-s3-bucket \
   --exclude="*.ps1" \
   --exclude="*.zip" \
   --exclude="node_modules/*" \
-  --exclude="backend/*"
+  --exclude="backend/*" \
+  --exclude=".aws-sam/*" \
+  --exclude="*/.aws-sam/*" \
+  --exclude="archive/*" \
+  --exclude="archives/*" \
+  --exclude="frontend/src/fix-artistid/*"
 
 echo " Deployment complete!"

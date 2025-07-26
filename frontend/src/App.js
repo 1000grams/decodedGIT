@@ -9,6 +9,8 @@ import CatalogPanel from './components/catalog/CatalogPanel.jsx';
 import AnalyticsPanel from './components/AnalyticsPanel.jsx';
 import SpotifyModule from './components/SpotifyModule.js';
 import BuzzPage from './pages/BuzzPage.js';
+import PitchPage from './pages/PitchPage.jsx';
+import Admin from './pages/Admin.jsx';
 import ContactForm from './components/ContactForm.jsx';
 import About from './pages/About.jsx';
 import MarketingHub from './pages/MarketingHub.jsx';
@@ -41,7 +43,9 @@ function App() {
             <Link to="/analytics"><button>Analytics</button></Link>
             <Link to="/spotify"><button>Spotify</button></Link>
             <Link to="/buzz"><button>Buzz</button></Link>
+            <Link to="/pitch"><button>Pitch</button></Link>
             <Link to="/marketing-hub"><button>Marketing Hub</button></Link>
+            <Link to="/admin"><button>Admin</button></Link>
             <button onClick={signOut}>Sign Out</button>
           </>
         )}
@@ -95,7 +99,9 @@ function App() {
             isAuthenticated ? <SpotifyModule user={user} /> : <Navigate to="/login" replace />
           }
         />
+        <Route path="/pitch" element={<PitchPage />} />
         <Route path="/buzz" element={<BuzzPage />} />
+        <Route path="/admin" element={isAuthenticated ? <Admin /> : <Navigate to="/login" replace />} />
         <Route path="/contact" element={<ContactForm />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/" replace />} />

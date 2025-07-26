@@ -333,7 +333,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       Name: decodedmusic-api
-      StageName: prod
+      StageName: !Ref EnvName
       Cors:
         AllowMethods: "GET,POST,OPTIONS"
         AllowHeaders: "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
@@ -342,8 +342,8 @@ Resources:
 Outputs:
   CatalogApi:
     Description: "Catalog endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/prod/dashboard/catalog"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/dashboard/catalog"
 
   DashboardApi:
     Description: "Dashboard streams endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/prod/dashboard/streams"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/dashboard/streams"

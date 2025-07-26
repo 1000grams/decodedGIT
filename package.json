@@ -2,6 +2,10 @@
   "scripts": {
     "start": "npm start --prefix frontend",
     "build": "npm run build --prefix frontend",
-    "test": "node tests/cors-headers.test.js"
+    "test": "node tests/cors-headers.test.js",
+    "schedule": "node scripts/automationScheduler.js"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
   }
 }

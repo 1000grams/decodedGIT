@@ -6,7 +6,8 @@ const AWS = require('aws-sdk');
 const BUCKET_NAME = 'decodedmusic-lambda-code';
 
 const s3 = new AWS.S3();
-const lambdaDir = path.join('C:', 'decoded', 'backend', 'lambda');
+// Resolve the lambda directory relative to this script so it works on any OS
+const lambdaDir = path.join(__dirname, '..', 'backend', 'lambda');
 
 fs.readdir(lambdaDir, (err, files) => {
   if (err) {

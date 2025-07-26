@@ -20,16 +20,16 @@ The page is built as a sequence of components, each representing a distinct sect
 **Project Layout:**
 
 * `src/` – React components and pages.
-* `public/` – static files served by the app such as `index.html` and `favicon.png`.
+* `public/` – static files served by the app such as `index.html` and `favicon.ico`.
 * `scripts/` – automation and deployment scripts.
 
-To update the site icon, replace `public/favicon.png` with your image and ensure `public/index.html` contains:
+To update the site icon, replace `public/favicon.ico` with your image and ensure `public/index.html` contains:
 
 ```html
-<link rel="icon" href="%PUBLIC_URL%/favicon.png" />
+<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 ```
 
-Remove any `favicon.ico` in `public/` before building so the updated icon appears in the browser.
+The favicon is stored in the S3 bucket `decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb`.
 
 **Conceptual Backend Integration:**
 

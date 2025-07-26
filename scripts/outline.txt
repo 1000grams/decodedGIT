@@ -2,7 +2,7 @@ music-analytics-dashboard/
 ├── frontend/
 │   ├── public/
 │   │   ├── index.html
-│   │   ├── favicon.png
+│   │   ├── favicon.ico
 │   │   └── manifest.json
 │   ├── src/
 │   │   ├── components/

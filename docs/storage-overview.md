@@ -21,14 +21,15 @@ The repository does **not** reference a table named `prod-ArtistStats`. Instead,
 | Purpose | Bucket Name | Source |
 | --- | --- | --- |
 | Lambda deployment packages | `decodedmusic-lambda-code` | `infra/template.yaml` |
-| Static frontend assets | _none referenced_ | — |
-| Uploaded ZIPs and generated buzz files | _none referenced_ | — |
+| Static frontend assets | `decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb` | `docs/README.md` |
+| Buzz summary text files | `decodedmusic-buzz-files` | `frontend/public/buzz.html` |
+| Additional artist data buckets | `decodedmusic-artist-catalog`, `prod-decodedmusic-industrybuzz`, `prod-decodedmusic-previews`, `prod-decodedmusic-statements`, `prod-decodedmusic-uploads` | _not referenced in code_ |
 
-Only the `decodedmusic-lambda-code` bucket appears in CloudFormation or scripts. Buckets named `decoded-assets` and `decodedmusic-data` are mentioned in early design notes but are not present in the current code base. Create them via CloudFormation if still required, or clean up any outdated references.
+Only `decodedmusic-lambda-code` is defined in the CloudFormation templates. The other buckets are currently managed outside of CloudFormation but are used in deployment scripts and manual workflows. Earlier docs referenced buckets named `decoded-assets` and `decodedmusic-data`, however those do not exist in the present environment.
 
 ## Next Steps
 
-1. Confirm whether `decoded-assets` and `decodedmusic-data` are still used in other environments or manual workflows.
-2. If they are active, add corresponding `AWS::S3::Bucket` resources to the CloudFormation templates for traceability.
-3. Remove any remaining references to the old `prod-ArtistStats` table name.
+1. Decide whether the manually managed buckets should be defined in CloudFormation for consistency.
+2. If so, add `AWS::S3::Bucket` resources and update the deployment scripts.
+3. Remove any outdated references such as the former `prod-ArtistStats` table name.
 

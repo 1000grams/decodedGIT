@@ -1,0 +1,4 @@
+.aws-sam/
+archive/
+archives/
+frontend/src/fix-artistid/

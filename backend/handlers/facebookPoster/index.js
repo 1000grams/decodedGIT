@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
+const { headers } = require('../../../lambda/shared/cors-headers');
 
 const { getSecretValue, getParameter } = require('../utils/secrets');
 
@@ -62,6 +63,9 @@ async function loadConfig() {
 }
 
 exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   await loadConfig();
   if (!TOKEN) throw new Error('FACEBOOK_TOKEN not set');
   if (PAGE_IDS.length === 0) throw new Error('FACEBOOK_PAGE_IDS not configured');
@@ -72,5 +76,5 @@ exports.handler = async (event = {}) => {
   for (const pageId of PAGE_IDS) {
     await postToPage(pageId, message);
   }
-  return { statusCode: 200, body: JSON.stringify({ posted: PAGE_IDS.length, message }) };
+  return { statusCode: 200, headers, body: JSON.stringify({ posted: PAGE_IDS.length, message }) };
 };

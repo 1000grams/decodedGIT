@@ -1,5 +1,6 @@
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 const fetch = require('node-fetch');
+const { headers } = require('../../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-sonnet-20240229-v1:0';
@@ -53,10 +54,13 @@ async function postToInstagram(caption) {
   await fetch(`${url}?access_token=${token}&caption=${encodeURIComponent(caption)}&image_url=${encodeURIComponent(imageUrl)}`, { method: 'POST' });
 }
 
-exports.handler = async () => {
+exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   const topic = await getTrendingTopic();
   const link = pickLink();
   const caption = await generateCaption(topic, link);
   await postToInstagram(caption);
-  return { statusCode: 200, body: JSON.stringify({ message: 'post queued', topic, link }) };
+  return { statusCode: 200, headers, body: JSON.stringify({ message: 'post queued', topic, link }) };
 };

@@ -1,12 +1,17 @@
 const querystring = require("querystring");
+const { headers } = require('../../../../lambda/shared/cors-headers');
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
 
-exports.handler = async () => {
+exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   if (!CLIENT_ID || !REDIRECT_URI) {
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: "Missing CLIENT_ID or REDIRECT_URI in environment variables." }),
     };
   }
@@ -20,8 +25,6 @@ exports.handler = async () => {
 
   return {
     statusCode: 302,
-    headers: {
-      Location: authURL,
-    },
+    headers: { ...headers, Location: authURL },
   };
 };

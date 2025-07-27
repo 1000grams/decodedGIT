@@ -1,5 +1,6 @@
 const { DynamoDBClient, PutItemCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const { headers } = require('../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SUB_TABLE || 'ArtistSubscriptions';
@@ -7,6 +8,9 @@ const ddb = new DynamoDBClient({ region: REGION });
 const ses = new SESClient({ region: REGION });
 
 exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   try {
     const body = JSON.parse(event.body || '{}');
     const type = body.type || '';
@@ -34,10 +38,10 @@ exports.handler = async (event) => {
       await sendFailureEmail(data.customer_email);
     }
 
-    return { statusCode: 200, body: JSON.stringify({ message: 'ok' }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ message: 'ok' }) };
   } catch (err) {
     console.error('webhook error', err);
-    return { statusCode: 500, body: JSON.stringify({ message: 'error' }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ message: 'error' }) };
   }
 };
 

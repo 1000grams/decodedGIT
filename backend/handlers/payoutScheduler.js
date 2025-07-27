@@ -1,10 +1,14 @@
 const { DynamoDBClient, ScanCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
+const { headers } = require('../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.REVENUE_TABLE || 'RevenueLog';
 const ddb = new DynamoDBClient({ region: REGION });
 
-exports.handler = async () => {
+exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   const threshold = new Date();
   threshold.setMonth(threshold.getMonth() - 3);
   const periodCutoff = threshold.toISOString().slice(0,7);
@@ -25,5 +29,5 @@ exports.handler = async () => {
       ExpressionAttributeValues: { ':p': { S: 'Paid' } }
     }));
   }
-  return { statusCode: 200, body: JSON.stringify({ updated: items.length }) };
+  return { statusCode: 200, headers, body: JSON.stringify({ updated: items.length }) };
 };

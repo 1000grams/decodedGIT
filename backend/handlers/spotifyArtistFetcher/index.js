@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+const { headers } = require('../../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
@@ -49,7 +50,10 @@ async function getArtistData(token, artistId) {
   return { profile, top: top.tracks || [], categories: cats.categories?.items || [] };
 }
 
-exports.handler = async () => {
+exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   if (!ARTIST_IDS.length) throw new Error('No ARTIST_IDS configured');
   const token = await getToken();
   const week = new Date().toISOString().slice(0,10);
@@ -67,5 +71,5 @@ exports.handler = async () => {
     await ddb.send(new PutItemCommand({ TableName: TABLE, Item: item }));
   });
   await Promise.all(tasks);
-  return { statusCode: 200, body: JSON.stringify({ saved: ARTIST_IDS.length }) };
+  return { statusCode: 200, headers, body: JSON.stringify({ saved: ARTIST_IDS.length }) };
 };

@@ -1,10 +1,14 @@
 const { DynamoDBClient, QueryCommand } = require('@aws-sdk/client-dynamodb');
+const { headers: defaultHeaders, response } = require('../../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
 const ddb = new DynamoDBClient({ region: REGION });
 
 exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: defaultHeaders, body: '' };
+  }
   try {
     const qs = event.queryStringParameters || {};
     if (!qs.artist_id) return response(400, { message: 'artist_id required' });
@@ -22,10 +26,6 @@ exports.handler = async (event) => {
     return response(500, { message: 'Internal Server Error' });
   }
 };
-
-function response(statusCode, body) {
-  return { statusCode, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) };
-}
 
 function clean(item) {
   const obj = {};

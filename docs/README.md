@@ -105,7 +105,7 @@ configured in your `.env` file:
 ```bash
 REACT_APP_PITCH_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/pitch
 REACT_APP_CATALOG_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/catalog
-REACT_APP_ANALYTICS_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/analytics
+REACT_APP_ANALYTICS_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/api/analytics
 REACT_APP_SIGNUP_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/signup
 REACT_APP_CONTACT_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/contact
 REACT_APP_AUTH_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/auth
@@ -384,7 +384,7 @@ URLs remain hidden.
 
 The `cloudformation/marketing-hub.yml` template provisions DynamoDB tables and
 Lambda functions for ad spend tracking and attribution. After deployment the
-API Gateway provides `/marketing` endpoints used by the dashboard to record
+API Gateway provides `/api/marketing` endpoints used by the dashboard to record
 campaign spend and fetch ROI metrics.
 
 Node scripts are available for social post scheduling and trending topic

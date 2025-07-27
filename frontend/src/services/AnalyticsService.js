@@ -6,7 +6,7 @@ class AnalyticsService {
   async getRealAnalytics(artistId = 'ruedevivre') {
     try {
       const token = localStorage.getItem('cognito_access_token') || 'demo-token';
-      const response = await fetch(`${this.baseURL}/analytics?artistId=${artistId}`, {
+      const response = await fetch(`${this.baseURL}/api/analytics?artistId=${artistId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ class AnalyticsService {
   async getDetailedAnalytics(artistId = 'ruedevivre') {
     try {
       const token = localStorage.getItem('cognito_access_token') || 'demo-token';
-      const response = await fetch(`${this.baseURL}/analytics/detailed?artistId=${artistId}`, {
+      const response = await fetch(`${this.baseURL}/api/analytics/detailed?artistId=${artistId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

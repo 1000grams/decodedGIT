@@ -56,7 +56,7 @@ export const DashboardAPI = {
   },
 
   getAnalytics: (payload) =>
-    fetchWithAuth(`${API_ENDPOINTS.DASHBOARD_BASE}/analytics`, {
+    fetchWithAuth(`${API_ENDPOINTS.DASHBOARD_BASE}/api/analytics`, {
       method: 'POST',
       body: JSON.stringify(payload),
     }),

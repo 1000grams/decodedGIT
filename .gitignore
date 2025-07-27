@@ -82,6 +82,7 @@ decoded-mirror.bfg-report/
 # Additional build artifacts
 .aws-sam/
 lambda/growth-dashboard-lambda/
+!lambda/growth-dashboard-lambda/lambda_function.py
 archives/
 archive/
 frontend/src/fix-artistid/

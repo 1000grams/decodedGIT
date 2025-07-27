@@ -19,14 +19,14 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Received' }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     };
   } catch (err) {
     console.error('Contact error:', err);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Submission failed' }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     };
   }
 };

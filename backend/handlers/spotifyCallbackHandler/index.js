@@ -44,7 +44,7 @@ exports.handler = async (event) => {
         resolve({
           statusCode: res.statusCode,
           body: JSON.stringify(json),
-          headers: { 'Access-Control-Allow-Origin': '*' }
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
       });
     });
@@ -53,7 +53,7 @@ exports.handler = async (event) => {
       resolve({
         statusCode: 500,
         body: JSON.stringify({ error: e.message }),
-        headers: { 'Access-Control-Allow-Origin': '*' }
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     });
 

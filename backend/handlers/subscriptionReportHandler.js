@@ -14,7 +14,7 @@ exports.handler = async () => {
     const avgRetention = calcRetention(records);
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ totalSubscribers, monthlyRevenue, avgRetention })
     };
   } catch (err) {

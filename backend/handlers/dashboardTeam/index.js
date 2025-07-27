@@ -7,7 +7,7 @@ exports.handler = async () => {
     const team = process.env.TEAM_JSON ? JSON.parse(process.env.TEAM_JSON) : defaultTeam;
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(team)
     };
   } catch (err) {

@@ -12,11 +12,17 @@ class AnalyticsService {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Analytics API error: ${response.status}`);
       }
-      
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(`Analytics API did not return JSON. Response was: ${text.slice(0, 100)}`);
+      }
+
       return await response.json();
     } catch (error) {
       console.error('Error fetching analytics from AWS:', error);
@@ -42,11 +48,17 @@ class AnalyticsService {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Detailed Analytics API error: ${response.status}`);
       }
-      
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(`Detailed Analytics API did not return JSON. Response was: ${text.slice(0, 100)}`);
+      }
+
       return await response.json();
     } catch (error) {
       console.error('Error fetching detailed analytics from AWS:', error);

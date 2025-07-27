@@ -1,30 +1,32 @@
 const headers = {
     'Access-Control-Allow-Origin': 'https://decodedmusic.com',
     'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,PUT,DELETE'
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Content-Type': 'application/json'
 };
 
-function successResponse(data) {
-    return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(data)
-    };
-}
-
-function errorResponse(error, statusCode = 500) {
+function response(statusCode, body) {
     return {
         statusCode,
         headers,
-        body: JSON.stringify({
-            error: error.message || error,
-            timestamp: new Date().toISOString()
-        })
+        body: JSON.stringify(body)
     };
+}
+
+function successResponse(data) {
+    return response(200, data);
+}
+
+function errorResponse(error, statusCode = 500) {
+    return response(statusCode, {
+        error: error.message || error,
+        timestamp: new Date().toISOString()
+    });
 }
 
 module.exports = {
     headers,
+    response,
     successResponse,
     errorResponse
 };

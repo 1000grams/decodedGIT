@@ -17,7 +17,7 @@ This document outlines the new marketing hub features added to the Decoded Music
 - `weeklyStatsLogger` – scheduled every Tuesday to store weekly performance metrics.
 - `dailyTrendingPost` – posts a Carol Leifer-style caption about the top Google Trends topic with a rotating artist link.
 
-These are exposed via API Gateway under `/marketing`.
+These are exposed via API Gateway under `/api/marketing`.
 
 ## Automation Scripts
 - `scripts/socialPostScheduler.js` queues posts to Instagram, Snapchat and YouTube.
@@ -29,8 +29,8 @@ The stack defined in `cloudformation/marketing-hub.yml` provisions the DynamoDB 
 
 ## Dashboard Tabs
 The frontend should include tabs for:
-1. **Ad Spend Summary** – pulls from `/marketing`.
-2. **ROI & Attribution** – queries `/marketing?campaign_id=xyz`.
+1. **Ad Spend Summary** – pulls from `/api/marketing`.
+2. **ROI & Attribution** – queries `/api/marketing?campaign_id=xyz`.
 3. **Post Scheduler** – schedules posts via the social posting script.
 4. **Trending-Based Auto-Reposts** – managed by the trending repost script.
 

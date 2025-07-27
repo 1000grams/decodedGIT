@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: 'Missing credentials' }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     };
   }
 
@@ -36,14 +36,14 @@ exports.handler = async (event) => {
         refreshToken: auth.AuthenticationResult.RefreshToken,
         groups
       }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     };
   } catch (err) {
     console.error('Cognito auth error', err);
     return {
       statusCode: 401,
       body: JSON.stringify({ message: 'Invalid credentials' }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     };
   }
 };

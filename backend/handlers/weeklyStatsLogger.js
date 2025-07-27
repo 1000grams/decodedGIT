@@ -1,4 +1,5 @@
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const { headers } = require('../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.STATS_TABLE || 'WeeklyArtistStats';
@@ -6,7 +7,10 @@ const ARTIST_IDS = (process.env.ARTIST_IDS || 'RDV').split(',');
 
 const ddb = new DynamoDBClient({ region: REGION });
 
-exports.handler = async () => {
+exports.handler = async (event = {}) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
   const weekStart = getWeekStart();
   const promises = ARTIST_IDS.map((id) => {
     const item = simulateStats(id, weekStart);
@@ -15,6 +19,7 @@ exports.handler = async () => {
   await Promise.all(promises);
   return {
     statusCode: 200,
+    headers,
     body: JSON.stringify({ message: 'weekly stats logged', count: ARTIST_IDS.length })
   };
 };

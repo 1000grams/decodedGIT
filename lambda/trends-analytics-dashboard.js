@@ -1,16 +1,21 @@
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
+const { headers } = require('./shared/cors-headers');
 
 const DYNAMO_MOOD_TABLE = 'prod-MoodContextAnalysis-decodedmusic-backend';
 const DYNAMO_VIRAL_TABLE = 'prod-ViralPrediction-decodedmusic-backend';
 
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
     try {
         // Fetch mood/context data
         const moodData = await getMoodContextData();
         if (!moodData.length) {
             return {
                 statusCode: 404,
+                headers,
                 body: JSON.stringify({ message: 'No mood data found.' })
             };
         }
@@ -50,12 +55,14 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
+            headers,
             body: JSON.stringify(allPredictions)
         };
     } catch (error) {
         console.error('Error processing viral predictions:', error);
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ message: 'Internal server error', error: error.message })
         };
     }

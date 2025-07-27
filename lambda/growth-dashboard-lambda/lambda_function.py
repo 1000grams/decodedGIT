@@ -4,7 +4,8 @@ import subprocess
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": "https://decodedmusic.com",
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Content-Type": "application/json"
 }
 
 
@@ -26,7 +27,7 @@ def lambda_handler(event, context):
         ])
         return {
             "statusCode": 200,
-            "headers": {**CORS_HEADERS, "Content-Type": "application/json"},
+            "headers": CORS_HEADERS,
             "body": result.decode("utf-8")
         }
     except subprocess.CalledProcessError as e:

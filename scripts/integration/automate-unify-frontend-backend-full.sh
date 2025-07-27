@@ -164,3 +164,4 @@ echo "🚀 Next steps:"
 echo "1. Connect your frontend contact form to the backend handler in backend/function/contactFormHandler/src/contact_form_handler.py."
 echo "2. Deploy your backend as needed (no Amplify required)."
 echo "3. Test /about and /contact from both header and footer."
+

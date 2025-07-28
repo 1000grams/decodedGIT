@@ -1,6 +1,6 @@
 ﻿import React, { useState } from "react";
 
-const API_BASE = process.env.REACT_APP_API_URL || "/api";
+const API_BASE = process.env.REACT_APP_API_BASE || "/api";
 
 export default function WriteWithRueForm() {
   const [showForm, setShowForm] = useState(false);

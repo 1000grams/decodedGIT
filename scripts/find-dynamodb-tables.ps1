@@ -67,7 +67,7 @@ Write-Host "`n➡️  Checking frontend configuration...`n"
 if (Test-Path $frontendEnvFile) {
     Write-Host "🔍 Found frontend .env file: $frontendEnvFile"
     $envContent = Get-Content $frontendEnvFile
-    if ($envContent -match "REACT_APP_API_BASE_URL=$apiBaseUrl") {
+    if ($envContent -match "REACT_APP_API_BASE=$apiBaseUrl") {
         Write-Host "✅ Frontend .env file is correctly configured with API base URL."
     } else {
         Write-Host "❌ Frontend .env file is missing or has an incorrect API base URL."

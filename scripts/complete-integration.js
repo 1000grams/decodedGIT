@@ -9,7 +9,6 @@ function copyGeneratedFiles() {
     // Copy dashboard files from the frontend/scripts directory to public folder
     const generatedFiles = [
         { from: 'scripts/FRONTEND INTEGRATION.html', to: 'public/dashboard.html' },
-        { from: '../apiconfig.js', to: 'public/apiconfig.js' },
         { from: '../dashboard.css', to: 'public/dashboard.css' },
         { from: '../test-dashboard.html', to: 'public/test-dashboard.html' }
     ];

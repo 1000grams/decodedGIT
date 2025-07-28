@@ -9,7 +9,7 @@ class DynamoDBService {
         // Ensure token is captured
         getCognitoTokenFromUrl();
         const token = localStorage.getItem('cognito_token');
-        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/portfolio`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/artist/portfolio`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ class DynamoDBService {
     async getTrackAnalytics(artistId) {
         getCognitoTokenFromUrl();
         const token = localStorage.getItem('cognito_token');
-        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/track/analytics`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/track/analytics`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ class DynamoDBService {
     async getAIRecommendations(artistId) {
         getCognitoTokenFromUrl();
         const token = localStorage.getItem('cognito_token');
-        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/recommendations`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/artist/recommendations`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ class DynamoDBService {
     async updateArtistData(artistId, data) {
         getCognitoTokenFromUrl();
         const token = localStorage.getItem('cognito_token');
-        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/artist/update`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/artist/update`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ class DynamoDBService {
     // Save contact message
     async saveContactMessage(data) {
         const token = localStorage.getItem('cognito_token');
-        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/contact/save`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/contact/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

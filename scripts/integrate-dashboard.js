@@ -27,12 +27,6 @@ function integrateDashboard() {
       }
     });
 
-    // Update reference to apiconfig.js
-    const servicesDir = 'src/services';
-    const apiConfigPath = path.join(servicesDir, 'apiconfig.js');
-    if (!fs.existsSync(apiConfigPath)) {
-      console.error('❌ apiconfig.js is missing. Ensure it is generated correctly.');
-    }
 
     console.log('🎉 Dashboard integration complete!');
   } catch (error) {

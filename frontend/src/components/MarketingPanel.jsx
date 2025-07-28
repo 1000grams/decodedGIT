@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 const API_BASE =
-  process.env.REACT_APP_API_URL ||
+  process.env.REACT_APP_API_BASE ||
   'https://2h2oj7u446.execute-api.eu-central-1.amazonaws.com/prod';
 
 export default function MarketingPanel({ user }) {

@@ -223,9 +223,9 @@ The bucket must already exist. Codex automation uses `decoded-genai-stack-webapp
 
 ```bash
 cd backend/handlers/pitchHandler
-zip -r pitchHandler.zip .
+zip -r prod-pitchHandler.zip .
 aws s3 mb s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb || true
-aws s3 cp pitchHandler.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/
+aws s3 cp prod-pitchHandler.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/
 ```
 
 Deploy the resources defined in `infra/cloudformation/decodedMusicBackend.yaml` to expose a `/api/pitch` endpoint:
@@ -243,7 +243,7 @@ Several Lambda functions under `backend/handlers/` implement the `/api/dashboard
 Package and upload the code to S3 before deploying:
 
 ```bash
-cd backend/handlers/dashboardEarnings && zip -r earnings.zip . && aws s3 cp earnings.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
+cd backend/handlers/dashboardEarnings && zip -r prod-dashboardEarnings.zip . && aws s3 cp prod-dashboardEarnings.zip s3://decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb/ && cd -
 ```
 
 Repeat for the other dashboard lambda directories (`dashboardStreams`, `dashboardCatalog`, etc.).

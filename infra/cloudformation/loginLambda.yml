@@ -12,7 +12,7 @@ Resources:
       Role: !GetAtt LoginFunctionRole.Arn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
   LoginFunctionRole:
     Type: AWS::IAM::Role
     Properties:

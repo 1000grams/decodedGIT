@@ -12,7 +12,7 @@ Resources:
       Role: !GetAtt ContactFunctionRole.Arn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
   ContactFunctionRole:
     Type: AWS::IAM::Role
     Properties:

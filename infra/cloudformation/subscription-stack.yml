@@ -76,7 +76,7 @@ Resources:
                   - !Sub "${SubscriptionsTable.Arn}/index/*"
 
   # === Subscription Functions ===
-  # SubscriptionCreateFunction -> Role: !GetAtt SubscriptionLambdaRole.Arn, S3Key: dashboardStreams.zip, Env: SUBSCRIPTIONS_TABLE
+  # SubscriptionCreateFunction -> Role: !GetAtt SubscriptionLambdaRole.Arn, S3Key: prod-dashboardStreams.zip, Env: SUBSCRIPTIONS_TABLE
   SubscriptionCreateFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -86,7 +86,7 @@ Resources:
       Role: !GetAtt SubscriptionLambdaRole.Arn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
       Environment:
         Variables:
           AWS_REGION: !Ref AWS::Region

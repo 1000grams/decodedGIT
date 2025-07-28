@@ -91,6 +91,8 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  # === Auth Functions ===
+  # SpotifyAuthHandler -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-BackendLambdaRole-7PvuaEMzpSHR, S3Key: spotifyAuthHandler.zip, Env: SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI
   SpotifyAuthHandler:
     Type: AWS::Lambda::Function
     Properties:
@@ -108,6 +110,7 @@ Resources:
       Timeout: 10
       MemorySize: 128
 
+  # SpotifyCallbackHandler -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-BackendLambdaRole-7PvuaEMzpSHR, S3Key: spotifyCallbackHandler.zip, Env: SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI
   SpotifyCallbackHandler:
     Type: AWS::Lambda::Function
     Properties:
@@ -126,6 +129,8 @@ Resources:
       Timeout: 10
       MemorySize: 128
 
+  # === Dashboard Functions ===
+  # CatalogFunction -> Role: arn:aws:iam::396913703024:role/decoded-music-resources-CatalogLambdaRole-8APIdPDKgFm8, S3Key: dashboardCatalog.zip, Env: CATALOG_TABLE
   CatalogFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -147,6 +152,7 @@ Resources:
             Path: /catalog
             Method: GET
 
+  # DashboardStreamsFunction -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR, S3Key: dashboardStreams.zip, Env: DYNAMO_TABLE_STREAMS
   DashboardStreamsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -168,6 +174,7 @@ Resources:
             Path: /dashboard/streams
             Method: GET
 
+  # DashboardEarningsFunction -> S3Key: dashboardEarnings.zip, Env: DYNAMO_TABLE_EARNINGS
   DashboardEarningsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -188,6 +195,7 @@ Resources:
             Path: /dashboard/earnings
             Method: GET
 
+  # DashboardCatalogFunction -> S3Key: dashboardCatalog.zip, Env: DYNAMO_TABLE_CATALOG
   DashboardCatalogFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -208,6 +216,7 @@ Resources:
             Path: /dashboard/catalog
             Method: GET
 
+  # DashboardAnalyticsFunction -> S3Key: dashboardAnalytics.zip, Env: DYNAMO_TABLE_ANALYTICS
   DashboardAnalyticsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -228,6 +237,7 @@ Resources:
             Path: /dashboard/analytics
             Method: GET
 
+  # DashboardStatementsFunction -> S3Key: dashboardStatements.zip, Env: DYNAMO_TABLE_STATEMENTS
   DashboardStatementsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -248,6 +258,7 @@ Resources:
             Path: /dashboard/statements
             Method: GET
 
+  # DashboardCampaignsFunction -> S3Key: dashboardCampaigns.zip, Env: SPEND_TABLE
   DashboardCampaignsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -268,6 +279,7 @@ Resources:
             Path: /dashboard/campaigns
             Method: GET
 
+  # DashboardSpotifyFunction -> S3Key: dashboardSpotify.zip, Env: SPOTIFY_TABLE
   DashboardSpotifyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -288,6 +300,7 @@ Resources:
             Path: /dashboard/spotify
             Method: GET
 
+  # DashboardAccountingFunction -> S3Key: dashboardAccounting.zip, Env: REVENUE_TABLE, EXPENSE_TABLE
   DashboardAccountingFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -309,6 +322,7 @@ Resources:
             Path: /dashboard/accounting
             Method: GET
 
+  # DashboardTeamFunction -> S3Key: dashboardTeam.zip, Env: TEAM_JSON
   DashboardTeamFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -328,6 +342,12 @@ Resources:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/team
             Method: GET
+
+# === Marketing Functions ===
+# See cloudformation/marketing-hub.yml for marketing Lambdas
+
+# === Subscription Functions ===
+# See cloudformation/subscription-stack.yml for subscription Lambdas
 
   DecodedApi:
     Type: AWS::Serverless::Api

@@ -75,7 +75,8 @@ Resources:
                   - !GetAtt SubscriptionsTable.Arn
                   - !Sub "${SubscriptionsTable.Arn}/index/*"
 
-  # Subscription Create Function
+  # === Subscription Functions ===
+  # SubscriptionCreateFunction -> Role: !GetAtt SubscriptionLambdaRole.Arn, S3Key: dashboardStreams.zip, Env: SUBSCRIPTIONS_TABLE
   SubscriptionCreateFunction:
     Type: AWS::Lambda::Function
     Properties:

@@ -179,10 +179,11 @@ Resources:
                   - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}"
 
   # =========================================================================
-  # LAMBDA FUNCTIONS
+  # === Marketing Functions ===
   # =========================================================================
 
   # Bedrock Insights Lambda (Updated)
+  # BedrockInsightsFunction -> Role: !GetAtt MarketingLambdaRole.Arn, S3Key: bedrockInsights.zip, Env: AWS_REGION, ENVIRONMENT, MARKETING_SPEND_TABLE
   BedrockInsightsFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -220,7 +221,7 @@ Resources:
       MemorySize: 1024
       ReservedConcurrencyLimit: 10
 
-  # Marketing Spend Handler Lambda
+  # MarketingSpendFunction -> Role: !GetAtt MarketingLambdaRole.Arn, S3Key: marketingSpendHandler.zip, Env: MARKETING_SPEND_TABLE
   MarketingSpendFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -248,6 +249,7 @@ Resources:
       MemorySize: 512
 
   # Marketing Attribution Lambda
+  # MarketingAttributionFunction -> Role: !GetAtt MarketingLambdaRole.Arn, S3Key: marketingAttribution.zip, Env: MARKETING_ATTRIBUTION_TABLE
   MarketingAttributionFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -275,6 +277,7 @@ Resources:
       MemorySize: 256
 
   # ✅ NEW: Cognito Auth Verification Lambda
+  # CognitoAuthFunction -> Role: !GetAtt MarketingLambdaRole.Arn, S3Key: cognitoAuth.zip, Env: COGNITO_USER_POOL_ID
   CognitoAuthFunction:
     Type: AWS::Lambda::Function
     Properties:

@@ -7,6 +7,10 @@ Parameters:
     Default: prod
     Description: Environment name
 
+  SupportEmail:
+    Type: String
+    Description: Email address for platform support
+
 Resources:
   # Subscriptions Table
   SubscriptionsTable:
@@ -196,7 +200,7 @@ Resources:
           AWS_ACCOUNT_ID: "3969-1370-3024"
           SUBSCRIPTIONS_TABLE: !Ref SubscriptionsTable
           PLATFORM_TAGLINE: "Created by artist, for artists"
-          SUPPORT_EMAIL: "ops@decodedmusic.com"
+          SUPPORT_EMAIL: !Ref SupportEmail
       Timeout: 30
       MemorySize: 256
 

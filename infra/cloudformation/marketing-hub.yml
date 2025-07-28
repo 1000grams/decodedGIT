@@ -11,6 +11,14 @@ Parameters:
     Type: String
     Default: decodedmusic-lambda-code
     Description: S3 bucket containing Lambda deployment packages
+
+  SupportEmail:
+    Type: String
+    Description: Email address for platform support
+
+  SubscriptionsTable:
+    Type: String
+    Description: DynamoDB table name for subscriptions
     
   # ✅ VERIFIED COGNITO CONFIGURATION
   UserPoolId:
@@ -202,7 +210,7 @@ Resources:
           # ✅ PLATFORM CONFIGURATION
           PLATFORM_TAGLINE: "Created by artist, for artists"
           PRICE_REVOLUTION: "0.99"
-          SUPPORT_EMAIL: "ops@decodedmusic.com"
+          SUPPORT_EMAIL: !Ref SupportEmail
           # ✅ DECODEDMUSIC TABLES
           USERS_TABLE: "prod-decodedmusic-users"
           EARNINGS_TABLE: "prod-decodedmusic-earnings"
@@ -235,7 +243,7 @@ Resources:
           COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClientId
           # ✅ INTEGRATIONS
           SPOTIFY_CLIENT_ID: "5866a38ab59f46b2b8ceebfa17540d32"
-          SUPPORT_EMAIL: "ops@decodedmusic.com"
+          SUPPORT_EMAIL: !Ref SupportEmail
       Timeout: 30
       MemorySize: 512
 
@@ -385,7 +393,7 @@ Resources:
       TopicName: !Sub "${Environment}-marketing-hub-alerts"
       DisplayName: "decodedmusic Marketing Hub Alerts"
       Subscription:
-        - Endpoint: "ops@decodedmusic.com"
+        - Endpoint: !Ref SupportEmail
           Protocol: "email"
 
 Outputs:

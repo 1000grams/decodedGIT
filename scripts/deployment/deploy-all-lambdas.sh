@@ -10,17 +10,16 @@ ENV_NAME="prod"
 WEB_S3_BUCKET_ARN="arn:aws:s3:::decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb"
 
 declare -A lambdas=(
-  [DashboardAccountingLambda]="dashboardAccounting.zip"
-  [DashboardAnalyticsLambda]="dashboardAnalytics.zip"
-  [DashboardCampaignsLambda]="dashboardCampaigns.zip"
-  [DashboardCatalogLambda]="dashboardCatalog.zip"
-  [DashboardEarningsLambda]="dashboardEarnings.zip"
-  [DashboardStatementsLambda]="dashboardStatements.zip"
-  [DashboardStreamsLambda]="dashboardStreams.zip"
-  [DashboardTeamLambda]="dashboardTeam.zip"
-  [DashboardSpotifyLambda]="dashboardSpotify.zip"
-  [SpotifyArtistFetcherLambda]="spotifyArtistFetcher.zip"
-  [PitchLambda]="pitchHandler.zip"
+  [DashboardAccountingLambda]="prod-dashboardAccounting.zip"
+  [DashboardAnalyticsLambda]="prod-dashboardAnalytics.zip"
+  [DashboardCampaignsLambda]="prod-dashboardCampaigns.zip"
+  [DashboardCatalogLambda]="prod-dashboardCatalog.zip"
+  [DashboardEarningsLambda]="prod-dashboardEarnings.zip"
+  [DashboardStatementsLambda]="prod-dashboardStatements.zip"
+  [DashboardStreamsLambda]="prod-dashboardStreams.zip"
+  [DashboardTeamLambda]="prod-dashboardTeam.zip"
+  [DashboardSpotifyLambda]="prod-dashboardSpotify.zip"
+  [PitchLambda]="prod-pitchHandler.zip"
 )
 
 for logical_id in "${!lambdas[@]}"; do

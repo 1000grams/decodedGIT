@@ -161,7 +161,7 @@ Resources:
       Role: !GetAtt CatalogLambdaRole.Arn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
 
   ApiGateway:
     Type: AWS::ApiGateway::RestApi

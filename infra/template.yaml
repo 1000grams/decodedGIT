@@ -130,7 +130,7 @@ Resources:
       MemorySize: 128
 
   # === Dashboard Functions ===
-  # CatalogFunction -> Role: arn:aws:iam::396913703024:role/decoded-music-resources-CatalogLambdaRole-8APIdPDKgFm8, S3Key: dashboardCatalog.zip, Env: CATALOG_TABLE
+  # CatalogFunction -> Role: arn:aws:iam::396913703024:role/decoded-music-resources-CatalogLambdaRole-8APIdPDKgFm8, S3Key: prod-dashboardCatalog.zip, Env: CATALOG_TABLE
   CatalogFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -140,7 +140,7 @@ Resources:
       Role: arn:aws:iam::396913703024:role/decoded-music-resources-CatalogLambdaRole-8APIdPDKgFm8
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardCatalog.zip
+        S3Key: prod-dashboardCatalog.zip
       Environment:
         Variables:
           CATALOG_TABLE: prod-Catalog
@@ -152,7 +152,7 @@ Resources:
             Path: /catalog
             Method: GET
 
-  # DashboardStreamsFunction -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR, S3Key: dashboardStreams.zip, Env: DYNAMO_TABLE_STREAMS
+  # DashboardStreamsFunction -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR, S3Key: prod-dashboardStreams.zip, Env: DYNAMO_TABLE_STREAMS
   DashboardStreamsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -162,7 +162,7 @@ Resources:
       Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
       Environment:
         Variables:
           DYNAMO_TABLE_STREAMS: prod-DecodedStreams
@@ -174,7 +174,7 @@ Resources:
             Path: /dashboard/streams
             Method: GET
 
-  # DashboardEarningsFunction -> S3Key: dashboardEarnings.zip, Env: DYNAMO_TABLE_EARNINGS
+  # DashboardEarningsFunction -> S3Key: prod-dashboardEarnings.zip, Env: DYNAMO_TABLE_EARNINGS
   DashboardEarningsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -183,7 +183,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardEarnings.zip
+        S3Key: prod-dashboardEarnings.zip
       Environment:
         Variables:
           DYNAMO_TABLE_EARNINGS: prod-DecodedEarnings
@@ -195,7 +195,7 @@ Resources:
             Path: /dashboard/earnings
             Method: GET
 
-  # DashboardCatalogFunction -> S3Key: dashboardCatalog.zip, Env: DYNAMO_TABLE_CATALOG
+  # DashboardCatalogFunction -> S3Key: prod-dashboardCatalog.zip, Env: DYNAMO_TABLE_CATALOG
   DashboardCatalogFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -204,7 +204,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardCatalog.zip
+        S3Key: prod-dashboardCatalog.zip
       Environment:
         Variables:
           DYNAMO_TABLE_CATALOG: prod-DecodedCatalog
@@ -216,7 +216,7 @@ Resources:
             Path: /dashboard/catalog
             Method: GET
 
-  # DashboardAnalyticsFunction -> S3Key: dashboardAnalytics.zip, Env: DYNAMO_TABLE_ANALYTICS
+  # DashboardAnalyticsFunction -> S3Key: prod-dashboardAnalytics.zip, Env: DYNAMO_TABLE_ANALYTICS
   DashboardAnalyticsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -225,7 +225,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardAnalytics.zip
+        S3Key: prod-dashboardAnalytics.zip
       Environment:
         Variables:
           DYNAMO_TABLE_ANALYTICS: prod-WeeklyArtistStats
@@ -237,7 +237,7 @@ Resources:
             Path: /dashboard/analytics
             Method: GET
 
-  # DashboardStatementsFunction -> S3Key: dashboardStatements.zip, Env: DYNAMO_TABLE_STATEMENTS
+  # DashboardStatementsFunction -> S3Key: prod-dashboardStatements.zip, Env: DYNAMO_TABLE_STATEMENTS
   DashboardStatementsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -246,7 +246,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardStatements.zip
+        S3Key: prod-dashboardStatements.zip
       Environment:
         Variables:
           DYNAMO_TABLE_STATEMENTS: prod-Statements
@@ -258,7 +258,7 @@ Resources:
             Path: /dashboard/statements
             Method: GET
 
-  # DashboardCampaignsFunction -> S3Key: dashboardCampaigns.zip, Env: SPEND_TABLE
+  # DashboardCampaignsFunction -> S3Key: prod-dashboardCampaigns.zip, Env: SPEND_TABLE
   DashboardCampaignsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -267,7 +267,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardCampaigns.zip
+        S3Key: prod-dashboardCampaigns.zip
       Environment:
         Variables:
           SPEND_TABLE: prod-MarketingSpend
@@ -279,7 +279,7 @@ Resources:
             Path: /dashboard/campaigns
             Method: GET
 
-  # DashboardSpotifyFunction -> S3Key: dashboardSpotify.zip, Env: SPOTIFY_TABLE
+  # DashboardSpotifyFunction -> S3Key: prod-dashboardSpotify.zip, Env: SPOTIFY_TABLE
   DashboardSpotifyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -288,7 +288,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardSpotify.zip
+        S3Key: prod-dashboardSpotify.zip
       Environment:
         Variables:
           SPOTIFY_TABLE: prod-SpotifyArtistData
@@ -300,7 +300,7 @@ Resources:
             Path: /dashboard/spotify
             Method: GET
 
-  # DashboardAccountingFunction -> S3Key: dashboardAccounting.zip, Env: REVENUE_TABLE, EXPENSE_TABLE
+  # DashboardAccountingFunction -> S3Key: prod-dashboardAccounting.zip, Env: REVENUE_TABLE, EXPENSE_TABLE
   DashboardAccountingFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -309,7 +309,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardAccounting.zip
+        S3Key: prod-dashboardAccounting.zip
       Environment:
         Variables:
           REVENUE_TABLE: prod-RevenueLog
@@ -322,7 +322,7 @@ Resources:
             Path: /dashboard/accounting
             Method: GET
 
-  # DashboardTeamFunction -> S3Key: dashboardTeam.zip, Env: TEAM_JSON
+  # DashboardTeamFunction -> S3Key: prod-dashboardTeam.zip, Env: TEAM_JSON
   DashboardTeamFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -331,7 +331,7 @@ Resources:
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: dashboardTeam.zip
+        S3Key: prod-dashboardTeam.zip
       Environment:
         Variables:
           TEAM_JSON: '[]'

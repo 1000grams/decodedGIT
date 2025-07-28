@@ -21,7 +21,7 @@ Resources:
       Handler: index.handler
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
       Role: !GetAtt BedrockLambdaRole.Arn
       Timeout: 300
       MemorySize: 512

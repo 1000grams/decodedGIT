@@ -14,7 +14,6 @@ $functions = @(
     "pitchHandler",
     "shortsGenerator",
     "facebookPoster",
-    "spotifyArtistFetcher",
     "dailyTrendingPost",
     "cognitoCheck",
     "spotifyCallbackHandler"
@@ -22,7 +21,7 @@ $functions = @(
 
 foreach ($fn in $functions) {
     $lambdaName = "prod-$fn"
-    $zipKey = "$fn.zip"
+    $zipKey = "prod-$fn.zip"
     Write-Output "🔄 Updating $lambdaName with $zipKey..."
     aws lambda update-function-code `
         --function-name $lambdaName `

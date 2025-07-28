@@ -12,7 +12,7 @@ Resources:
       Role: !GetAtt SignupFunctionRole.Arn
       Code:
         S3Bucket: !Ref LambdaCodeBucket
-        S3Key: dashboardStreams.zip
+        S3Key: prod-dashboardStreams.zip
   SignupFunctionRole:
     Type: AWS::IAM::Role
     Properties:

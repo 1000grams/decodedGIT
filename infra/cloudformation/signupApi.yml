@@ -3,13 +3,13 @@ Resources:
   SignupLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: DecodedSignupHandler
+      FunctionName: prod-decodedSignupHandler
       Runtime: nodejs18.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Handler: index.handler
       Code:
-        S3Bucket: decodedmusic.com
-        S3Key: lambda/signup-handler.zip
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedSignupHandler.zip
 
   SignupApi:
     Type: AWS::ApiGateway::RestApi
@@ -27,7 +27,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      HttpMethod: POST
+      HttpMethod: ANY
       ResourceId: !Ref SignupResource
       RestApiId: !Ref SignupApi
       Integration:
@@ -43,4 +43,4 @@ Resources:
       FunctionName: !GetAtt SignupLambdaFunction.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SignupApi}/*/POST/signup
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SignupApi}/*/*/signup

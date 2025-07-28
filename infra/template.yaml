@@ -91,6 +91,19 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  BasicLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
   # === Auth Functions ===
   # SpotifyAuthHandler -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-BackendLambdaRole-7PvuaEMzpSHR, S3Key: spotifyAuthHandler.zip, Env: SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI
   SpotifyAuthHandler:
@@ -343,6 +356,78 @@ Resources:
             Path: /dashboard/team
             Method: ANY
 
+  LoginLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-decodedLoginHandler
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt BasicLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedLoginHandler.zip
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /auth/login
+            Method: ANY
+
+  SignupLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-decodedSignupHandler
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt BasicLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedSignupHandler.zip
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /signup
+            Method: ANY
+
+  SigninLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-decodedSigninHandler
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt BasicLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedSigninHandler.zip
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /auth/signin
+            Method: ANY
+
+  ContactLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-decodedContactHandler
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt BasicLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedContactHandler.zip
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /contact
+            Method: ANY
+
 # === Marketing Functions ===
 # See cloudformation/marketing-hub.yml for marketing Lambdas
 
@@ -367,3 +452,19 @@ Outputs:
   DashboardApi:
     Description: "Dashboard streams endpoint"
     Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/dashboard/streams"
+
+  LoginApi:
+    Description: "Login endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/auth/login"
+
+  SignupApi:
+    Description: "Signup endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/signup"
+
+  SigninApi:
+    Description: "Signin endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/auth/signin"
+
+  ContactApi:
+    Description: "Contact endpoint"
+    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/contact"

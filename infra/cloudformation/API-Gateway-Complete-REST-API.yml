@@ -47,7 +47,7 @@ Resources:
     Properties:
       RestApiId: !Ref DecodedMusicAPI
       ResourceId: !Ref AuthResource
-      HttpMethod: POST
+      HttpMethod: ANY
       AuthorizationType: NONE
       Integration:
         Type: AWS_PROXY
@@ -69,7 +69,7 @@ Resources:
     Properties:
       RestApiId: !Ref DecodedMusicAPI
       ResourceId: !Ref AuthResource
-      HttpMethod: PUT
+      HttpMethod: ANY
       AuthorizationType: NONE
       Integration:
         Type: AWS_PROXY
@@ -99,7 +99,7 @@ Resources:
     Properties:
       RestApiId: !Ref DecodedMusicAPI
       ResourceId: !Ref SubscriptionResource
-      HttpMethod: POST
+      HttpMethod: ANY
       AuthorizationType: NONE
       Integration:
         Type: AWS_PROXY

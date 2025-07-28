@@ -27,13 +27,13 @@ Resources:
   ContactLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: DecodedContactHandler
+      FunctionName: prod-decodedContactHandler
       Runtime: nodejs18.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Handler: index.handler
       Code:
-        S3Bucket: decodedmusic.com
-        S3Key: lambda/contact-handler.zip
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedContactHandler.zip
 
   ContactApi:
     Type: AWS::ApiGateway::RestApi
@@ -51,7 +51,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      HttpMethod: POST
+      HttpMethod: ANY
       ResourceId: !Ref ContactResource
       RestApiId: !Ref ContactApi
       Integration:
@@ -67,4 +67,4 @@ Resources:
       FunctionName: !GetAtt ContactLambdaFunction.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactApi}/*/POST/contact
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactApi}/*/*/contact

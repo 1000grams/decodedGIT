@@ -150,7 +150,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /catalog
-            Method: GET
+            Method: ANY
 
   # DashboardStreamsFunction -> Role: arn:aws:iam::396913703024:role/decoded-genai-stack-backend-DashboardLambdaRole-YkDbqxxNlaMR, S3Key: prod-dashboardStreams.zip, Env: DYNAMO_TABLE_STREAMS
   DashboardStreamsFunction:
@@ -172,7 +172,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/streams
-            Method: GET
+            Method: ANY
 
   # DashboardEarningsFunction -> S3Key: prod-dashboardEarnings.zip, Env: DYNAMO_TABLE_EARNINGS
   DashboardEarningsFunction:
@@ -193,7 +193,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/earnings
-            Method: GET
+            Method: ANY
 
   # DashboardCatalogFunction -> S3Key: prod-dashboardCatalog.zip, Env: DYNAMO_TABLE_CATALOG
   DashboardCatalogFunction:
@@ -214,7 +214,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/catalog
-            Method: GET
+            Method: ANY
 
   # DashboardAnalyticsFunction -> S3Key: prod-dashboardAnalytics.zip, Env: DYNAMO_TABLE_ANALYTICS
   DashboardAnalyticsFunction:
@@ -235,7 +235,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/analytics
-            Method: GET
+            Method: ANY
 
   # DashboardStatementsFunction -> S3Key: prod-dashboardStatements.zip, Env: DYNAMO_TABLE_STATEMENTS
   DashboardStatementsFunction:
@@ -256,7 +256,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/statements
-            Method: GET
+            Method: ANY
 
   # DashboardCampaignsFunction -> S3Key: prod-dashboardCampaigns.zip, Env: SPEND_TABLE
   DashboardCampaignsFunction:
@@ -277,7 +277,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/campaigns
-            Method: GET
+            Method: ANY
 
   # DashboardSpotifyFunction -> S3Key: prod-dashboardSpotify.zip, Env: SPOTIFY_TABLE
   DashboardSpotifyFunction:
@@ -298,7 +298,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/spotify
-            Method: GET
+            Method: ANY
 
   # DashboardAccountingFunction -> S3Key: prod-dashboardAccounting.zip, Env: REVENUE_TABLE, EXPENSE_TABLE
   DashboardAccountingFunction:
@@ -320,7 +320,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/accounting
-            Method: GET
+            Method: ANY
 
   # DashboardTeamFunction -> S3Key: prod-dashboardTeam.zip, Env: TEAM_JSON
   DashboardTeamFunction:
@@ -341,7 +341,7 @@ Resources:
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/team
-            Method: GET
+            Method: ANY
 
 # === Marketing Functions ===
 # See cloudformation/marketing-hub.yml for marketing Lambdas

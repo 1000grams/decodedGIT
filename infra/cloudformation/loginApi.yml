@@ -3,13 +3,13 @@ Resources:
   LoginLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: DecodedLoginHandler
+      FunctionName: prod-decodedLoginHandler
       Runtime: nodejs18.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Handler: index.handler
       Code:
-        S3Bucket: decodedmusic.com
-        S3Key: lambda/login-handler.zip
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedLoginHandler.zip
 
   LoginApi:
     Type: AWS::ApiGateway::RestApi
@@ -34,7 +34,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      HttpMethod: POST
+      HttpMethod: ANY
       ResourceId: !Ref LoginResource
       RestApiId: !Ref LoginApi
       Integration:
@@ -50,4 +50,4 @@ Resources:
       FunctionName: !GetAtt LoginLambdaFunction.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LoginApi}/*/POST/auth/login
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LoginApi}/*/*/auth/login

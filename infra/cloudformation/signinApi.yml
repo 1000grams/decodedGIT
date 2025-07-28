@@ -3,13 +3,13 @@ Resources:
   SigninLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: DecodedSigninHandler
+      FunctionName: prod-decodedSigninHandler
       Runtime: nodejs18.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Handler: index.handler
       Code:
-        S3Bucket: decodedmusic.com
-        S3Key: lambda/signin-handler.zip
+        S3Bucket: decodedmusic-lambda-code
+        S3Key: prod-decodedSigninHandler.zip
 
   SigninApi:
     Type: AWS::ApiGateway::RestApi
@@ -34,7 +34,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      HttpMethod: POST
+      HttpMethod: ANY
       ResourceId: !Ref SigninResource
       RestApiId: !Ref SigninApi
       Integration:
@@ -50,4 +50,4 @@ Resources:
       FunctionName: !GetAtt SigninLambdaFunction.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SigninApi}/*/POST/auth/signin
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SigninApi}/*/*/auth/signin

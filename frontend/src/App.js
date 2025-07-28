@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Link } from 'react-router-dom';
 
 import LandingPage from './components/LandingPage.js';
 import Dashboard from './components/Dashboard.js';
-import CognitoLogin from './components/CognitoLogin.js';
+import Login from './components/Login.jsx';
 import MarketingPanel from './components/MarketingPanel.jsx';
 import CatalogPanel from './components/catalog/CatalogPanel.jsx';
 import AnalyticsPanel from './components/AnalyticsPanel.jsx';
@@ -56,7 +56,7 @@ function App() {
         <Route
           path="/login"
           element={
-            isAuthenticated ? <Navigate to="/dashboard" replace /> : <CognitoLogin />
+            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
           }
         />
         <Route

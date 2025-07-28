@@ -114,7 +114,7 @@ const CognitoLogin = () => {
                 )}
                 
                 <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: '#718096' }}>
-                    <p>Demo Mode: Use any email/password to access dashboard</p>
+                    <p>Sign in with your Cognito credentials</p>
                 </div>
             </div>
         </div>

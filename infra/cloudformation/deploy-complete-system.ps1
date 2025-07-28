@@ -134,7 +134,7 @@ Write-Host "   5. Test full authentication flow" -ForegroundColor White
 if (Test-Path "../.env") {
     Write-Host "`n📝 Updating .env file..." -ForegroundColor Yellow
     $envContent = Get-Content "../.env"
-    $envContent = $envContent -replace "REACT_APP_API_URL=.*", "REACT_APP_API_URL=$apiEndpoint"
+    $envContent = $envContent -replace "REACT_APP_API_BASE=.*", "REACT_APP_API_BASE=$apiEndpoint"
     $envContent | Out-File "../.env" -Encoding UTF8
     Write-Host "✅ .env file updated with new API endpoint!" -ForegroundColor Green
 }

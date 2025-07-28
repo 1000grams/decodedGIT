@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'https://api.example.com';
+const apiBaseUrl = process.env.REACT_APP_API_BASE || 'https://api.example.com';
 
 /**
  * Fetch artist data by artist ID.

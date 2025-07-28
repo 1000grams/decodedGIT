@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Centralized Lambda functions for decodedmusic
+
+Parameters:
+  Environment:
+    Type: String
+  LambdaCodeBucket:
+    Type: String
+  AuthLoginS3Key:
+    Type: String
+  AuthSignupS3Key:
+    Type: String
+  SubscriptionCreateS3Key:
+    Type: String
+  CognitoClientId:
+    Type: String
+    Default: ""
+  UsersTableName:
+    Type: String
+    Default: ""
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    Timeout: 30
+    MemorySize: 256
+
+Resources:
+  AuthLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Environment}-auth-lambda-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  AuthLoginFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authLogin"
+      CodeUri:
+        Bucket: !Ref LambdaCodeBucket
+        Key: !Ref AuthLoginS3Key
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          COGNITO_CLIENT_ID: !Ref CognitoClientId
+          USERS_TABLE: !Ref UsersTableName
+
+  AuthSignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-authSignup"
+      CodeUri:
+        Bucket: !Ref LambdaCodeBucket
+        Key: !Ref AuthSignupS3Key
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          COGNITO_CLIENT_ID: !Ref CognitoClientId
+          USERS_TABLE: !Ref UsersTableName
+
+  SubscriptionCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-subscriptionCreate"
+      CodeUri:
+        Bucket: !Ref LambdaCodeBucket
+        Key: !Ref SubscriptionCreateS3Key
+      Handler: index.handler
+      Role: !GetAtt AuthLambdaRole.Arn
+
+Outputs:
+  AuthLoginFunctionArn:
+    Description: Auth Login Function ARN
+    Value: !GetAtt AuthLoginFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthLoginFunctionArn"
+
+  AuthSignupFunctionArn:
+    Description: Auth Signup Function ARN
+    Value: !GetAtt AuthSignupFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthSignupFunctionArn"
+
+  SubscriptionCreateFunctionArn:
+    Description: Subscription Create Function ARN
+    Value: !GetAtt SubscriptionCreateFunction.Arn
+    Export:
+      Name: !Sub "${Environment}-SubscriptionCreateFunctionArn"
+
+  LambdaRoleArn:
+    Description: Lambda Execution Role ARN
+    Value: !GetAtt AuthLambdaRole.Arn
+    Export:
+      Name: !Sub "${Environment}-AuthLambdaRoleArn"

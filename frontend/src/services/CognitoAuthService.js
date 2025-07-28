@@ -1,10 +1,12 @@
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 
 const cognitoConfig = {
-  region: 'eu-central-1',
-  userPoolId: 'eu-central-1_d9JNeVdni',
-  clientId: '5pb29tja8gkqm3jb43oimd5qjt',
-  domain: 'https://prod-decodedmusic-auth.auth.eu-central-1.amazoncognito.com'
+  region: process.env.REACT_APP_REGION || 'eu-central-1',
+  userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID || 'eu-central-1_d9JNeVdni',
+  clientId: process.env.REACT_APP_COGNITO_CLIENT_ID || '5pb29tja8gkqm3jb43oimd5qjt',
+  domain: process.env.REACT_APP_COGNITO_DOMAIN
+    ? `https://${process.env.REACT_APP_COGNITO_DOMAIN}`
+    : 'https://prod-decodedmusic-auth.auth.eu-central-1.amazoncognito.com'
 };
 
 const userPool = new CognitoUserPool({

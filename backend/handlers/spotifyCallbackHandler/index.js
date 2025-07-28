@@ -2,6 +2,21 @@ const https = require('https');
 const querystring = require('querystring');
 
 exports.handler = async (event) => {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
+  }
+
   const code = event.queryStringParameters?.code;
   if (!code) {
     return { statusCode: 400, body: 'Missing code' };
@@ -44,7 +59,7 @@ exports.handler = async (event) => {
         resolve({
           statusCode: res.statusCode,
           body: JSON.stringify(json),
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+          headers: corsHeaders
         });
       });
     });
@@ -53,7 +68,7 @@ exports.handler = async (event) => {
       resolve({
         statusCode: 500,
         body: JSON.stringify({ error: e.message }),
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        headers: corsHeaders
       });
     });
 

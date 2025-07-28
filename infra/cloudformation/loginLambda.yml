@@ -1,4 +1,8 @@
-﻿AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
 Resources:
   LoginFunction:
     Type: AWS::Lambda::Function
@@ -7,15 +11,8 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt LoginFunctionRole.Arn
       Code:
-        ZipFile: |
-
-
-            const { email, password } = body;
-            if (!email || !password) {
-              return { statusCode: 400, body: 'Missing credentials' };
-            }
-            return { statusCode: 200, body: JSON.stringify({ token: 'placeholder-token' }) };
-          };
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: dashboardStreams.zip
   LoginFunctionRole:
     Type: AWS::IAM::Role
     Properties:

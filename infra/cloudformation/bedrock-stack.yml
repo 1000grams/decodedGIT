@@ -1,4 +1,4 @@
-﻿AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Rue De Vivre Bedrock Integration Stack'
 
 Parameters:
@@ -6,6 +6,10 @@ Parameters:
     Type: String
     Default: 'prod'
     Description: Environment name prefix
+
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
 
 Resources:
   # Bedrock Insights Lambda Function
@@ -16,13 +20,8 @@ Resources:
       Runtime: nodejs18.x
       Handler: index.handler
       Code:
-        ZipFile: |
-
-
-              statusCode: 200,
-              body: JSON.stringify({ message: 'Bedrock Lambda placeholder' })
-            };
-          };
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: dashboardStreams.zip
       Role: !GetAtt BedrockLambdaRole.Arn
       Timeout: 300
       MemorySize: 512

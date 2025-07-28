@@ -1,4 +1,4 @@
-﻿AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Description: 'decodedmusic Subscription Stack - Price Revolution starting from $0.99'
 
 Parameters:
@@ -10,6 +10,10 @@ Parameters:
   SupportEmail:
     Type: String
     Description: Email address for platform support
+
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
 
 Resources:
   # Subscriptions Table
@@ -80,120 +84,8 @@ Resources:
       Handler: index.handler
       Role: !GetAtt SubscriptionLambdaRole.Arn
       Code:
-        ZipFile: |
-
-
-
-
-          exports.handler = async (event) => {
-              console.log('ðŸ’³ Subscription Create - decodedmusic Platform');
-              console.log('Event:', JSON.stringify(event));
-    
-              // Handle CORS preflight
-              if (event.httpMethod === 'OPTIONS') {
-                  return {
-                      statusCode: 200,
-                      headers: {
-                          'Access-Control-Allow-Origin': '*',
-                          'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-                          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
-                      },
-                      body: ''
-                  };
-              }
-    
-              try {
-                  const requestBody = event.body ? JSON.parse(event.body) : {};
-                  const { userId, planType } = requestBody;
-        
-                  if (!userId || !planType) {
-                      throw new Error('Missing required parameters: userId, planType');
-                  }
-        
-                  const subscriptionId = require('crypto').randomUUID();
-        
-                  // Pricing plans - Price Revolution
-                  const plans = {
-                      'artist-starter': { 
-                          name: 'Artist Starter', 
-                          price: 19, 
-                          features: ['Basic Analytics', 'Music Upload', 'Discord Access'] 
-                      },
-                      'pro-creator': { 
-                          name: 'Pro Creator', 
-                          price: 89, 
-                          features: ['Advanced Analytics', 'Spotify Integration', 'AI Insights', 'Pitch System'] 
-                      },
-                      'industry-pro': { 
-                          name: 'Industry Pro', 
-                          price: 249, 
-                          features: ['Full Platform Access', 'Bedrock AI', 'Marketing Hub', 'Priority Support'] 
-                      }
-                  };
-        
-                  const plan = plans[planType];
-                  if (!plan) {
-                      throw new Error(`Invalid plan type: ${planType}`);
-                  }
-        
-                  // Store subscription
-                  await ddb.send(new PutItemCommand({
-                      TableName: process.env.SUBSCRIPTIONS_TABLE,
-                      Item: {
-                          user_id: { S: userId },
-                          subscription_id: { S: subscriptionId },
-                          plan_type: { S: planType },
-                          plan_name: { S: plan.name },
-                          amount: { N: plan.price.toString() },
-                          status: { S: 'pending' },
-                          created_at: { S: new Date().toISOString() },
-                          platform: { S: 'decodedmusic' },
-                          tagline: { S: 'Created by artist, for artists' },
-                          price_revolution: { S: 'starting from $0.99' },
-                          aws_account: { S: process.env.AWS_ACCOUNT_ID }
-                      }
-                  }));
-        
-                  // Generate Stripe payment URL (placeholder)
-                  const paymentURL = `https://checkout.stripe.com/c/pay/cs_${subscriptionId.substring(0, 8)}`;
-        
-                  return {
-                      statusCode: 200,
-                      headers: { 
-                          'Access-Control-Allow-Origin': '*',
-                          'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-                          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                          success: true,
-                          subscriptionId,
-                          paymentURL,
-                          plan: {
-                              name: plan.name,
-                              price: plan.price,
-                              features: plan.features
-                          },
-                          platform: 'decodedmusic',
-                          message: `${plan.name} subscription created - Price Revolution in action!`
-                      })
-                  };
-        
-              } catch (error) {
-                  console.error('Subscription error:', error);
-                  return {
-                      statusCode: 400,
-                      headers: { 
-                          'Access-Control-Allow-Origin': '*',
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                          success: false,
-                          message: error.message || 'Subscription creation failed'
-                      })
-                  };
-              }
-          };
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: dashboardStreams.zip
       Environment:
         Variables:
           AWS_REGION: !Ref AWS::Region

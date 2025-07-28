@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCognitoTokenFromUrl } from '../utils/getCognitoToken';
-import { useAuth } from '../hooks/useAuth';
+// Use authentication context backed by AWS Cognito
+import { useAuth } from '../context/AuthContext.js';
 import './LandingPage.css';
 
 const LandingPage = () => {

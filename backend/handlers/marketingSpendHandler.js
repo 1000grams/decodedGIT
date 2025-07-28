@@ -3,8 +3,21 @@ const { DynamoDBClient, PutItemCommand, QueryCommand } = require('@aws-sdk/clien
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPEND_TABLE || 'MarketingSpend';
 const ddb = new DynamoDBClient({ region: REGION });
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
 
 exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
+  }
   try {
     if (event.httpMethod === 'POST') {
       const body = JSON.parse(event.body || '{}');
@@ -38,7 +51,11 @@ exports.handler = async (event) => {
 };
 
 function response(statusCode, body) {
-  return { statusCode, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) };
+  return {
+    statusCode,
+    headers: corsHeaders,
+    body: JSON.stringify(body)
+  };
 }
 
 function cleanItem(item) {

@@ -1,13 +1,27 @@
 const { DynamoDBClient, QueryCommand } = require('@aws-sdk/client-dynamodb');
-const { headers: defaultHeaders, response } = require('../../../lambda/shared/cors-headers');
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
 const ddb = new DynamoDBClient({ region: REGION });
 
+function response(statusCode, body) {
+  return {
+    statusCode,
+    headers: corsHeaders,
+    body: JSON.stringify(body)
+  };
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: defaultHeaders, body: '' };
+    return { statusCode: 200, headers: corsHeaders, body: '' };
   }
   try {
     const qs = event.queryStringParameters || {};

@@ -1,13 +1,18 @@
 const fetch = require('node-fetch');
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
-const { headers } = require('../../../lambda/shared/cors-headers');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
 const ARTIST_IDS = (process.env.ARTIST_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
 const ddb = new DynamoDBClient({ region: REGION });
 const secretsClient = new SecretsManagerClient({ region: REGION });
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
 let creds;
 
 async function getCreds() {
@@ -52,7 +57,11 @@ async function getArtistData(token, artistId) {
 
 exports.handler = async (event = {}) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
   }
   if (!ARTIST_IDS.length) throw new Error('No ARTIST_IDS configured');
   const token = await getToken();
@@ -71,5 +80,9 @@ exports.handler = async (event = {}) => {
     await ddb.send(new PutItemCommand({ TableName: TABLE, Item: item }));
   });
   await Promise.all(tasks);
-  return { statusCode: 200, headers, body: JSON.stringify({ saved: ARTIST_IDS.length }) };
+  return {
+    statusCode: 200,
+    headers: corsHeaders,
+    body: JSON.stringify({ saved: ARTIST_IDS.length })
+  };
 };

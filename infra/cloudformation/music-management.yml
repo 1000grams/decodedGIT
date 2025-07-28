@@ -1,4 +1,4 @@
-﻿AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   Decoded Music Management stack - region EU-Central (Frankfurt)
 
@@ -7,6 +7,10 @@ Parameters:
     Type: String
     Default: prod
     Description: Environment name prefix
+
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
 
 Resources:
   UploadsBucket:
@@ -156,10 +160,8 @@ Resources:
       Handler: index.handler
       Role: !GetAtt CatalogLambdaRole.Arn
       Code:
-        ZipFile: |
-
-
-          };
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: dashboardStreams.zip
 
   ApiGateway:
     Type: AWS::ApiGateway::RestApi

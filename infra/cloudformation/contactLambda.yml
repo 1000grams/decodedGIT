@@ -1,4 +1,8 @@
-﻿AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LambdaCodeBucket:
+    Type: String
+    Default: decodedmusic-lambda-code
 Resources:
   ContactFunction:
     Type: AWS::Lambda::Function
@@ -7,23 +11,8 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt ContactFunctionRole.Arn
       Code:
-        ZipFile: |
-
-
-          exports.handler = async (event) => {
-            const body = JSON.parse(event.body || '{}');
-            const { name, email, message } = body;
-            const params = {
-              Destination: { ToAddresses: ['ops@decodedmusic.com'] },
-              Message: {
-                Body: { Text: { Data: `Contact Form:\nName: ${name}\nEmail: ${email}\nMessage: ${message}` } },
-                Subject: { Data: 'Decoded Contact Form' }
-              },
-              Source: 'ops@decodedmusic.com'
-            };
-            await ses.sendEmail(params).promise();
-            return { statusCode: 200, body: 'Received' };
-          };
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: dashboardStreams.zip
   ContactFunctionRole:
     Type: AWS::IAM::Role
     Properties:

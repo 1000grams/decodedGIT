@@ -2,7 +2,7 @@
   "scripts": {
     "start": "npm start --prefix frontend",
     "build": "npm run build --prefix frontend",
-    "test": "node tests/cors-headers.test.js",
+    "test": "node tests/cors-headers.test.js && node tests/deploy-spotifyArtistFetcher.test.js",
     "schedule": "node scripts/automationScheduler.js"
   },
   "dependencies": {

@@ -2,7 +2,8 @@
 // Uses Meta Graph API, Snapchat API, and YouTube to queue posts.
 // Requires access tokens via environment variables.
 
-const fetch = require('node-fetch');
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 async function postToInstagram(caption, mediaUrl) {
   const token = process.env.INSTAGRAM_TOKEN;

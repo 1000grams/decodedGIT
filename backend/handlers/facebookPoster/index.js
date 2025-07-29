@@ -1,4 +1,5 @@
-const fetch = require('node-fetch');
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 const { headers } = require('../../../lambda/shared/cors-headers');
 

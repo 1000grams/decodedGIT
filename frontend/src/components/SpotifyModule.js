@@ -17,33 +17,52 @@ function SpotifyModule() {
   }, []);
 
   if (!data) {
-    return <div style={{ border: '1px solid #ccc', padding: '1rem' }}>Loading Spotify data...</div>;
+    return (
+      <div style={{ border: '1px solid #ccc', padding: '1rem' }}>
+        Loading Spotify data...
+      </div>
+    );
   }
+
+  const name = data.name || data.artist;
+  const topTracks = data.top_tracks || data.topTracks || [];
+  const recent = data.recentStreams;
+  const trendInsights = data.trendInsights;
 
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem' }}>
       <h2>Spotify Profile</h2>
-      <div>{data.name}</div>
+      <div>{name}</div>
       <div>Followers: {data.followers}</div>
-      <div>Popularity: {data.popularity}</div>
-      {Array.isArray(data.top_tracks) && (
+      {data.popularity && <div>Popularity: {data.popularity}</div>}
+      {data.monthlyListeners && (
+        <div>Monthly Listeners: {data.monthlyListeners}</div>
+      )}
+      {topTracks.length > 0 && (
         <div>
           <h3>Top Tracks</h3>
           <ul>
-            {data.top_tracks.map(t => (
-              <li key={t.id}>{t.name}</li>
+            {topTracks.map((t, i) => (
+              <li key={t.id || i}>
+                {t.name}
+                {t.plays && ` - ${t.plays} plays`}
+              </li>
             ))}
           </ul>
         </div>
       )}
-      {Array.isArray(data.trending) && (
+      {recent && (
         <div>
-          <h3>Trending</h3>
-          <ul>
-            {data.trending.map((c, i) => (
-              <li key={i}>{c}</li>
-            ))}
-          </ul>
+          <h3>Recent Streams</h3>
+          <div>Today: {recent.today}</div>
+          <div>This Week: {recent.thisWeek}</div>
+          <div>This Month: {recent.thisMonth}</div>
+        </div>
+      )}
+      {trendInsights && (
+        <div>
+          <h3>Trend Insights</h3>
+          <div>Market Score: {trendInsights.marketScore}</div>
         </div>
       )}
     </div>

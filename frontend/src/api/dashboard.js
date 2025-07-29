@@ -64,8 +64,11 @@ export const DashboardAPI = {
     }),
 
   getSpotifyData: (payload) =>
-    fetchWithAuth(`${API_BASE}/spotify`, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    }),
+    fetchWithAuth(
+      process.env.REACT_APP_ENHANCED_SPOTIFY_API_URL || `${API_BASE}/spotify`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }
+    ),
 };

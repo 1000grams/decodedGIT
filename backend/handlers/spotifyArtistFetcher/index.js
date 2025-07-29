@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+const fs = require('fs');
+const path = require('path');
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
@@ -23,10 +25,17 @@ async function getCreds() {
     );
     creds = JSON.parse(SecretString);
   } else {
-    creds = {
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      client_secret: process.env.SPOTIFY_CLIENT_SECRET
-    };
+    // Allow local development by loading credentials from spotify-credentials.json
+    try {
+      const filePath = path.resolve(__dirname, '../../../spotify-credentials.json');
+      const file = fs.readFileSync(filePath, 'utf8');
+      creds = JSON.parse(file);
+    } catch {
+      creds = {
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET
+      };
+    }
   }
   return creds;
 }

@@ -35,7 +35,8 @@ def main():
         ("python load-ascap-works-albums.py", "Loading Album Catalog with Enhanced Metadata"),
         ("python spotify-auto-linker.py", "Auto-Linking Catalog to Spotify Tracks"),
         ("python enhanced-spotify-insights.py", "Collecting Enhanced Spotify Insights"),
-        ("python growth-dashboard.py", "Generating Comprehensive Growth Dashboard")
+        ("python growth-dashboard.py", "Generating Comprehensive Growth Dashboard"),
+        ("python run-weekly-insights.py", "Running Weekly Spotify Insights")
     ]
     
     for command, description in commands:

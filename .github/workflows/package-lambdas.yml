@@ -1,0 +1,27 @@
+name: Package Lambda Functions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'backend/handlers/**'
+      - '.github/workflows/package-lambdas.yml'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install zip
+        run: sudo apt-get update && sudo apt-get install -y zip
+      - name: Package all Lambda functions
+        run: bash scripts/package-lambdas.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda-zips
+          path: backend/handlers/*.zip

@@ -7,7 +7,7 @@ Resources:
   LoginFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Handler: loginHandler.handler
+      Handler: index.handler
       Runtime: nodejs18.x
       Role: !GetAtt LoginFunctionRole.Arn
       Code:

@@ -7,7 +7,7 @@ Resources:
   ContactFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Handler: contactHandler.handler
+      Handler: index.handler
       Runtime: nodejs18.x
       Role: !GetAtt ContactFunctionRole.Arn
       Code:

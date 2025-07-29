@@ -7,7 +7,7 @@ Resources:
   SigninFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Handler: signinHandler.handler
+      Handler: index.handler
       Runtime: nodejs18.x
       Role: !GetAtt SigninFunctionRole.Arn
       Code:

@@ -37,6 +37,10 @@ export function AuthProvider({ children }) {
     }
 
     checkAuthStatus();
+
+    // Check session validity every 5 minutes instead of 30 seconds
+    const interval = setInterval(checkAuthStatus, 300000);
+    return () => clearInterval(interval);
   }, []);
 
   const signIn = async (email, password) => {

@@ -1,5 +1,6 @@
 // verify-api-connectivity.js
-const fetch = require('node-fetch'); // npm install node-fetch@2
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 // List your API endpoints here for each landing page section
 const apiEndpoints = [

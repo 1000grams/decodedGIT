@@ -1,7 +1,8 @@
 // Trending Topic Reposter
 // Gathers trending topics and reposts content with hashtags.
 
-const fetch = require('node-fetch');
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 async function getTwitterTrends() {
   // Placeholder for Twitter API call

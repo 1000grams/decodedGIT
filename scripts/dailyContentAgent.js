@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
-const fetch = require('node-fetch');
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 
 // Load environment variables from .env if present

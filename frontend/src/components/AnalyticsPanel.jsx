@@ -10,8 +10,7 @@ export default function AnalyticsPanel({ user }) {
   useEffect(() => {
     async function fetchAnalytics() {
       try {
-        const output = await runGrowthDashboard([`--artistId=${artistId}`]);
-        const data = JSON.parse(output);
+        const data = await runGrowthDashboard([`--artistId=${artistId}`]);
         setAnalyticsData(data);
       } catch (err) {
         setError(err.message || 'Error fetching analytics data');

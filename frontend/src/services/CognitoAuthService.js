@@ -46,17 +46,17 @@ class CognitoAuthService {
         });
     }
 
-    async getCurrentUser() {
+  async getCurrentUser() {
         const currentUser = userPool.getCurrentUser();
 
         if (!currentUser) {
             return { success: false, user: null };
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             currentUser.getSession((err, session) => {
-                if (err) {
-                    reject({ success: false, error: err.message });
+                if (err || !session?.isValid()) {
+                    resolve({ success: false, error: err ? err.message : 'Session invalid' });
                 } else {
                     resolve({
                         success: true,

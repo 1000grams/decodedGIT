@@ -17,6 +17,10 @@ export function AuthProvider({ children }) {
           setUser(result.user);
           setUsername(result.username);
           setIsAuthenticated(true);
+        } else if (result.error === 'Session invalid') {
+          console.warn('Session expired or invalid. Logging out...');
+          await cognitoAuthService.signOut();
+          window.location.href = '/login';
         }
       } catch (error) {
         console.error('Error checking authentication status:', error);
@@ -39,9 +43,11 @@ export function AuthProvider({ children }) {
 
   const signOut = async () => {
     await cognitoAuthService.signOut();
+    localStorage.clear();
     setUser(null);
     setUsername('');
     setIsAuthenticated(false);
+    window.location.href = '/login';
   };
 
   return (

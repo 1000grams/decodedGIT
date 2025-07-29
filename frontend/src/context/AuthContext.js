@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import cognitoAuthService from '../services/CognitoAuthService.js';
+import { getCognitoTokenFromUrl } from '../utils/getCognitoToken.js';
 
 const AuthContext = createContext();
 
@@ -11,6 +12,21 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function checkAuthStatus() {
+      // Attempt to capture a token from the URL
+      const urlToken = getCognitoTokenFromUrl();
+      const storedToken = urlToken || localStorage.getItem('cognito_token');
+
+      if (storedToken) {
+        try {
+          const payload = JSON.parse(atob(storedToken.split('.')[1]));
+          setUsername(payload["cognito:username"] || payload.email || '');
+        } catch {}
+        setUser(storedToken);
+        setIsAuthenticated(true);
+        setLoading(false);
+        return;
+      }
+
       try {
         const result = await cognitoAuthService.getCurrentUser();
         if (result && result.success) {

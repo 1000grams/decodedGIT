@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getArtistId } from '../state/ArtistManager.js';
 import { runGrowthDashboard } from '../scripts/growth-dashboard-wrapper.js';
+import GrowthDashboard from './GrowthDashboard.jsx';
 
 export default function AnalyticsPanel({ user }) {
   const artistId = getArtistId();
@@ -33,6 +34,7 @@ export default function AnalyticsPanel({ user }) {
   return (
     <div>
       <h2>📊 Analytics for {user?.username || 'Guest'}</h2>
+      <GrowthDashboard data={analyticsData} />
       <pre>{JSON.stringify(analyticsData, null, 2)}</pre>
     </div>
   );

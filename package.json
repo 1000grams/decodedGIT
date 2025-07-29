@@ -6,6 +6,7 @@
     "schedule": "node scripts/automationScheduler.js"
   },
   "dependencies": {
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "node-fetch": "^2.6.7"
   }
 }

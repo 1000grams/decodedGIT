@@ -34,16 +34,18 @@ export function AuthProvider({ children }) {
           setUsername(result.username);
           setIsAuthenticated(true);
         } else {
-          console.warn('Session expired or invalid. Logging out...');
+          console.warn('Session expired or invalid. Clearing auth state.');
           await cognitoAuthService.signOut();
           localStorage.clear();
-          window.location.href = '/login';
+          setUser(null);
+          setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Error checking authentication status:', error);
         await cognitoAuthService.signOut();
         localStorage.clear();
-        window.location.href = '/login';
+        setUser(null);
+        setIsAuthenticated(false);
       }
       setLoading(false);
     }

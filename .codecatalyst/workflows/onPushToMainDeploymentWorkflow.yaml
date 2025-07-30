@@ -48,9 +48,9 @@ Actions:
       - BackendCDKBootstrapAction
       - BackendTest
     Configuration:
-      StackName: DecodedMusicBackendStack
+      StackName: decodedMusicBackend
       Region: eu-central-1
-      Context: '{"stack_name": "DecodedMusicBackendStack"}'
+      Context: '{"stack_name": "decodedMusicBackend"}'
     Environment:
       Name: default_environment
       Connections:

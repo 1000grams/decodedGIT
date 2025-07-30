@@ -1,0 +1,35 @@
+Name: build_and_deploy_react
+SchemaVersion: 1.0
+Triggers:
+  - Type: PUSH
+    Branches:
+      - main
+Actions:
+  Build_and_Test:
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Outputs:
+      Artifacts:
+        - Name: build_output
+          Files:
+            - build/**/*
+    Configuration:
+      Steps:
+        - Run: npm install
+        - Run: npm run lint
+        - Run: npm run test
+        - Run: npm run build
+  DeployToS3:
+    Identifier: aws/s3-publish@v1
+    Needs:
+      - Build_and_Test
+    Inputs:
+      Sources:
+        - build_output
+    Configuration:
+      # This is the line that handles deleting old files
+      Delete: true
+      DestinationBucketName: decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb
+      SourcePath: build/

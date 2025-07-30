@@ -5,7 +5,7 @@ import { TodoApiStack } from '../lib/todo-api-stack';
 
 const app = new cdk.App();
 
-export const stackName = 'DecodedMusicBackendStack';
+export const stackName = 'decodedMusicBackend';
 
 
 new TodoApiStack(app, stackName, {

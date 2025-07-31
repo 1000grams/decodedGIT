@@ -116,6 +116,45 @@ Resources:
           Projection:
             ProjectionType: ALL
 
+  # Fan Segments Table
+  FanSegmentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-FanSegments"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: artist_id
+          AttributeType: S
+        - AttributeName: fan_email
+          AttributeType: S
+        - AttributeName: segment
+          AttributeType: S
+      KeySchema:
+        - AttributeName: artist_id
+          KeyType: HASH
+        - AttributeName: fan_email
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: segment-index
+          KeySchema:
+            - AttributeName: segment
+              KeyType: HASH
+            - AttributeName: artist_id
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Purpose
+          Value: Fan Segmentation
+        - Key: Platform
+          Value: decodedmusic
+        - Key: PriceRevolution
+          Value: "0.99"
+        - Key: CognitoUserPool
+          Value: !Ref UserPoolId
+        - Key: CognitoAppClient
+          Value: !Ref UserPoolClientId
+
   # =========================================================================
   # IAM ROLES & POLICIES
   # =========================================================================
@@ -134,27 +173,29 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: MarketingDynamoDBAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - dynamodb:Query
-                  - dynamodb:Scan
-                  - dynamodb:GetItem
-                  - dynamodb:PutItem
-                  - dynamodb:UpdateItem
-                  - dynamodb:DeleteItem
-                Resource:
-                  - !GetAtt MarketingSpendTable.Arn
-                  - !GetAtt MarketingAttributionTable.Arn
-                  - !Sub "${MarketingSpendTable.Arn}/index/*"
-                  - !Sub "${MarketingAttributionTable.Arn}/index/*"
-                  # ✅ Add access to main decodedmusic tables
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users"
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users/index/*"
+        Policies:
+          - PolicyName: MarketingDynamoDBAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:Query
+                    - dynamodb:Scan
+                    - dynamodb:GetItem
+                    - dynamodb:PutItem
+                    - dynamodb:UpdateItem
+                    - dynamodb:DeleteItem
+                  Resource:
+                    - !GetAtt MarketingSpendTable.Arn
+                    - !GetAtt MarketingAttributionTable.Arn
+                    - !GetAtt FanSegmentsTable.Arn
+                    - !Sub "${MarketingSpendTable.Arn}/index/*"
+                    - !Sub "${MarketingAttributionTable.Arn}/index/*"
+                    - !Sub "${FanSegmentsTable.Arn}/index/*"
+                    # ✅ Add access to main decodedmusic tables
+                    - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users"
+                    - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/prod-decodedmusic-users/index/*"
         - PolicyName: BedrockAccess
           PolicyDocument:
             Version: '2012-10-17'
@@ -412,6 +453,12 @@ Outputs:
     Value: !Ref MarketingAttributionTable
     Export:
       Name: !Sub "${Environment}-MarketingAttributionTable"
+
+  FanSegmentsTableName:
+    Description: Fan Segments table name
+    Value: !Ref FanSegmentsTable
+    Export:
+      Name: !Sub "${Environment}-FanSegmentsTable"
 
   # ✅ COGNITO OUTPUTS
   CognitoUserPoolId:

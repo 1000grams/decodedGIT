@@ -78,4 +78,24 @@ export const DashboardAPI = {
 
   getMarketingAutomation: () =>
     fetchWithAuth(`${API_BASE}/marketing-automation/subscription/report`),
+
+  sendEmailCampaign: (payload) =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/email`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  upsertFanSegment: (payload) =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/segments`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listFanSegments: ({ artistId }) =>
+    fetchWithAuth(
+      `${API_BASE}/marketing-automation/segments?artist_id=${encodeURIComponent(artistId)}`
+    ),
+
+  getDeepMarketingAnalytics: () =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/analytics/deep`),
 };

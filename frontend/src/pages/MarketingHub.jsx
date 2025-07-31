@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SuggestionTile from '../components/SuggestionTile.jsx';
 import { FaChartPie, FaBullhorn, FaCalendarAlt, FaFire } from 'react-icons/fa';
+import { DashboardAPI } from '../api/dashboard';
 
 function MarketingHub() {
   const [contentPlan] = useState(null); // Removed 'setContentPlan' as it is unused
+  const [report, setReport] = useState(null);
+
+  useEffect(() => {
+    DashboardAPI.getMarketingAutomation()
+      .then(setReport)
+      .catch((err) => console.error('marketing automation fetch failed', err));
+  }, []);
 
   return (
     <div
@@ -147,6 +155,13 @@ function MarketingHub() {
           Real-time trend insights
         </SuggestionTile>
       </div>
+      {report && (
+        <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+          <p>Total Subscribers: {report.totalSubscribers}</p>
+          <p>Monthly Revenue: ${report.monthlyRevenue}</p>
+          <p>Average Retention: {report.avgRetention} months</p>
+        </div>
+      )}
     </div>
   );
 }

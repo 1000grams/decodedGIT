@@ -4,7 +4,6 @@
 lambda_dirs=(
   "cognitoCheck"
   "loginHandler"
-  "signinHandler"
   "signupHandler"
   "dashboardAnalytics"
   "dashboardCatalog"

@@ -109,7 +109,7 @@ REACT_APP_ANALYTICS_API_URL=https://your-api-id.execute-api.region.amazonaws.com
 REACT_APP_SIGNUP_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/signup
 REACT_APP_CONTACT_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/contact
 REACT_APP_AUTH_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/auth
-# Cognito configuration for the sign-in Lambda
+# Cognito configuration for the login Lambda
 COGNITO_USER_POOL_ID=5fxmkd
 COGNITO_USER_POOL_CLIENT_ID=your_client_id
 POST_IMAGE_URL=https://yourdomain.com/default-post.jpg
@@ -120,7 +120,7 @@ These URLs are outputs of the `decoded-genai-stack` CloudFormation stack.
 
 ## Cognito Access Check
 
-The sign-in page posts the user's email to a backend endpoint which verifies the
+The login page posts the user's email to a backend endpoint which verifies the
 `artist` group membership in Cognito. Add the URL to your `.env`:
 
 ```bash
@@ -149,7 +149,7 @@ REACT_APP_COGNITO_CHECK_URL=https://your-api-id.execute-api.region.amazonaws.com
 
 
 ## Signup Lambda Function
-The backend includes a sample AWS Lambda handler at `backend/handlers/signupHandler.js` which emails signup details via SES. Deploy it using the CloudFormation template at `infra/cloudformation/signupLambda.yml`:
+The backend includes a sample AWS Lambda handler at `backend/handlers/signupHandler/index.js` which creates a Cognito user and emails signup details via SES. Deploy it using the CloudFormation template at `infra/cloudformation/signupLambda.yml`:
 
 ```bash
 aws cloudformation deploy \
@@ -187,20 +187,20 @@ aws cloudformation deploy \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
-## Sign‑in Lambda Function
-The sign‑in handler at `backend/handlers/signinHandler.js` demonstrates a minimal
-authentication endpoint. Deploy it with:
+## Login Lambda Function
+The login handler at `backend/handlers/loginHandler/index.js` demonstrates a minimal
+authentication endpoint using Amazon Cognito. Deploy it with:
 
 ```bash
 aws cloudformation deploy \
-  --template-file infra/cloudformation/signinLambda.yml \
-  --stack-name DecodedSigninLambda \
+  --template-file infra/cloudformation/loginLambda.yml \
+  --stack-name DecodedLoginLambda \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 
 aws cloudformation deploy \
-  --template-file infra/cloudformation/signinApi.yml \
-  --stack-name DecodedSigninApi \
+  --template-file infra/cloudformation/loginApi.yml \
+  --stack-name DecodedLoginApi \
   --region eu-central-1 \
   --capabilities CAPABILITY_NAMED_IAM
 ```

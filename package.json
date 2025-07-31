@@ -9,7 +9,16 @@
     "schedule": "node scripts/automationScheduler.js"
   },
   "dependencies": {
+    "aws-cdk-lib": "^2.208.0",
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1692.0",
+    "constructs": "^10.4.2",
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.1.0"
   }
 }

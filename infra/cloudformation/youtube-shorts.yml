@@ -43,7 +43,7 @@ Resources:
   ShortsLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub '${EnvName}-shortsGenerator'
+      FunctionName: !Sub '${EnvName}-social'
       Runtime: python3.11
       Handler: index.handler
       Role: !GetAtt ShortsLambdaRole.Arn
@@ -54,7 +54,7 @@ Resources:
           POLLY_VOICE: Joanna
       Code:
         S3Bucket: REPLACE_WITH_CODE_BUCKET
-        S3Key: shortsGenerator.zip
+        S3Key: social.zip
 
 Outputs:
   ShortsBucketName:

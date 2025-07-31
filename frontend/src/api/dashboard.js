@@ -71,7 +71,7 @@ export const DashboardAPI = {
 
   getSpotifyData: ({ artistId }) => {
     const base =
-      process.env.REACT_APP_ENHANCED_SPOTIFY_API_URL || `${API_BASE}/spotify`;
+      process.env.REACT_APP_ENHANCED_SPOTIFY_API_URL || `${API_BASE}/SPOTIFY`;
     const url = `${base}?artist_id=${encodeURIComponent(artistId)}`;
     return fetchWithAuth(url);
   },

@@ -6,7 +6,7 @@ class SpotifyService {
   async getRealSpotifyData(artistId = '293x3NAIGPR4RCJrFkzs0P') {
     try {
       const token = localStorage.getItem('cognito_access_token') || 'demo-token';
-      const response = await fetch(`${this.baseURL}/spotify?artistId=${artistId}`, {
+      const response = await fetch(`${this.baseURL}/SPOTIFY?artist_id=${artistId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ class SpotifyService {
   async getSpotifyInsights(artistId = '293x3NAIGPR4RCJrFkzs0P') {
     try {
       const token = localStorage.getItem('cognito_access_token') || 'demo-token';
-      const response = await fetch(`${this.baseURL}/spotify/insights?artistId=${artistId}`, {
+      const response = await fetch(`${this.baseURL}/SPOTIFY/insights?artistId=${artistId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ class SpotifyService {
 
   async authenticateSpotify() {
     try {
-      const response = await fetch("https://decodedmusic.com/spotify/auth");
+      const response = await fetch("https://decodedmusic.com/SPOTIFY/auth");
 
       if (!response.ok) {
         const errorText = await response.text();

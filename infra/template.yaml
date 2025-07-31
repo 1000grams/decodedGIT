@@ -392,23 +392,6 @@ Resources:
             Path: /signup
             Method: ANY
 
-  SigninLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-decodedSigninHandler
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Role: !GetAtt BasicLambdaExecutionRole.Arn
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-decodedSigninHandler.zip
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /auth/signin
-            Method: ANY
 
   ContactLambdaFunction:
     Type: AWS::Serverless::Function
@@ -460,10 +443,6 @@ Outputs:
   SignupApi:
     Description: "Signup endpoint"
     Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/signup"
-
-  SigninApi:
-    Description: "Signin endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/auth/signin"
 
   ContactApi:
     Description: "Contact endpoint"

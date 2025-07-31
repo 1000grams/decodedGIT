@@ -15,5 +15,5 @@ functions:
           method: get
   analytics:
     handler: backend/handlers/analytics-lambda/handler.handler
-  auth:
-    handler: backend/handlers/auth-lambda/handler.handler
+  authLogin:
+    handler: backend/handlers/loginHandler/index.handler

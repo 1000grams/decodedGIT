@@ -6,6 +6,8 @@
   "dependencies": {
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^3.0.1",
-    "aws-sdk": "^2.1485.0"
+    "aws-sdk": "^2.1485.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.637.0",
+    "@aws-sdk/client-ses": "^3.637.0"
   }
 }

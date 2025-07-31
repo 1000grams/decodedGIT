@@ -4,7 +4,6 @@
 S3_BUCKET="decodedmusic-lambda-deployments"
 LAMBDA_FUNCTIONS=(
   "loginHandler"
-  "signinHandler"
   "signupHandler"
 )
 AWS_REGION="eu-central-1"
@@ -43,7 +42,6 @@ API_ID="YOUR_API_ID"
 STAGE="prod"
 ROUTES=(
   "/auth/login"
-  "/auth/signin"
   "/auth/signup"
 )
 

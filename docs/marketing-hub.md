@@ -15,7 +15,7 @@ This document outlines the new marketing hub features added to the Decoded Music
 - `marketingSpendHandler` – CRUD interface for the `MarketingSpend` table.
 - `attributionHandler` – correlates ad campaigns with streaming lifts and returns ROI data.
 - `weeklyStatsLogger` – scheduled every Tuesday to store weekly performance metrics.
-- `dailyTrendingPost` – posts a Carol Leifer-style caption about the top Google Trends topic with a rotating artist link.
+- `social` – posts a Carol Leifer-style caption about the top Google Trends topic with a rotating artist link.
 
 These are exposed via API Gateway under `/api/marketing`.
 

@@ -10,7 +10,7 @@ const streamPipeline = promisify(pipeline);
 const REGION = process.env.AWS_REGION || 'eu-central-1';
 const S3_BUCKET = process.env.S3_BUCKET;
 const SHORTS_BUCKET = process.env.SHORTS_BUCKET;
-const LAMBDA_NAME = process.env.SHORTS_LAMBDA || 'shortsGenerator';
+const LAMBDA_NAME = process.env.SHORTS_LAMBDA || 'social';
 
 const s3 = new S3Client({ region: REGION });
 const lambda = new LambdaClient({ region: REGION });

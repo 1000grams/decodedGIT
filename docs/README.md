@@ -406,19 +406,20 @@ Set `BEDROCK_MODEL_ID` to either `meta.llama3-70b-instruct-v1:0` or
 Configure `INSTAGRAM_TOKEN` and `INSTAGRAM_USER_ID` in your `.env` along with
 `AWS_REGION`.
 
-## Facebook Poster Lambda
+## Social Lambda
 
-`backend/lambda/facebookPoster` posts to one or more Facebook Pages using the
-Meta Graph API. Set `FACEBOOK_TOKEN` and a comma separated list of page IDs in
-`FACEBOOK_PAGE_IDS`. The function optionally uses Bedrock to generate the post
-content. Each post ends with a randomly chosen artist link (Apple Music,
-YouTube, or Spotify) and logs the posting progress for debugging.
-
+`backend/lambda/social` combines Facebook posting, daily Instagram caption
+generation, and YouTube Shorts creation into a single function. Set
+`FACEBOOK_TOKEN` and `FACEBOOK_PAGE_IDS` for page posts, and
+`INSTAGRAM_TOKEN`/`INSTAGRAM_USER_ID` for trending captions. The shorts
+workflow reads from `SHORTS_BUCKET` and uses Amazon Polly, FFmpeg and OpenCV
+to create captioned videos.
 
 ## YouTube Shorts Automation
 
-
-The `youtubeShortsPipeline.js` script splits a track into three segments and calls the `shortsGenerator` Lambda. The Lambda overlays caption text using Amazon Polly and OpenCV, then saves each short to `SHORTS_BUCKET` ready for manual upload.
+The `youtubeShortsPipeline.js` script splits a track into three segments and
+invokes the `social` Lambda to generate videos. Each short is stored in
+`SHORTS_BUCKET` ready for manual upload.
 
 ## AWS SDK Usage on Lambda
 

@@ -12,9 +12,7 @@ $functions = @(
     "dashboardStreams",
     "dashboardTeam",
     "pitchHandler",
-    "shortsGenerator",
-    "facebookPoster",
-    "dailyTrendingPost",
+    "social",
     "cognitoCheck",
     "spotifyCallbackHandler"
 )

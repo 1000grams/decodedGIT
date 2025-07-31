@@ -75,4 +75,7 @@ export const DashboardAPI = {
     const url = `${base}?artist_id=${encodeURIComponent(artistId)}`;
     return fetchWithAuth(url);
   },
+
+  getMarketingAutomation: () =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/subscription/report`),
 };

@@ -47,6 +47,10 @@ coverage/
 aws-credentials.json
 config.json
 
+# CDK output
+cdk.out/
+*.zip
+
 # Temporary files
 tmp/
 temp/

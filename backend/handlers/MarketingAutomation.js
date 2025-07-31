@@ -7,6 +7,7 @@ const SPEND_TABLE = process.env.SPEND_TABLE || 'MarketingSpend';
 const STATS_TABLE = process.env.STATS_TABLE || 'WeeklyArtistStats';
 const REVENUE_TABLE = process.env.REVENUE_TABLE || 'RevenueLog';
 const SUB_TABLE = process.env.SUB_TABLE || 'ArtistSubscriptions';
+const FAN_TABLE = process.env.FAN_TABLE || 'FanSegments';
 const ARTIST_IDS = (process.env.ARTIST_IDS || 'RDV').split(',');
 
 const ddb = new DynamoDBClient({ region: REGION });
@@ -26,6 +27,9 @@ exports.handler = async (event) => {
     if (path.endsWith('/payout')) return await handlePayout();
     if (path.endsWith('/subscription/webhook')) return await handleSubscriptionWebhook(event);
     if (path.endsWith('/subscription/report')) return await handleSubscriptionReport();
+    if (path.endsWith('/email')) return await handleEmailCampaign(event);
+    if (path.endsWith('/segments')) return await handleFanSegments(event);
+    if (path.endsWith('/analytics/deep')) return await handleDeepAnalytics();
     return response(404, { message: 'Not Found' });
   } catch (err) {
     console.error('MarketingAutomation error', err);
@@ -165,6 +169,88 @@ async function handleSubscriptionReport() {
   const monthlyRevenue = totalSubscribers * 99;
   const avgRetention = calcRetention(records);
   return response(200, { totalSubscribers, monthlyRevenue, avgRetention });
+}
+
+async function handleFanSegments(event) {
+  if (event.httpMethod === 'POST') {
+    const body = JSON.parse(event.body || '{}');
+    if (!body.artist_id || !body.email || !body.segment) {
+      return response(400, { message: 'artist_id, email and segment required' });
+    }
+    const item = {
+      artist_id: { S: body.artist_id },
+      fan_email: { S: body.email },
+      segment: { S: body.segment },
+    };
+    await ddb.send(new PutItemCommand({ TableName: FAN_TABLE, Item: item }));
+    return response(200, { message: 'fan segmented' });
+  }
+  if (event.httpMethod === 'GET') {
+    const qs = event.queryStringParameters || {};
+    if (!qs.artist_id) return response(400, { message: 'artist_id required' });
+    const params = new QueryCommand({
+      TableName: FAN_TABLE,
+      KeyConditionExpression: 'artist_id = :a',
+      ExpressionAttributeValues: { ':a': { S: qs.artist_id } },
+    });
+    const data = await ddb.send(params);
+    const items = (data.Items || []).map(cleanItem);
+    return response(200, items);
+  }
+  return response(405, { message: 'Method Not Allowed' });
+}
+
+async function handleEmailCampaign(event) {
+  const body = JSON.parse(event.body || '{}');
+  const { segment, subject, message } = body;
+  if (!segment || !subject || !message) {
+    return response(400, { message: 'segment, subject and message required' });
+  }
+  const segParams = new QueryCommand({
+    TableName: FAN_TABLE,
+    IndexName: 'segment-index',
+    KeyConditionExpression: 'segment = :s',
+    ExpressionAttributeValues: { ':s': { S: segment } },
+  });
+  const data = await ddb.send(segParams);
+  const emails = (data.Items || [])
+    .map((i) => i.fan_email && i.fan_email.S)
+    .filter(Boolean);
+  if (!emails.length) return response(200, { sent: 0 });
+  const sendPromises = emails.map((to) =>
+    ses.send(
+      new SendEmailCommand({
+        Destination: { ToAddresses: [to] },
+        Message: { Body: { Text: { Data: message } }, Subject: { Data: subject } },
+        Source: 'no-reply@decodedmusic.com',
+      })
+    )
+  );
+  await Promise.allSettled(sendPromises);
+  return response(200, { sent: emails.length });
+}
+
+async function handleDeepAnalytics() {
+  const [spendRes, statsRes, subsRes] = await Promise.all([
+    ddb.send(new ScanCommand({ TableName: SPEND_TABLE })),
+    ddb.send(new ScanCommand({ TableName: STATS_TABLE })),
+    ddb.send(new ScanCommand({ TableName: SUB_TABLE })),
+  ]);
+  const spend = (spendRes.Items || []).reduce((sum, i) => sum + parseInt(i.spent_cents.N), 0);
+  const streams = (statsRes.Items || []).reduce(
+    (sum, i) => sum + (parseInt(i.spotify_streams?.N || '0') + parseInt(i.youtube_views?.N || '0')),
+    0
+  );
+  const subscribers = (subsRes.Items || []).length;
+  const avgSpendPerSubscriber = subscribers ? spend / subscribers : 0;
+  const streamsPerDollar = spend ? (streams / (spend / 100)).toFixed(2) : '0';
+  return response(200, {
+    spend_cents: spend,
+    total_streams: streams,
+    subscribers,
+    avg_spend_per_subscriber: Number(avgSpendPerSubscriber.toFixed(2)),
+    streams_per_dollar: Number(streamsPerDollar),
+  });
 }
 
 function response(statusCode, body) {

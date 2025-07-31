@@ -6,11 +6,15 @@ import { DashboardAPI } from '../api/dashboard';
 function MarketingHub() {
   const [contentPlan] = useState(null); // Removed 'setContentPlan' as it is unused
   const [report, setReport] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
 
   useEffect(() => {
     DashboardAPI.getMarketingAutomation()
       .then(setReport)
       .catch((err) => console.error('marketing automation fetch failed', err));
+    DashboardAPI.getDeepMarketingAnalytics()
+      .then(setAnalytics)
+      .catch((err) => console.error('deep analytics fetch failed', err));
   }, []);
 
   return (
@@ -160,6 +164,12 @@ function MarketingHub() {
           <p>Total Subscribers: {report.totalSubscribers}</p>
           <p>Monthly Revenue: ${report.monthlyRevenue}</p>
           <p>Average Retention: {report.avgRetention} months</p>
+        </div>
+      )}
+      {analytics && (
+        <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+          <p>Streams per Dollar: {analytics.streams_per_dollar}</p>
+          <p>Avg Spend per Subscriber: ${analytics.avg_spend_per_subscriber}</p>
         </div>
       )}
     </div>

@@ -1,7 +1,9 @@
 // Social Posting Scheduler
 // Uses Meta Graph API, Snapchat API, and YouTube to queue posts.
-// Requires access tokens via environment variables.
+// Requires access tokens via environment variables and schedules
+// posts three times daily.
 
+const cron = require('node-cron');
 const fetch = (...args) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
@@ -26,7 +28,7 @@ async function queueYouTubeShort(mediaUrl, title) {
   console.log('YouTube Short queued:', title);
 }
 
-async function run() {
+async function postAll() {
   const post = { caption: 'New single out now!', mediaUrl: 'https://decodedmusic.com/logo.png' };
   const mediaUrl = process.env.POST_IMAGE_URL || post.mediaUrl;
   post.mediaUrl = mediaUrl;
@@ -36,7 +38,20 @@ async function run() {
   console.log('Posts scheduled');
 }
 
-run().catch(err => {
-  console.error('Posting failed', err);
-  process.exit(1);
-});
+function schedulePosts() {
+  cron.schedule('0 9 * * *', () => {
+    postAll().catch(err => console.error('Posting failed', err));
+  }, { timezone: 'America/New_York' });
+
+  cron.schedule('0 12 * * *', () => {
+    postAll().catch(err => console.error('Posting failed', err));
+  }, { timezone: 'America/Los_Angeles' });
+
+  cron.schedule('0 19 * * *', () => {
+    postAll().catch(err => console.error('Posting failed', err));
+  }, { timezone: 'America/Los_Angeles' });
+
+  console.log('Scheduler initialized for 9 AM ET, 12 PM PT, and 7 PM PT posts');
+}
+
+schedulePosts();

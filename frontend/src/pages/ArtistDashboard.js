@@ -3,6 +3,7 @@ import { DashboardAPI } from '../api/dashboard.js';
 import { getCognitoTokenFromUrl } from '../utils/getCognitoToken.js';
 import SpotifyModule from '../components/SpotifyModule.js';
 import LogoutButton from '../components/LogoutButton.jsx';
+import { getArtistId } from '../state/ArtistManager.js';
 
 const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = process.env.REACT_APP_SPOTIFY_REDIRECT_URI ||
@@ -53,7 +54,8 @@ function ArtistDashboard() {
 
     async function loadData() {
       try {
-        const data = await DashboardAPI.getAccounting({ artistId: 'RueDeVivre' });
+        const artistId = getArtistId();
+        const data = await DashboardAPI.getAccounting({ artistId });
         setAccounting(data);
       } catch (err) {
         setError('Failed to load dashboard data.');

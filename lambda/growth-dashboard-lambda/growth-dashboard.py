@@ -8,9 +8,9 @@ import sys
 DYNAMO_GROWTH_TABLE = 'prod-GrowthMetrics-decodedmusic-backend'
 DYNAMO_INSIGHTS_TABLE = 'prod-SpotifyInsights-decodedmusic-backend'
 DYNAMO_CATALOG_TABLE = 'prod-DecodedCatalog-decodedmusic-backend'
-SPOTIFY_ARTIST_ID = '293x3NAIGPR4RCJrFkzs0P'  # Spotify Artist ID
-CATALOG_ARTIST_ID = 'ruedevivre'  # Programmatic identifier for DynamoDB queries
-ARTIST_NAME = 'Rue De Vivre'  # Display name for UI and logs
+SPOTIFY_ARTIST_ID = ''  # Spotify Artist ID (set per artist)
+CATALOG_ARTIST_ID = ''  # Programmatic identifier for DynamoDB queries
+ARTIST_NAME = ''  # Display name for UI and logs
 
 dynamodb = boto3.resource('dynamodb')
 

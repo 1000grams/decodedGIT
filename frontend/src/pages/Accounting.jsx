@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DashboardAPI } from '../api/dashboard';
+import { getArtistId } from '../state/ArtistManager.js';
 
 const API_BASE = process.env.REACT_APP_API_BASE || '/api/dashboard';
 
@@ -9,7 +10,8 @@ function Accounting() {
   useEffect(() => {
     async function fetchAccounting() {
       try {
-        const data = await DashboardAPI.getAccounting({ artistId: 'RueDeVivre' });
+        const artistId = getArtistId();
+        const data = await DashboardAPI.getAccounting({ artistId });
         setSummary(data);
       } catch (err) {
         console.error('fetch accounting error', err);
@@ -19,7 +21,8 @@ function Accounting() {
   }, []);
 
   const downloadCsv = () => {
-    window.location.href = `${API_BASE}/accounting/export?artist_id=RueDeVivre`;
+    const artistId = getArtistId();
+    window.location.href = `${API_BASE}/accounting/export?artist_id=${artistId}`;
   };
 
   return (

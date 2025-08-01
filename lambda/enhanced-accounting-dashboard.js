@@ -15,7 +15,7 @@ exports.handler = async (event) => {
     }
     
     try {
-        const artistId = event.queryStringParameters?.artistId || 'RueDeVivre';
+        const artistId = event.queryStringParameters?.artistId || 'unknown_artist';
         
         // Get trend prediction data
         const trendsResponse = await dynamodb.scan({
@@ -204,7 +204,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 error: 'Failed to load accounting data',
                 message: error.message,
-                artist: 'RueDeVivre',
+                artist: artistId,
                 fallback: { totalTracks: 0, message: 'Investment data temporarily unavailable' }
             })
         };

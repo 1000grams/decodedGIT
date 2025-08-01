@@ -23,7 +23,9 @@ export async function generateContent(prompt) {
 
     return response.data;
   } catch (error) {
-    console.error('Error generating content with AWS Bedrock:', error);
+    const message =
+      error?.response?.data?.message || error.message || String(error);
+    console.error('Error generating content with AWS Bedrock:', message);
     throw error;
   }
 }

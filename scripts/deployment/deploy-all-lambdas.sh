@@ -10,15 +10,13 @@ ENV_NAME="prod"
 WEB_S3_BUCKET_ARN="arn:aws:s3:::decoded-genai-stack-webappne-websitebucket4326d7c2-jvplfkkey9mb"
 
 declare -A lambdas=(
-  [DashboardAccountingLambda]="prod-dashboardAccounting.zip"
   [DashboardAnalyticsLambda]="prod-dashboardAnalytics.zip"
   [DashboardCampaignsLambda]="prod-dashboardCampaigns.zip"
   [DashboardCatalogLambda]="prod-dashboardCatalog.zip"
-  [DashboardEarningsLambda]="prod-dashboardEarnings.zip"
-  [DashboardStatementsLambda]="prod-dashboardStatements.zip"
+  [DashboardFinanceLambda]="prod-dashboardFinance.zip"
+  [DashboardRoadmapLambda]="prod-dashboardRoadmap.zip"
   [DashboardStreamsLambda]="prod-dashboardStreams.zip"
   [DashboardTeamLambda]="prod-dashboardTeam.zip"
-  [DashboardSpotifyLambda]="prod-dashboardSpotify.zip"
   [PitchLambda]="prod-pitchHandler.zip"
 )
 

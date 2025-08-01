@@ -2,13 +2,11 @@ $bucket = "decodedmusic-lambda-code"
 $region = "eu-central-1"
 
 $functions = @(
-    "dashboardAccounting",
     "dashboardAnalytics",
     "dashboardCampaigns",
     "dashboardCatalog",
-    "dashboardEarnings",
-    "dashboardSpotify",
-    "dashboardStatements",
+    "dashboardFinance",
+    "dashboardRoadmap",
     "dashboardStreams",
     "dashboardTeam",
     "pitchHandler",

@@ -5,15 +5,13 @@ bucket="decodedmusic-lambda-code"
 # Map local lambda directories to prod zip names
 lambdas=(
   "pitchHandler:prod-pitchHandler"
-  "dashboardEarnings:prod-dashboardEarnings"
+  "dashboardFinance:prod-dashboardFinance"
   "dashboardStreams:prod-dashboardStreams"
   "dashboardCatalog:prod-dashboardCatalog"
   "dashboardAnalytics:prod-dashboardAnalytics"
-  "dashboardStatements:prod-dashboardStatements"
-  "dashboardAccounting:prod-dashboardAccounting"
+  "dashboardRoadmap:prod-dashboardRoadmap"
   "dashboardTeam:prod-dashboardTeam"
   "dashboardCampaigns:prod-dashboardCampaigns"
-  "dashboardSpotify:prod-dashboardSpotify"
   "fetch:prod-fetch"
 )
 
@@ -28,7 +26,7 @@ for entry in "${lambdas[@]}"; do
     aws s3 cp "$zip_name.zip" "s3://$bucket/"
     echo "$zip_name uploaded."
   )
+
 done
 
 echo "All Lambda functions packaged and uploaded."
-

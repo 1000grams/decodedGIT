@@ -9,14 +9,12 @@ const bedrockApiUrl =
 
 export async function generateContent(prompt) {
   try {
-    const token = localStorage.getItem('cognito_access_token');
     const response = await axios.post(
       bedrockApiUrl,
       { prompt },
       {
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
         },
       }
     );

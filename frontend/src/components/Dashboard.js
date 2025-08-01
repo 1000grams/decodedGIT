@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import { getArtistId } from '../state/ArtistManager.js';
 
 const Dashboard = ({ user, username, onSignOut }) => {
     const [dashboardData, setDashboardData] = useState(null);
@@ -16,9 +17,10 @@ const Dashboard = ({ user, username, onSignOut }) => {
 
         try {
             // Use fallback data for demo
+            const artist = getArtistId();
             const fallbackData = {
                 catalog: {
-                    artist: 'Rue De Vivre',
+                    artist,
                     totalTracks: 40,
                     totalStreams: 125000,
                     monthlyRevenue: 1247.89
@@ -86,7 +88,7 @@ const Dashboard = ({ user, username, onSignOut }) => {
             <header className="dashboard-header">
                 <div className="dashboard-nav">
                     <div className="dashboard-logo">
-                        <h1> Rue De Vivre Analytics</h1>
+                        <h1> {getArtistId()} Analytics</h1>
                     </div>
                     <div className="user-controls">
                         <span className="welcome-text">Welcome, {username}</span>

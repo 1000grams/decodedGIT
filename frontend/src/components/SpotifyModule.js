@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DashboardAPI } from '../api/dashboard.js';
+import { getArtistId } from '../state/ArtistManager.js';
 
 function SpotifyModule() {
   const [data, setData] = useState(null);
@@ -7,7 +8,8 @@ function SpotifyModule() {
   useEffect(() => {
     async function fetchSpotify() {
       try {
-        const res = await DashboardAPI.getSpotifyData({ artistId: 'RueDeVivre' });
+        const artistId = getArtistId();
+        const res = await DashboardAPI.getSpotifyData({ artistId });
         setData(res);
       } catch (err) {
         console.error('spotify fetch error', err);

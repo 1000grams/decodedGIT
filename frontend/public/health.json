@@ -6,5 +6,5 @@
         "analytics": "Using fallback data if API unavailable",
         "frontend": "React app running with error handling"
     },
-    "message": "Rue De Vivre Analytics - All systems operational with graceful fallbacks"
+    "message": "Analytics system operational with graceful fallbacks"
 }

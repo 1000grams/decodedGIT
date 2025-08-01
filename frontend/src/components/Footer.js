@@ -60,14 +60,6 @@ export default function Footer() {
             YouTube
           </a>
           <a
-            href="https://www.youtube.com/@ruedevivre/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            Rue De Vivre YouTube
-          </a>
-          <a
             href="https://www.instagram.com/kaiserinstreetwear/"
             target="_blank"
             rel="noopener noreferrer"

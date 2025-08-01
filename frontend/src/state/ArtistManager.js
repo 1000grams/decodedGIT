@@ -8,10 +8,10 @@ export const setArtistId = (newId) => {
 };
 
 export const setArtistIdFromUser = async () => {
-  const user = await cognitoAuthService.getCurrentUser();
-  const email = user.email;
-  const artistId = mapEmailToArtistId(email);
-  setArtistId(artistId);
+  const result = await cognitoAuthService.getCurrentUser();
+  const email = result.user; // currentUser.getUsername() returns the email
+  const derivedId = mapEmailToArtistId(email);
+  setArtistId(derivedId);
 };
 
 function mapEmailToArtistId(email) {

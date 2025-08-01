@@ -2,7 +2,7 @@ class CatalogService {
   // If you have live DynamoDB tables, replace these mock methods with real API/database calls.
   // Remove the dummy/mock data and implement actual fetch logic as needed.
 
-  async getCatalog(artistId = 'ruedevivre') {
+  async getCatalog(artistId = 'demo_artist') {
     // Example: Replace this block with a real fetch from your backend or DynamoDB
     // return fetch(`/api/catalog?artistId=${artistId}`).then(res => res.json());
     try {
@@ -11,42 +11,42 @@ class CatalogService {
       return [
         {
           title: 'Summer Nights',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Electronic',
           duration: '3:42',
           releaseDate: '2024-06-15'
         },
         {
           title: 'Digital Dreams',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Synthwave',
           duration: '4:18',
           releaseDate: '2024-05-20'
         },
         {
           title: 'Neon Lights',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Electronic',
           duration: '3:55',
           releaseDate: '2024-04-10'
         },
         {
           title: 'City Pulse',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Ambient',
           duration: '5:12',
           releaseDate: '2024-03-25'
         },
         {
           title: 'Midnight Drive',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Synthwave',
           duration: '4:33',
           releaseDate: '2024-02-14'
         },
         {
           title: 'Electric Sunset',
-          artistName: 'Rue de Vivre',
+          artistName: artistId,
           genre: 'Electronic',
           duration: '3:27',
           releaseDate: '2024-01-30'
@@ -58,7 +58,7 @@ class CatalogService {
     }
   }
 
-  async getSpotifyData(artistId = 'ruedevivre') {
+  async getSpotifyData(artistId = 'demo_artist') {
     // Replace with real Spotify API call if available
     try {
       // Mock Spotify data for demo (REMOVE if using live data)
@@ -76,7 +76,7 @@ class CatalogService {
     }
   }
 
-  async getAccountingData(artistId = 'RueDeVivre') {
+  async getAccountingData(artistId = 'demo_artist') {
     // Replace with real accounting data fetch if available
     try {
       // Mock accounting data for demo (REMOVE if using live data)

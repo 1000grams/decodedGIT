@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import cognitoAuthService from '../services/CognitoAuthService.js';
 import { getCognitoTokenFromUrl } from '../utils/getCognitoToken.js';
+import { setArtistIdFromUser } from '../state/ArtistManager.js';
 
 const AuthContext = createContext();
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }) {
         } catch {}
         setUser(storedToken);
         setIsAuthenticated(true);
+        await setArtistIdFromUser();
         setLoading(false);
         return;
       }
@@ -33,6 +35,7 @@ export function AuthProvider({ children }) {
           setUser(result.user);
           setUsername(result.username);
           setIsAuthenticated(true);
+          await setArtistIdFromUser();
         } else {
           console.warn('Session expired or invalid. Clearing auth state.');
           await cognitoAuthService.signOut();
@@ -67,6 +70,7 @@ export function AuthProvider({ children }) {
       setUser(result.user);
       setUsername(result.username);
       setIsAuthenticated(true);
+      await setArtistIdFromUser();
     }
     return result;
   };

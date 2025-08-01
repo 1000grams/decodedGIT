@@ -23,9 +23,11 @@ exports.handler = async (event) => {
         }).promise();
         
         const latestTrends = trendsResponse.Items[0]?.analysis_data || {};
-        
+
+        const artist = event.queryStringParameters?.artist_id || 'unknown_artist';
+
         const spotifyData = {
-            artist: 'Rue De Vivre',
+            artist,
             followers: 15,
             verified: false,
             monthlyListeners: 1250,
@@ -80,7 +82,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 error: 'Failed to load Spotify data',
                 message: error.message,
-                fallback: { artist: 'Rue De Vivre', followers: 0 }
+                fallback: { artist, followers: 0 }
             })
         };
     }

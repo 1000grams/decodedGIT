@@ -23,4 +23,10 @@ To support user-specific features such as playlist access, implement the followi
    - Start with limited scopes and a small test group of artists.
    - Expand scope coverage as features (playlist editing, follows, etc.) are added.
 
-This roadmap ensures any artist logging into the platform can authorize Spotify and access their personalized data securely.
+6. **Analytics Dashboard Frontend**
+   - Build a single-page dashboard with sections for portfolio metrics, Spotify analytics, market trends, and investment recommendations.
+   - Fetch data from backend endpoints (`/accounting`, `/spotify`, `/trends`), refresh it periodically, and show fallback messages on errors.
+   - Offer an optional "Connect Spotify" button that stores connection status locally and enables user-level Spotify features.
+   - Style the interface with a responsive grid layout and metric cards for clarity on both desktop and mobile.
+
+This roadmap ensures any artist logging into the platform can authorize Spotify, access personalized data, and view a comprehensive analytics dashboard.

@@ -356,61 +356,6 @@ Resources:
             Path: /dashboard/team
             Method: ANY
 
-  LoginLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-decodedLoginHandler
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Role: !GetAtt BasicLambdaExecutionRole.Arn
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-decodedLoginHandler.zip
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /auth/login
-            Method: ANY
-
-  SignupLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-decodedSignupHandler
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Role: !GetAtt BasicLambdaExecutionRole.Arn
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-decodedSignupHandler.zip
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /signup
-            Method: ANY
-
-
-  ContactLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-decodedContactHandler
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Role: !GetAtt BasicLambdaExecutionRole.Arn
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-decodedContactHandler.zip
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /contact
-            Method: ANY
-
 # === Marketing Functions ===
 # See cloudformation/marketing-hub.yml for marketing Lambdas
 
@@ -436,14 +381,3 @@ Outputs:
     Description: "Dashboard streams endpoint"
     Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/dashboard/streams"
 
-  LoginApi:
-    Description: "Login endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/auth/login"
-
-  SignupApi:
-    Description: "Signup endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/signup"
-
-  ContactApi:
-    Description: "Contact endpoint"
-    Value: !Sub "https://${DecodedApi}.execute-api.${AWS::Region}.amazonaws.com/${EnvName}/contact"

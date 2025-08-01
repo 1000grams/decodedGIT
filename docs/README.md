@@ -107,7 +107,6 @@ REACT_APP_PITCH_API_URL=https://your-api-id.execute-api.region.amazonaws.com/pro
 REACT_APP_CATALOG_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/catalog
 REACT_APP_ANALYTICS_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/api/analytics
 REACT_APP_SIGNUP_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/signup
-REACT_APP_CONTACT_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/contact
 REACT_APP_AUTH_API_URL=https://your-api-id.execute-api.region.amazonaws.com/prod/auth
 # Cognito configuration for the login Lambda
 COGNITO_USER_POOL_ID=5fxmkd
@@ -147,74 +146,6 @@ REACT_APP_COGNITO_CHECK_URL=https://your-api-id.execute-api.region.amazonaws.com
 *   See [docs/spotify-module.md](docs/spotify-module.md)
     for the weekly Spotify fetcher and dashboard panel.
 
-
-## Signup Lambda Function
-The backend includes a sample AWS Lambda handler at `backend/handlers/signupHandler/index.js` which creates a Cognito user and emails signup details via SES. Deploy it using the CloudFormation template at `infra/cloudformation/signupLambda.yml`:
-
-```bash
-aws cloudformation deploy \
-  --template-file infra/cloudformation/signupLambda.yml \
-  --stack-name DecodedSignupLambda \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-The API Gateway and Lambda permission configuration lives in `infra/cloudformation/signupApi.yml`. Deploy this CloudFormation stack after uploading `lambda/signup-handler.zip` to S3 to expose a `/signup` endpoint:
-
-```bash
-aws cloudformation deploy \
-  --template-file infra/cloudformation/signupApi.yml \
-  --stack-name DecodedSignupApi \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-## Contact Lambda Function
-Handle simple contact submissions with the Lambda at `backend/handlers/contactHandler.js`.
-Deploy the function and API Gateway using the templates provided:
-
-```bash
-aws cloudformation deploy \
-  --template-file infra/cloudformation/contactLambda.yml \
-  --stack-name DecodedContactLambda \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-
-aws cloudformation deploy \
-  --template-file infra/cloudformation/contactApi.yml \
-  --stack-name DecodedContactApi \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-## Login Lambda Function
-The login handler at `backend/handlers/loginHandler/index.js` demonstrates a minimal
-authentication endpoint using Amazon Cognito. Deploy it with:
-
-```bash
-aws cloudformation deploy \
-  --template-file infra/cloudformation/loginLambda.yml \
-  --stack-name DecodedLoginLambda \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-
-aws cloudformation deploy \
-  --template-file infra/cloudformation/loginApi.yml \
-  --stack-name DecodedLoginApi \
-  --region eu-central-1 \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-The Lambda expects a Cognito User Pool and client ID configured via
-`COGNITO_USER_POOL_ID` and `COGNITO_USER_POOL_CLIENT_ID`. Users are assigned to
-groups such as `admin`, `artist`, `buyer`, `catalog_curator`, `content_creator`,
-`music_supervisor`, and `review_only`. Artists in the `artist` group are
-redirected to the dashboard after signing in.
-
-## Login Lambda Function
-`backend/handlers/loginHandler.js` exposes the same sign‑in logic under an
-`/auth/login` endpoint. Deploy it with the same CloudFormation templates used
-for the sign‑in handler if you want both routes available.
 
 ## Pitch Lambda Function
 The sync licensing pitch handler at `backend/handlers/pitchHandler/index.js` sends templated emails via SES.

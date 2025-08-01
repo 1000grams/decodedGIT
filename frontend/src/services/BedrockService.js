@@ -1,21 +1,20 @@
 import axios from 'axios';
 
-const bedrockApiKey = process.env.REACT_APP_BEDROCK_API_KEY || 'ABSKQmVkcm9ja0FQSUtleS1tanZsLWF0LTM5NjkxMzcwMzAyNDp5WExYTGg1cHQ1YVo2N0hWK3hiMjgwRy9hVlpJQkJJdzNaZHJPQ0QvUllpTUFRMy9YN1Q5MlozYUtubz0=';
-const bedrockApiUrl = 'https://bedrock-api-endpoint.amazonaws.com'; // Replace with the actual endpoint
-
-if (!process.env.REACT_APP_BEDROCK_API_KEY) {
-  console.error('Bedrock API key is missing. Please set REACT_APP_BEDROCK_API_KEY in your environment variables.');
-}
+// Use backend endpoint instead of direct Bedrock access to avoid exposing API keys
+const API_BASE =
+  process.env.REACT_APP_API_BASE ||
+  'https://2h2oj7u446.execute-api.eu-central-1.amazonaws.com/prod';
+const bedrockApiUrl =
+  process.env.REACT_APP_BEDROCK_API_URL || `${API_BASE}/bedrock-insights`;
 
 export async function generateContent(prompt) {
   try {
     const response = await axios.post(
-      `${bedrockApiUrl}/generate`,
+      bedrockApiUrl,
       { prompt },
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${bedrockApiKey}`,
         },
       }
     );

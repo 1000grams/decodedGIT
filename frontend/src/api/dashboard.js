@@ -63,6 +63,9 @@ export const DashboardAPI = {
       body: JSON.stringify(payload),
     }),
 
+  getCombinedData: ({ artistId }) =>
+    fetchWithAuth(`${API_BASE}/fetch?artist_id=${encodeURIComponent(artistId)}`),
+
   postSocial: (payload) =>
     fetchWithAuth(`${API_BASE}/social`, {
       method: 'POST',

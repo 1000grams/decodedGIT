@@ -14,6 +14,7 @@ lambdas=(
   "dashboardTeam:prod-dashboardTeam"
   "dashboardCampaigns:prod-dashboardCampaigns"
   "dashboardSpotify:prod-dashboardSpotify"
+  "fetch:prod-fetch"
 )
 
 for entry in "${lambdas[@]}"; do

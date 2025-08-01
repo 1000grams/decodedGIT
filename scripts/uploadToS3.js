@@ -4,10 +4,10 @@ const path = require('path');
 
 const s3 = new AWS.S3();
 const BUCKET_NAME = process.env.S3_BUCKET_NAME || 'your-s3-bucket-name';
-const FILE_NAME = process.argv[2]; // passed in CLI, like: node uploadToS3.js signupHandler.zip
+const FILE_NAME = process.argv[2]; // passed in CLI, like: node uploadToS3.js authSignup.zip
 
 if (!FILE_NAME) {
-  console.error('❌ Please provide the zip file name, e.g., node uploadToS3.js signupHandler.zip');
+  console.error('❌ Please provide the zip file name, e.g., node uploadToS3.js authSignup.zip');
   process.exit(1);
 }
 

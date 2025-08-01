@@ -3,8 +3,6 @@
 # Define directories and files to zip
 lambda_dirs=(
   "cognitoCheck"
-  "loginHandler"
-  "signupHandler"
   "dashboardAnalytics"
   "dashboardCatalog"
   "dashboardSpotify"

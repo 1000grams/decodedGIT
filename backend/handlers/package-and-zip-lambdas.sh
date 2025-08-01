@@ -7,6 +7,7 @@ lambda_dirs=(
   "dashboardCatalog"
   "dashboardSpotify"
   "dashboardEarnings"
+  "fetch"
 )
 
 # Create zip files for each lambda directory

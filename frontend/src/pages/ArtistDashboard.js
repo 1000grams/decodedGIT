@@ -17,6 +17,7 @@ const buildAuthUrl = () => {
 
 function ArtistDashboard() {
   const [accounting, setAccounting] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -57,6 +58,8 @@ function ArtistDashboard() {
         const artistId = getArtistId();
         const data = await DashboardAPI.getAccounting({ artistId });
         setAccounting(data);
+        const combined = await DashboardAPI.getCombinedData({ artistId });
+        setDashboardData(combined);
       } catch (err) {
         setError('Failed to load dashboard data.');
         console.error('dashboard fetch error', err);
@@ -100,6 +103,13 @@ function ArtistDashboard() {
             <div>Total Revenue: {(accounting.totalRevenue / 100).toFixed(2)}</div>
             <div>Total Expenses: {(accounting.totalExpenses / 100).toFixed(2)}</div>
             <div>Net Revenue: {(accounting.netRevenue / 100).toFixed(2)}</div>
+          </div>
+        )}
+        {dashboardData && (
+          <div style={{ marginTop: '1rem' }}>
+            <div>Catalog Items: {dashboardData.catalog.length}</div>
+            <div>Earnings Records: {dashboardData.earnings.length}</div>
+            <div>Stream Records: {dashboardData.streams.length}</div>
           </div>
         )}
       </div>

@@ -187,27 +187,42 @@ Resources:
             Path: /dashboard/streams
             Method: ANY
 
-  # DashboardEarningsFunction -> S3Key: prod-dashboardEarnings.zip, Env: DYNAMO_TABLE_EARNINGS
-  DashboardEarningsFunction:
+
+  # DashboardFinanceFunction -> S3Key: prod-dashboardFinance.zip, Env: REVENUE_TABLE, EXPENSE_TABLE, EARNINGS_TABLE, STATEMENTS_TABLE
+  DashboardFinanceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: prod-dashboardEarnings
+      FunctionName: prod-dashboardFinance
       Handler: index.handler
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-dashboardEarnings.zip
+        S3Key: prod-dashboardFinance.zip
       Environment:
         Variables:
-          DYNAMO_TABLE_EARNINGS: prod-DecodedEarnings
+          REVENUE_TABLE: prod-RevenueLog
+          EXPENSE_TABLE: prod-ExpenseLog
+          EARNINGS_TABLE: prod-DecodedEarnings
+          STATEMENTS_TABLE: prod-Statements
       Events:
-        Api:
+        Accounting:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/accounting
+            Method: ANY
+        Earnings:
           Type: Api
           Properties:
             RestApiId: !Ref DecodedApi
             Path: /dashboard/earnings
             Method: ANY
-
+        Statements:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DecodedApi
+            Path: /dashboard/statements
+            Method: ANY
   # DashboardCatalogFunction -> S3Key: prod-dashboardCatalog.zip, Env: DYNAMO_TABLE_CATALOG
   DashboardCatalogFunction:
     Type: AWS::Serverless::Function
@@ -250,26 +265,6 @@ Resources:
             Path: /dashboard/analytics
             Method: ANY
 
-  # DashboardStatementsFunction -> S3Key: prod-dashboardStatements.zip, Env: DYNAMO_TABLE_STATEMENTS
-  DashboardStatementsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-dashboardStatements
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-dashboardStatements.zip
-      Environment:
-        Variables:
-          DYNAMO_TABLE_STATEMENTS: prod-Statements
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /dashboard/statements
-            Method: ANY
 
   # DashboardCampaignsFunction -> S3Key: prod-dashboardCampaigns.zip, Env: SPEND_TABLE
   DashboardCampaignsFunction:
@@ -292,50 +287,29 @@ Resources:
             Path: /dashboard/campaigns
             Method: ANY
 
-  # DashboardSpotifyFunction -> S3Key: prod-dashboardSpotify.zip, Env: SPOTIFY_TABLE
-  DashboardSpotifyFunction:
+
+
+  # DashboardRoadmapFunction -> S3Key: prod-dashboardRoadmap.zip, Env: ROADMAP_TABLE
+  DashboardRoadmapFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: prod-dashboardSpotify
+      FunctionName: prod-dashboardRoadmap
       Handler: index.handler
       Runtime: nodejs18.x
       Code:
         S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-dashboardSpotify.zip
+        S3Key: prod-dashboardRoadmap.zip
       Environment:
         Variables:
-          SPOTIFY_TABLE: prod-SpotifyArtistData
+          ROADMAP_TABLE: prod-RoadmapData
       Events:
         Api:
           Type: Api
           Properties:
             RestApiId: !Ref DecodedApi
-            Path: /dashboard/spotify
+            Path: /dashboard/roadmap
             Method: ANY
-
-  # DashboardAccountingFunction -> S3Key: prod-dashboardAccounting.zip, Env: REVENUE_TABLE, EXPENSE_TABLE
-  DashboardAccountingFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: prod-dashboardAccounting
-      Handler: index.handler
-      Runtime: nodejs18.x
-      Code:
-        S3Bucket: decodedmusic-lambda-code
-        S3Key: prod-dashboardAccounting.zip
-      Environment:
-        Variables:
-          REVENUE_TABLE: prod-RevenueLog
-          EXPENSE_TABLE: prod-ExpenseLog
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            RestApiId: !Ref DecodedApi
-            Path: /dashboard/accounting
-            Method: ANY
-
-  # DashboardTeamFunction -> S3Key: prod-dashboardTeam.zip, Env: TEAM_JSON
+    # DashboardTeamFunction -> S3Key: prod-dashboardTeam.zip, Env: TEAM_JSON
   DashboardTeamFunction:
     Type: AWS::Serverless::Function
     Properties:

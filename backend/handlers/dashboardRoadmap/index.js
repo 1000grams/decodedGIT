@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 const REGION = process.env.AWS_REGION || 'eu-central-1';
-const TABLE = process.env.SPOTIFY_TABLE || 'SpotifyArtistData';
+const TABLE = process.env.ROADMAP_TABLE || 'RoadmapData';
 const ddb = new DynamoDBClient({ region: REGION });
 
 function response(statusCode, body) {
@@ -36,7 +36,7 @@ exports.handler = async (event) => {
     const item = data.Items?.[0] ? clean(data.Items[0]) : {};
     return response(200, item);
   } catch (err) {
-    console.error('spotify dashboard error', err);
+    console.error('roadmap dashboard error', err);
     return response(500, { message: 'Internal Server Error' });
   }
 };
@@ -50,3 +50,4 @@ function clean(item) {
   if (obj.trending) obj.trending = JSON.parse(obj.trending);
   return obj;
 }
+

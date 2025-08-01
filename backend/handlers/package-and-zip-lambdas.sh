@@ -5,8 +5,8 @@ lambda_dirs=(
   "cognitoCheck"
   "dashboardAnalytics"
   "dashboardCatalog"
-  "dashboardSpotify"
-  "dashboardEarnings"
+  "dashboardFinance"
+  "dashboardRoadmap"
   "fetch"
 )
 

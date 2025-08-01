@@ -82,6 +82,19 @@ export const DashboardAPI = {
   getMarketingAutomation: () =>
     fetchWithAuth(`${API_BASE}/marketing-automation/subscription/report`),
 
+  logWeeklyStats: () =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/weekly-stats`),
+
+  getAttribution: ({ campaignId }) =>
+    fetchWithAuth(
+      `${API_BASE}/marketing-automation/attribution?campaign_id=${encodeURIComponent(
+        campaignId
+      )}`
+    ),
+
+  triggerPayout: () =>
+    fetchWithAuth(`${API_BASE}/marketing-automation/payout`),
+
   sendEmailCampaign: (payload) =>
     fetchWithAuth(`${API_BASE}/marketing-automation/email`, {
       method: 'POST',

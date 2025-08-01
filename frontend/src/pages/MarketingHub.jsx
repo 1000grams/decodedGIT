@@ -7,6 +7,8 @@ function MarketingHub() {
   const [contentPlan] = useState(null); // Removed 'setContentPlan' as it is unused
   const [report, setReport] = useState(null);
   const [analytics, setAnalytics] = useState(null);
+  const [roi, setRoi] = useState(null);
+  const [payout, setPayout] = useState(null);
 
   useEffect(() => {
     DashboardAPI.getMarketingAutomation()
@@ -15,6 +17,15 @@ function MarketingHub() {
     DashboardAPI.getDeepMarketingAnalytics()
       .then(setAnalytics)
       .catch((err) => console.error('deep analytics fetch failed', err));
+    DashboardAPI.logWeeklyStats().catch((err) =>
+      console.error('weekly stats logging failed', err)
+    );
+    DashboardAPI.getAttribution({ campaignId: 'demo' })
+      .then(setRoi)
+      .catch((err) => console.error('attribution fetch failed', err));
+    DashboardAPI.triggerPayout()
+      .then(setPayout)
+      .catch((err) => console.error('payout trigger failed', err));
   }, []);
 
   return (
@@ -166,14 +177,25 @@ function MarketingHub() {
           <p>Average Retention: {report.avgRetention} months</p>
         </div>
       )}
-      {analytics && (
-        <div style={{ textAlign: 'center', margin: '2rem 0' }}>
-          <p>Streams per Dollar: {analytics.streams_per_dollar}</p>
-          <p>Avg Spend per Subscriber: ${analytics.avg_spend_per_subscriber}</p>
-        </div>
-      )}
-    </div>
-  );
-}
+        {analytics && (
+          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+            <p>Streams per Dollar: {analytics.streams_per_dollar}</p>
+            <p>Avg Spend per Subscriber: ${analytics.avg_spend_per_subscriber}</p>
+          </div>
+        )}
+        {roi && (
+          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+            <p>Campaign ID: {roi.campaign_id}</p>
+            <p>Cost per Stream: ${roi.cost_per_stream}</p>
+          </div>
+        )}
+        {payout && (
+          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+            <p>Payouts Processed: {payout.updated}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
 
 export default MarketingHub;
